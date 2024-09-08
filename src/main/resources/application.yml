@@ -1,0 +1,62 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${google_client_id}
+            client-secret: ${google_secret}
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            scope: profile, email
+
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/linkmoa?autoReconnect=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: ${datasource_password}
+
+  jwt:
+    secret: ${jwt_seceret}
+    redis:
+      host: ${redis_host}
+      port: ${redis_port}
+
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+logging:
+  level:
+    org:
+    hibernate:
+      SQL: DEBUG
+    type:
+      descriptor:
+        sql:
+          BasicBinder: TRACE
+
+cloud:
+  gcp:
+    storage:
+      bucket: knulinkmoa-bucket
+
+springdoc:
+  packages-to-scan: com.knu.linkmoa
+  override-with-generic-response: true
+  default-consumes-media-type: application/json;charset=UTF-8 # ?? ??? ??
+  default-produces-media-type: application/json;charset=UTF-8 # ?? ??? ??
+  swagger-ui:
+    operations-sorter: method # operations ?? ??? HTTP Method ?
+    tags-sorter: alpha # tag ?? ??? ??? ?
