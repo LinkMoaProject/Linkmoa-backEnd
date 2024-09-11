@@ -1,16 +1,12 @@
 package com.linkmoa.source.auth.jwt.error;
 
-import com.linkmoa.source.auth.jwt.dto.response.TokenStatus;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public class NotValidTokenException extends RuntimeException{
-    private JwtErrorCode errorCode;
-    private TokenStatus tokenStatus;
+    private final JwtErrorCode errorCode;
 
-
-    public NotValidTokenException(JwtErrorCode errorCode, TokenStatus tokenStatus) {
-        this.errorCode = errorCode;
-        this.tokenStatus = tokenStatus;
-    }
 }
+

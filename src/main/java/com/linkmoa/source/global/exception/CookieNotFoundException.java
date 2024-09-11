@@ -1,4 +1,4 @@
-package com.linkmoa.source.global.error.cookie;
+package com.linkmoa.source.global.exception;
 
 import lombok.Getter;
 

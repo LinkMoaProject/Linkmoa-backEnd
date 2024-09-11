@@ -1,11 +1,10 @@
 package com.linkmoa.source.auth.jwt.service;
 
 
-import com.linkmoa.source.auth.jwt.dto.response.TokenStatus;
 import com.linkmoa.source.auth.jwt.error.JwtErrorCode;
 import com.linkmoa.source.auth.jwt.error.NotValidTokenException;
 import com.linkmoa.source.domain.member.repository.MemberRepository;
-import com.linkmoa.source.global.error.cookie.CookieNotFoundException;
+import com.linkmoa.source.global.exception.CookieNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -34,7 +33,6 @@ public class JwtService {
     private final Long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 14L;
 
 
-    private final MemberRepository memberRepository;
 
     @PostConstruct
     private void init() {
@@ -67,21 +65,22 @@ public class JwtService {
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token", e);
-            throw new NotValidTokenException(JwtErrorCode.NOT_VALID_TOKEN_EXCEPTION, TokenStatus.INVALID);
+            throw new NotValidTokenException(JwtErrorCode.NOT_VALID_TOKEN_EXCEPTION);
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT Token", e);
             if (isRefreshTokenExpired(e)) {
-                throw new NotValidTokenException(JwtErrorCode.EXPIRED_REFRESH_TOKEN_EXCEPTION, TokenStatus.REFRESH_TOKEN_EXPIRED);
+                throw new NotValidTokenException(JwtErrorCode.EXPIRED_REFRESH_TOKEN_EXCEPTION);
             }
-            throw new NotValidTokenException(JwtErrorCode.EXPIRED_ACCESS_TOKEN_EXCEPTION, TokenStatus.ACCESS_TOKEN_EXPIRED);
+            throw new NotValidTokenException(JwtErrorCode.EXPIRED_ACCESS_TOKEN_EXCEPTION);
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT Token", e);
-            throw new NotValidTokenException(JwtErrorCode.UNSUPPORTED_TOKEN_EXCEPTION, TokenStatus.UNSUPPORTED);
+            throw new NotValidTokenException(JwtErrorCode.UNSUPPORTED_TOKEN_EXCEPTION);
         } catch (IllegalArgumentException e) {
             log.info("JWT claims string is empty.", e);
-            throw new NotValidTokenException(JwtErrorCode.MISMATCH_CLAIMS_EXCEPTION, TokenStatus.MISMATCH_CLAIMS);
+            throw new NotValidTokenException(JwtErrorCode.MISMATCH_CLAIMS_EXCEPTION);
         }
     }
+
 
     public String createAccessToken(String email, String role) {
         return Jwts.builder()
