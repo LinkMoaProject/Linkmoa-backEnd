@@ -3,7 +3,6 @@ package com.linkmoa.source.auth.jwt.service;
 
 import com.linkmoa.source.auth.jwt.error.JwtErrorCode;
 import com.linkmoa.source.auth.jwt.error.NotValidTokenException;
-import com.linkmoa.source.domain.member.repository.MemberRepository;
 import com.linkmoa.source.global.exception.CookieNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

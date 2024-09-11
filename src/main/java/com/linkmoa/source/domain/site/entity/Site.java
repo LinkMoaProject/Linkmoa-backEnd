@@ -32,18 +32,27 @@ public class Site {
     private Directory directory;
 
 
+    @Column(name="member_id")
+    private Long memberId;
+
 
     @Builder
-    public Site(String siteName,String siteUrl,Directory directory){
+    public Site(String siteName,String siteUrl,Long memberId){
         this.siteName=siteName;
         this.siteUrl=siteUrl;
-        setDirectory(directory);
+        this.memberId=memberId;
     }
 
     public void setDirectory(Directory directory){
         this.directory=directory;
         directory.getSites().add(this);
     }
+
+    public void updateSite(String siteName,String siteUrl){
+        this.siteName=siteName;
+        this.siteUrl=siteUrl;
+    }
+
 
 
 }

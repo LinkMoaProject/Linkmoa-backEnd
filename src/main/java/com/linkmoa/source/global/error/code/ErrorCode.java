@@ -1,4 +1,4 @@
-package com.linkmoa.source.global.error;
+package com.linkmoa.source.global.error.code;
 
 import org.springframework.http.HttpStatus;
 

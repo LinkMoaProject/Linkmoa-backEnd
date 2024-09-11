@@ -1,6 +1,6 @@
 package com.linkmoa.source.domain.member.error;
 
-import com.linkmoa.source.global.error.ErrorCode;
+import com.linkmoa.source.global.error.code.ErrorCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -12,11 +12,11 @@ public enum MemberErrorCode implements ErrorCode {
 
     private HttpStatus httpStatus;
     private String errorCode;
-    private String message;
-    MemberErrorCode(HttpStatus httpStatus, String errorCode, String message) {
+    private String errorMessage;
+    MemberErrorCode(HttpStatus httpStatus, String errorCode, String errorMessage) {
         this.httpStatus = httpStatus;
         this.errorCode = errorCode;
-        this.message =message;
+        this.errorMessage =errorMessage;
     }
 
     @Override
