@@ -1,6 +1,7 @@
 package com.linkmoa.source.domain.member.entity;
 
 import com.linkmoa.source.domain.directory.entity.Directory;
+import com.linkmoa.source.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity {
 
     @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="member_id")

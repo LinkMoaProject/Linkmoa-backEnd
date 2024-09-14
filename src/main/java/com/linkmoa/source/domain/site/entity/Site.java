@@ -3,6 +3,7 @@ package com.linkmoa.source.domain.site.entity;
 
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.member.entity.Member;
+import com.linkmoa.source.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity(name="sites")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Site {
+public class Site extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="site_id")

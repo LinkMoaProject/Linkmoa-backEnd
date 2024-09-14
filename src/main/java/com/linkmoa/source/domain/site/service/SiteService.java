@@ -99,7 +99,6 @@ public class SiteService {
 
 
       updatedSite.updateSite(siteUpdateRequestDto.siteName(),siteUpdateRequestDto.siteUrl());
-      siteRepository.save(updatedSite);
 
       SiteGetResponseDto siteGetResponseDto = SiteGetResponseDto.builder()
               .siteName(siteUpdateRequestDto.siteName())

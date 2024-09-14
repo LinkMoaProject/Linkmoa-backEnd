@@ -3,6 +3,7 @@ package com.linkmoa.source.domain.directory.entity;
 
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.site.entity.Site;
+import com.linkmoa.source.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.util.List;
 @Entity(name="directory")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Directory {
+public class Directory extends BaseEntity {
 
     @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="directory_id")
@@ -57,9 +58,8 @@ public class Directory {
 
 
     @Builder
-    public Directory(String directoryName,Member member,Directory parentDirectory){
+    public Directory(String directoryName,Member member){
         this.directoryName=directoryName;
-        this.parentDirectory=parentDirectory;
         setMember(member);
     }
 
@@ -77,6 +77,9 @@ public class Directory {
         child.setParentDirectory(this);
     }
 
+    public void updateDirectoryName(String directoryName){
+        this.directoryName=directoryName;
+    }
 
 
 
