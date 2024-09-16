@@ -3,9 +3,9 @@ package com.linkmoa.source.domain.directory.service;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequestDto;
-import com.linkmoa.source.domain.directory.dto.request.DirectoryIdRequestDto;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequestDto;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponse;
+import com.linkmoa.source.domain.directory.dto.response.DirectoryUpdateResponseDto;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
@@ -64,8 +64,8 @@ public class DirectoryService {
      **/
 
     @Transactional
-    public ApiDirectoryResponse<Long> deleteDirectory(DirectoryIdRequestDto directoryIdRequestDto,PrincipalDetails principalDetails){
-        Directory deleteDirectory =directoryRepository.findById(directoryIdRequestDto.directoryId())
+    public ApiDirectoryResponse<Long> deleteDirectory(Long directoryId,PrincipalDetails principalDetails){
+        Directory deleteDirectory =directoryRepository.findById(directoryId)
                 .orElseThrow(()->new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
         Member member =memberService.findMemberByEmail(principalDetails.getEmail());
@@ -84,7 +84,7 @@ public class DirectoryService {
 
 
     @Transactional
-    public ApiDirectoryResponse<Long> updateDirectory(DirectoryUpdateRequestDto directoryUpdateRequestDto,PrincipalDetails principalDetails){
+    public ApiDirectoryResponse<DirectoryUpdateResponseDto> updateDirectory(DirectoryUpdateRequestDto directoryUpdateRequestDto, PrincipalDetails principalDetails){
         Directory updateDirectory = directoryRepository.findById(directoryUpdateRequestDto.directoryId())
                 .orElseThrow(()->new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
@@ -92,9 +92,16 @@ public class DirectoryService {
 
         updateDirectory.updateDirectoryName(directoryUpdateRequestDto.direcotryName());
 
-        return ApiDirectoryResponse.<Long>builder()
+        DirectoryUpdateResponseDto directoryUpdateResponseDto = DirectoryUpdateResponseDto.builder()
+                .directoryName(updateDirectory.getDirectoryName())
+                .parentDirectoryId(updateDirectory.getParentDirectory().getId())
+                .build();
+
+
+        return ApiDirectoryResponse.<DirectoryUpdateResponseDto>builder()
                 .httpStatusCode(HttpStatus.OK)
                 .successMessage("directory 수정에 성공했습니다.")
+                .data(directoryUpdateResponseDto)
                 .build();
     }
 

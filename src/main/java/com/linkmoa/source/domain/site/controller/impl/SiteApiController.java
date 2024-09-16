@@ -52,7 +52,7 @@ public class SiteApiController implements SiteApiSpecification {
     @DeleteMapping("/{siteId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiSiteResponse<Long>> deleteSite(
-            @PathVariable @NotBlank Long siteId,
+            @PathVariable("siteId") @NotBlank Long siteId,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ){
         ApiSiteResponse<Long> apiSiteResponse =siteService.deleteSite(siteId,principalDetails);
@@ -63,7 +63,7 @@ public class SiteApiController implements SiteApiSpecification {
     @GetMapping("/{siteId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiSiteResponse<SiteGetResponseDto>> getSite(
-            @PathVariable @NotBlank Long siteId,
+            @PathVariable("siteId") @NotBlank Long siteId,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ){
         ApiSiteResponse<SiteGetResponseDto> siteGetResponseDtoApiSiteResponse = siteService.getSite(siteId, principalDetails);
