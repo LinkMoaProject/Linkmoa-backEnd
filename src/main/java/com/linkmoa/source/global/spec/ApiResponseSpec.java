@@ -11,12 +11,10 @@ import org.springframework.http.HttpStatus;
 public class ApiResponseSpec {
 
     private HttpStatus httpStatusCode;
-    private String successCode; //SUCESS_000으로 통일 (임시)
     private String successMessage;
 
-    public ApiResponseSpec(HttpStatus httpStatusCode, String successCode, String successMessage) {
+    public ApiResponseSpec(HttpStatus httpStatusCode, String successMessage) {
         this.httpStatusCode = httpStatusCode;
-        this.successCode = successCode;
         this.successMessage = successMessage;
     }
 }

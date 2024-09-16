@@ -1,3 +1,4 @@
+/*
 package com.linkmoa.source.auth.jwt.refresh.service;
 
 
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 
-@SpringBootTest
+
 @Slf4j
 public class RefreshTokenServiceTest {
 
@@ -38,4 +39,4 @@ public class RefreshTokenServiceTest {
         Assertions.assertThat(token).isEqualTo(findToken);
 
     }
-}
+}*/

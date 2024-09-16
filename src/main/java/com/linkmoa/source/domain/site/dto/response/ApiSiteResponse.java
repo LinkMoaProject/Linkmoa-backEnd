@@ -11,8 +11,8 @@ public class ApiSiteResponse<T> extends ApiResponseSpec {
 
     private T data;
     @Builder
-    public ApiSiteResponse(HttpStatus httpStatusCode, String successCode, String successMessage,T data) {
-        super(httpStatusCode, successCode, successMessage);
+    public ApiSiteResponse(HttpStatus httpStatusCode, String successMessage,T data) {
+        super(httpStatusCode, successMessage);
         this.data=data;
     }
 }

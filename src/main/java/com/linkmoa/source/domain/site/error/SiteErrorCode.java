@@ -7,15 +7,14 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum SiteErrorCode implements ErrorCode {
 
-    SITE_NOT_FOUND(HttpStatus.NOT_FOUND,"SITE_001","Site를 찾을 수 없습니다.");
+    SITE_NOT_FOUND(HttpStatus.NOT_FOUND,"Site를 찾을 수 없습니다."),
+    SITE_ERRORCODE_TEST(HttpStatus.NOT_FOUND,"site error code 테스트");
 
     private HttpStatus httpStatus;
-    private String errorCode;
     private String errorMessage;
 
-    SiteErrorCode(HttpStatus httpStatus, String errorCode, String errorMessage) {
+    SiteErrorCode(HttpStatus httpStatus, String errorMessage) {
         this.httpStatus = httpStatus;
-        this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }
 
@@ -25,7 +24,9 @@ public enum SiteErrorCode implements ErrorCode {
     }
 
     @Override
-    public String getErrorCode() {
-        return errorCode;
+    public String getErrorMessage(){
+        return errorMessage;
     }
+
+
 }

@@ -7,7 +7,6 @@ import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.site.dto.request.SiteCreateRequestDto;
-import com.linkmoa.source.domain.site.dto.request.SiteIdRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteListGetRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteUpdateRequestDto;
 import com.linkmoa.source.domain.site.dto.response.ApiSiteResponse;
@@ -32,10 +31,9 @@ public class SiteService {
     private final DirectoryRepository directoryRepository;
 
 
-    private final String successCode="SUCCESS_001";
+    private final String successCode="200";
 
 
-    //CRUD
     @Transactional
     public ApiSiteResponse<Long> saveSite(SiteCreateRequestDto siteCreateRequestDto, PrincipalDetails principalDetails){
         Site newSite =Site.builder()
@@ -55,7 +53,6 @@ public class SiteService {
 
         return ApiSiteResponse.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successCode(successCode)
                 .successMessage("site 생성 및 저장에 성공하였습니다.")
                 .data(newSite.getId())
                 .build();
@@ -70,9 +67,9 @@ public class SiteService {
      **/
 
     @Transactional
-    public ApiSiteResponse<Long> deleteSite(SiteIdRequestDto siteIdRequestDto, PrincipalDetails principalDetails){
+    public ApiSiteResponse<Long> deleteSite(Long siteId, PrincipalDetails principalDetails){
 
-        Site deletedSite = siteRepository.findById(siteIdRequestDto.siteId())
+        Site deletedSite = siteRepository.findById(siteId)
                 .orElseThrow(()->new SiteException(SiteErrorCode.SITE_NOT_FOUND));
 
 
@@ -82,7 +79,6 @@ public class SiteService {
 
         return ApiSiteResponse.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successCode(successCode)
                 .successMessage("site 삭제에 성공했습니다.")
                 .data(deletedSite.getId())
                 .build();
@@ -108,7 +104,6 @@ public class SiteService {
 
       return ApiSiteResponse.<SiteGetResponseDto>builder()
               .httpStatusCode(HttpStatus.OK)
-              .successCode(successCode)
               .successMessage("site 수정에 성공했습니다.")
               .data(siteGetResponseDto)
               .build();
@@ -116,8 +111,8 @@ public class SiteService {
     }
 
     @Transactional
-    public ApiSiteResponse<SiteGetResponseDto> getSite(SiteIdRequestDto siteIdRequestDto,PrincipalDetails principalDetails){
-        Site getSite = siteRepository.findById(siteIdRequestDto.siteId())
+    public ApiSiteResponse<SiteGetResponseDto> getSite(Long siteId,PrincipalDetails principalDetails){
+        Site getSite = siteRepository.findById(siteId)
                 .orElseThrow(()->new SiteException(SiteErrorCode.SITE_NOT_FOUND));
 
 
@@ -131,7 +126,6 @@ public class SiteService {
 
         return ApiSiteResponse.<SiteGetResponseDto>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successCode(successCode)
                 .successMessage("단일 site 조회에 성공했습니다.")
                 .data(siteGetResponse)
                 .build();
@@ -139,12 +133,12 @@ public class SiteService {
     }
 
     @Transactional
-    public ApiSiteResponse<List<SiteGetResponseDto>> getSiteList(SiteListGetRequestDto siteListGetRequestDto,PrincipalDetails principalDetails){
+    public ApiSiteResponse<List<SiteGetResponseDto>> getSiteList(Long directoryId,PrincipalDetails principalDetails){
 
         // 공통 관심사 부분
 
 
-        Directory directory = directoryRepository.findById(siteListGetRequestDto.directoryid())
+        Directory directory = directoryRepository.findById(directoryId)
                 .orElseThrow(()->new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
         List<Site> sites = directory.getSites();
@@ -158,7 +152,6 @@ public class SiteService {
 
         return ApiSiteResponse.<List<SiteGetResponseDto>>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successCode(successCode)
                 .successMessage("Directory 내 site 목록 조회에 성공했습니다.")
                 .build();
     }

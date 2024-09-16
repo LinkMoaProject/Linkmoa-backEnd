@@ -1,6 +1,7 @@
 package com.linkmoa.source.global.error.dto;
 
 
+import com.linkmoa.source.global.error.code.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -9,12 +10,12 @@ import org.springframework.http.HttpStatus;
 public class ResponseError {
 
     private HttpStatus httpStatusCode;
-    private String errorCode;
     private String errorMessage;
+
+
     @Builder
-    public ResponseError(HttpStatus httpStatusCode,String errorCode, String errorMessage) {
+    public ResponseError(HttpStatus httpStatusCode,String errorMessage) {
         this.httpStatusCode = httpStatusCode;
-        this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }
 }

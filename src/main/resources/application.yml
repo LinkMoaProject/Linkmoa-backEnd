@@ -52,11 +52,3 @@ cloud:
     storage:
       bucket: knulinkmoa-bucket
 
-springdoc:
-  packages-to-scan: com.knu.linkmoa
-  override-with-generic-response: true
-  default-consumes-media-type: application/json;charset=UTF-8 # ?? ??? ??
-  default-produces-media-type: application/json;charset=UTF-8 # ?? ??? ??
-  swagger-ui:
-    operations-sorter: method # operations ?? ??? HTTP Method ?
-    tags-sorter: alpha # tag ?? ??? ??? ?

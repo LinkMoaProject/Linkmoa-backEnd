@@ -11,8 +11,8 @@ public class ApiDirectoryResponse<T> extends ApiResponseSpec {
     private T data;
 
     @Builder
-    public ApiDirectoryResponse(HttpStatus httpStatusCode, String successCode, String successMessage, T data) {
-        super(httpStatusCode, successCode, successMessage);
+    public ApiDirectoryResponse(HttpStatus httpStatusCode, String successMessage, T data) {
+        super(httpStatusCode, successMessage);
         this.data = data;
     }
 }

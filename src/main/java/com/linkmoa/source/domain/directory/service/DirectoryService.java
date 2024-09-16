@@ -11,9 +11,7 @@ import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.member.entity.Member;
-import com.linkmoa.source.domain.member.repository.MemberRepository;
 import com.linkmoa.source.domain.member.service.MemberService;
-import com.linkmoa.source.global.spec.ApiResponseSpec;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,6 @@ public class DirectoryService {
 
     private final DirectoryRepository directoryRepository;
     private final MemberService memberService;
-    private final String successCode="SUCCESS_001";
 
 
     @Transactional
@@ -52,7 +49,6 @@ public class DirectoryService {
 
         return ApiDirectoryResponse.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successCode(successCode)
                 .successMessage("Directory 생성에 성공했습니다.")
                 .data(newDirectory.getId())
                 .build();
@@ -80,7 +76,6 @@ public class DirectoryService {
 
         return ApiDirectoryResponse.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successCode(successCode)
                 .successMessage("Directory 삭제에 성공하였습니다.")
                 .data(deleteDirectory.getId())
                 .build();
@@ -99,7 +94,6 @@ public class DirectoryService {
 
         return ApiDirectoryResponse.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successCode(successCode)
                 .successMessage("directory 수정에 성공했습니다.")
                 .build();
     }
