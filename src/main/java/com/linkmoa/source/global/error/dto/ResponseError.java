@@ -11,11 +11,13 @@ public class ResponseError {
 
     private HttpStatus httpStatusCode;
     private String errorMessage;
+    private String status;
 
 
     @Builder
     public ResponseError(HttpStatus httpStatusCode,String errorMessage) {
         this.httpStatusCode = httpStatusCode;
         this.errorMessage = errorMessage;
+        this.status="FAIL";
     }
 }

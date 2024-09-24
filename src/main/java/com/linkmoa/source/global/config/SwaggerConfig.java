@@ -63,9 +63,9 @@ public class SwaggerConfig {
         Map<Integer, List<ExampleHolder>> statusWithExampleHolders = Arrays.stream(errorCodes)
                 .map(
                         errorCode -> ExampleHolder.builder()
-                                .holder(getSwaggerExample((Enum<?>) errorCode))
-                                .name(((Enum<?>) errorCode).name()) // 직접 name() 메서드 사용
-                                .code(errorCode.getHttpStatus().value())
+                                .holder(getSwaggerExample((Enum<?>) errorCode)) // Swagger의 Example 객체 생성
+                                .name(((Enum<?>) errorCode).name()) // 에러 코드 이름
+                                .code(errorCode.getHttpStatus().value()) // HTTP 상태 코드
                                 .build()
                         )
                 .collect(Collectors.groupingBy(ExampleHolder::getCode));

@@ -6,7 +6,6 @@ import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequestDto
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponse;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryUpdateResponseDto;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
-import com.linkmoa.source.domain.site.error.SiteErrorCode;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +29,7 @@ public interface DirectoryApiSpecification {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
-    @Tag(name = "Post",description = "디렉토리 관련 API")
+    @Tag(name = "Delete",description = "디렉토리 관련 API")
     @Operation(summary = "디렉토리 삭제",description = "디렉토리를 삭제합니다.")
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @DeleteMapping("/{directoryId}")
@@ -41,7 +40,7 @@ public interface DirectoryApiSpecification {
     );
 
 
-    @Tag(name = "Post",description = "디렉토리 관련 API")
+    @Tag(name = "Put",description = "디렉토리 관련 API")
     @Operation(summary = "디렉토리 수정",description = "디렉토리를 수정(이름,부모 디렉토리)합니다.")
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PutMapping

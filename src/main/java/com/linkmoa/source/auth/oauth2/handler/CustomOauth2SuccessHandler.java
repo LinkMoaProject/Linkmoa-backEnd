@@ -49,7 +49,7 @@ public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         refreshTokenService.saveRefreshToken(email,refreshToken);
         response.addCookie(jwtService.createCookie("refresh_token", refreshToken));
 
-        //response.sendRedirect("http://localhost:3000/reissue");
+        response.sendRedirect("http://localhost:5173/reissue");
 
 
         // 테스트용으로 추가한 부분
@@ -62,6 +62,21 @@ public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         log.info("OAuth2 로그인에 성공하였습니다. 이메일 : {}",  oauth2User.getEmail());
         log.info("OAuth2 로그인에 성공하였습니다. Refresh Token : {}",  refreshToken);
 
+        /**
+         * 자체 회원가입 로직
+         * 1.프론트 OAuth2 소셜 로그인 후 쿠키에 리프레쉬 토큰만 응답
+         * 2-1. 새로운 유저
+         *  - 서버에서 redirect /reissue
+         *  - 클라이언트에서 api(엑세스 토큰 요청) 호출
+         *  - 응답으로 헤더에 엑세스 토큰, 쿠키에 리프레쉬 토큰 - status 200, 201나 다른 필드로 구분하는 등 
+         *  - 클라이언트에서 사인업 페이지로 리다이렉트
+         *
+         * 2-2. 기존 유저
+         *  - 서버에서 redirect /reissue
+         *  - 클라이언트에서 api(엑세스 토큰 요청) 호출
+         *  - 응답으로 헤더에 엑세스 토큰, 쿠키에 리프레쉬 토큰
+         *  - 클라이언트에서 메인 페이지로 리다이렉
+         */
 
     }
 }

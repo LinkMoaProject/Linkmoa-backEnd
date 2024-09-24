@@ -12,9 +12,13 @@ public class ApiResponseSpec {
 
     private HttpStatus httpStatusCode;
     private String successMessage;
+    private String status;
+
+
 
     public ApiResponseSpec(HttpStatus httpStatusCode, String successMessage) {
         this.httpStatusCode = httpStatusCode;
         this.successMessage = successMessage;
+        this.status="SUCCESS";
     }
 }

@@ -3,6 +3,8 @@ package com.linkmoa.source.auth.jwt.service;
 
 import com.linkmoa.source.auth.jwt.error.JwtErrorCode;
 import com.linkmoa.source.auth.jwt.error.NotValidTokenException;
+import com.linkmoa.source.domain.member.entity.Member;
+import com.linkmoa.source.domain.member.repository.MemberRepository;
 import com.linkmoa.source.global.exception.CookieNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -26,10 +28,12 @@ import java.util.Date;
 public class JwtService {
     private SecretKey secretKey;
 
+
     @Value("${spring.jwt.secret}")
     private String secret;
     private final Long ACCESS_TOKEN_EXPIRATION = 1000L * 60 * 60;
     private final Long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 14L;
+
 
 
 
