@@ -63,7 +63,7 @@ public class JwtService {
 
     public boolean validateToken(String token) {
         try {
-            log.info("jw service : {} ",token);
+            log.info("jwt service : {} ",token);
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {

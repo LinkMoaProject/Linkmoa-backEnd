@@ -8,6 +8,7 @@ import com.linkmoa.source.domain.site.dto.request.SiteCreateRequestDto;
 import com.linkmoa.source.domain.site.dto.response.ApiSiteResponse;
 import com.linkmoa.source.domain.site.entity.Site;
 import com.linkmoa.source.domain.site.repository.SiteRepository;
+import com.linkmoa.source.global.aop.LogAspect;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,13 +29,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 @Transactional
 @ExtendWith(MockitoExtension.class) // JUnit 5에서 Mockito 사용을 위한 어노테이션
-
+@Import(LogAspect.class)
 public class SiteServiceTest {
 
     @Mock
     private SiteService siteService;
-
-
     @Mock
     private SiteRepository siteRepository;
 
@@ -67,8 +67,8 @@ public class SiteServiceTest {
                 .siteUrl(requestDto.siteUrl())
                 .memberId(principalDetails.getId())
                 .build();
-        //Mockito.when(siteRepository.save(Mockito.any(Site.class))).thenReturn(site);
 
+        //Mockito.when(siteRepository.save(Mockito.any(Site.class))).thenReturn(site);
         Mockito.when(siteService.saveSite(Mockito.any(SiteCreateRequestDto.class), Mockito.any(PrincipalDetails.class)))
                 .thenReturn(new ApiSiteResponse<Long>(HttpStatus.OK,
                         "site 생성 및 저장에 성공하였습니다.",

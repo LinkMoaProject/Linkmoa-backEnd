@@ -25,6 +25,9 @@ public class DirectoryService {
     private final MemberService memberService;
 
 
+    public void test(){
+
+    }
     @Transactional
     public ApiDirectoryResponse<Long> saveDirectory(DirectoryCreateRequestDto directoryCreateRequestDto, PrincipalDetails principalDetails){
         Member member = memberService.findMemberByEmail(principalDetails.getEmail());
