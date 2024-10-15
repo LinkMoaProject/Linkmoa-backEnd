@@ -20,6 +20,13 @@ public class NotifyService {
     private final NotifyRepository notifyRepository;
 
 
+    /**
+     * 테스트
+     * @param emitter
+     * @param eventId
+     * @param emitterId
+     * @param data
+     */
 
 
     /*public SseEmitter subscribe(String email,String lastEventId){
