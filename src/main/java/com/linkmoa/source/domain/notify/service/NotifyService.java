@@ -21,7 +21,7 @@ public class NotifyService {
 
 
     /**
-     * 테스트
+     * 테스트 2
      * @param emitter
      * @param eventId
      * @param emitterId
