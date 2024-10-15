@@ -40,7 +40,6 @@ public class SiteServiceTest {
     @Mock
     private DirectoryRepository directoryRepository;
 
-
     @Test
     @WithMockUser
     void saveSite() {

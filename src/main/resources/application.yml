@@ -4,15 +4,15 @@ spring:
       client:
         registration:
           google:
-            client-id: ${google_client_id}
-            client-secret: ${google_secret}
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
+            redirect-uri: ${REDIRECT_URI}
             scope: profile, email
 
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: true
@@ -22,14 +22,15 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/linkmoa?autoReconnect=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    #url : ${DB_URL}
     username: root
-    password: ${datasource_password}
+    password: ${DB_PASSWORD}
 
   jwt:
-    secret: ${jwt_seceret}
+    secret: ${JWT_SECRET}
     redis:
-      host: ${redis_host}
-      port: ${redis_port}
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
 
 
   servlet:
