@@ -33,7 +33,7 @@ public class LogAspect {
      */
 
 
-    @Pointcut("execution(* com.linkmoa.source.domain.*.*(..)) && !execution(* com.linkmoa.source.global..*.*(..))")
+    @Pointcut("execution(* com.linkmoa.source.domain..*.*(..)) && !execution(* com.linkmoa.source.global..*.*(..))")
     public void allDomain(){}
 
     @Pointcut("execution(* com.linkmoa.source.domain..*Controller.*(..))")
@@ -42,7 +42,6 @@ public class LogAspect {
     @Around("allDomain()")
     public Object logging(ProceedingJoinPoint joinPoint) throws  Throwable{
         long start = System.currentTimeMillis();
-
         try{
             Object result = joinPoint.proceed();
             return result;
@@ -58,8 +57,13 @@ public class LogAspect {
      * 문제점 : @RequestBody에 있는 request의 파라미터의 키 밸류를 가져와서 로그로 출력하고 싶음
      * 하지만, 필터나 인터셉터에서 @RequestBody에서 사용된 객체를 불러와서 읽으면, 필터나 인터셉터에서는 사용할 수 있으나, Controller까지 넘어가지 않음.
      * 즉, 한번 사용되면 재사용되지 않는 성질이 있어 필터나 인터셉터에서 @RequestBody 데이터를 중간에 한번 읽으려면 Wrapper를 통해서 감싸줘야 함.
+     * RequestBody가 스트림 형태로 들어오기 때문.
+     * 스트림은 한번 소비하면 다시 못쓰기 때문에 로깅에서 써버리면 서비스 로직에서 @RequestBody를 사용할 수 없음.
+     *
+     * 현재 아래 메소드는 request body의 파라미터 로깅이 안됨. 해결 못함
      */
-    @Around("controller()")
+
+   @Around("controller()")
     public Object loggingController(ProceedingJoinPoint joinPoint) throws Throwable{
 
         HttpServletRequest request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -75,7 +79,7 @@ public class LogAspect {
             parmas.put("controller", controllerName);
             parmas.put("method", methodName);
             parmas.put("params", getParams(request));
-            parmas.put("log_time", System.currentTimeMillis());
+            //parmas.put("log_time", System.currentTimeMillis());
             parmas.put("request_uri", decodedURI);
             parmas.put("http_method", request.getMethod());
 
@@ -85,7 +89,7 @@ public class LogAspect {
 
         log.info("[ {} ] {}", parmas.get("http_method"), parmas.get("request_uri"));
         log.info("[ method ] {}.{} ", parmas.get("controller"), parmas.get("method"));
-        log.info("[ params ] {}", parmas.get("params"));
+        //log.info("[ params ] {}", parmas.get("params"));
 
         Object result = joinPoint.proceed();
 

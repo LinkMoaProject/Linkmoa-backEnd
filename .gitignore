@@ -35,3 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### environment variables
+.env.dev
+.env.local
+
+local.sh
+dev.sh

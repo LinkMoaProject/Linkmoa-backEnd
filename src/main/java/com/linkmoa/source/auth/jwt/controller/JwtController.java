@@ -3,6 +3,7 @@ package com.linkmoa.source.auth.jwt.controller;
 
 import com.linkmoa.source.auth.jwt.service.JwtService;
 import com.linkmoa.source.domain.member.entity.Member;
+import com.linkmoa.source.domain.member.repository.MemberRepository;
 import com.linkmoa.source.global.spec.ApiResponseSpec;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,21 +28,32 @@ public class JwtController {
     @GetMapping("/access-token")
     public ResponseEntity<ApiResponseSpec> getAccessToken(
             @CookieValue(value = "refresh_token") String refreshToken,
-            HttpServletResponse response){
+            HttpServletResponse response) throws IOException {
 
-        log.info("token : {}", refreshToken);
-        String accessToken = jwtService.createAccessToken("bag083278@gmail.com","ROLE_USER");
-        log.info("access token = {}",accessToken);
+        //log.info("token : {}", refreshToken);
+        //String accessToken = jwtService.createAccessToken("bag083278@gmail.com","ROLE_USER");
+        //log.info("access token = {}",accessToken);
+
+        // AOP로 사용자의 회원가입 유무룰 확인할 듯 ?
+
+        String accessToken = null;
+
+        if (jwtService.validateToken(refreshToken)) {
+            String email = jwtService.getEmail(refreshToken);
+            String role = jwtService.getRole(refreshToken);
+            accessToken = jwtService.createAccessToken(email,role);
+
+            response.setHeader("Authorization", accessToken);
+            response.sendRedirect("http://localhost:3000/mainpage");
+        }
+
         ApiResponseSpec apiResponseSpec =new ApiResponseSpec(HttpStatus.OK,"Access Token 발급 성공");
-
-        response.setHeader("Authorization", accessToken);
-
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + accessToken)
                 .body(apiResponseSpec);
     }
 
-/*    @GetMapping("/reissue")
+    /*@GetMapping("/reissue")
     public ResponseEntity<ApiResponseSpec> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String refreshToken = jwtService.getRefreshTokenFromCookies(request.getCookies());
@@ -57,5 +69,6 @@ public class JwtController {
 
         return ResponseEntity.ok()
                 .body(new ApiResponseSpec(HttpStatus.OK, "Access token을 재 갱신하였습니다."));
+
     }*/
 }

@@ -3,6 +3,7 @@ package com.linkmoa.source.auth.jwt.refresh.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
+@RedisHash
 public class RefreshTokenService {
 
     private final RedisTemplate<String,Object> redisTemplate;

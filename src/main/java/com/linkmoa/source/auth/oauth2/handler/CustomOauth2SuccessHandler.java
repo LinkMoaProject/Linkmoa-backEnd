@@ -49,7 +49,7 @@ public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         refreshTokenService.saveRefreshToken(email,refreshToken);
         response.addCookie(jwtService.createCookie("refresh_token", refreshToken));
 
-        response.sendRedirect("http://localhost:5173/reissue");
+        response.sendRedirect("http://localhost:3000/reissue");
 
 
         // 테스트용으로 추가한 부분
@@ -77,6 +77,33 @@ public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
          *  - 응답으로 헤더에 엑세스 토큰, 쿠키에 리프레쉬 토큰
          *  - 클라이언트에서 메인 페이지로 리다이렉
          */
+
+
+        /**
+         * ! 정리해서 다시 보여드리기 (우선은 구글만 진행하기)
+         * 1.프론트에서 "하이퍼링크"로 소셜 로그인 요청 (소셜 로그인 리다이렉트)
+         *
+         * 2.백엔드에서 Oauth code(인가코드) 등 로그인 처리를 전부 진행해서 사용자의 정보를 받아옴 ( 이메일 ...)
+         *
+         * 3.백엔드에서 해당 이메일을 바탕으로 "리프레시 토큰을 생성해서 쿠키에 담아서" 프론트에 응답으로 보내줌
+         * => 쿠키 : 리프레시 토큰 , 헤더: 엑세스 토큰을 담아서 보내면 안되냐?
+         * => 프론트에서 "하이퍼링크"로 접속을 하면 헤더에 접근을 할 수가 없음
+         * => 보통 백엔드에서 쿠키를 사용할 떄, http only (보안)때문에 프론트에서도 쿠키에 접근을 할수가없음.
+         *
+         * => "쿠키에 바로 접근이 안됨" 응답받은 그대로 다시 요청을 보내시면 됩니다.
+         *
+         * 4.프론트에서 "쿠키에 있는 리프레시 토큰을 그대로 담아서" 다시 백엔드로 엑세스 토큰 요청(http 요청)을 보냄
+         *
+         * 5.백엔드에서 "쿠키의 리프레시 토큰"을 바탕으로 엑세스 토큰 생성
+         *
+         * 6.백엔드에서 쿠키 : 리프레시 토큰 , 헤더에 엑세스 토큰을 담아서 response를 보냄
+         *
+         * 7.프론트에서 추후 http 요청을 보낼때, 헤더에는 엑세스 토큰을 담고, 쿠키에는 리프레시 토큰을 담아서 요청을 보냄
+
+         */
+
+
+
 
     }
 }
