@@ -1,0 +1,52 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: linkmoa-server
+    env_file:
+      - ${ENV_FILE}
+    depends_on:
+      - redis
+      - database
+    ports:
+      - ${SPRING_PORT}:${SPRING_PORT}
+    restart: always
+    volumes:
+      - type: bind
+        source: ${SERVER_STORAGE_PATH}
+        target: ${STORAGE_PATH}
+
+  database:
+    image: mysql:latest
+    container_name: linkmoa-database
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    command:
+      --port=${DB_PORT} --max_allowed_packet=32M
+    expose:
+      - ${DB_PORT}
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    restart: always
+    volumes:
+      - linkmoa-database:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    container_name: linkmoa-redis
+    command: --port ${REDIS_PORT} --requirepass ${REDIS_PASSWORD}
+    expose:
+      - ${REDIS_PORT}
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    volumes:
+      - linkmoa-redis:/data
+    restart: always
+
+volumes:
+  linkmoa-database:
+  linkmoa-redis:
