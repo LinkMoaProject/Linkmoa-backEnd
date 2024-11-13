@@ -1,4 +1,4 @@
-package com.linkmoa.source.global.aop;
+package com.linkmoa.source.global.aop.aspect;
 
 
 import org.aspectj.lang.annotation.Aspect;

@@ -3,7 +3,7 @@ package com.linkmoa.source.domain.directory.controller.spec;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequestDto;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequestDto;
-import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponse;
+import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryUpdateResponseDto;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
@@ -24,7 +24,7 @@ public interface DirectoryApiSpecification {
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponse<Long>> saveDirectory(
+    public ResponseEntity<ApiDirectoryResponseSpec<Long>> saveDirectory(
             @RequestBody @Validated DirectoryCreateRequestDto directoryCreateRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
@@ -34,7 +34,7 @@ public interface DirectoryApiSpecification {
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @DeleteMapping("/{directoryId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponse<Long>> deleteDirecotry(
+    public ResponseEntity<ApiDirectoryResponseSpec<Long>> deleteDirecotry(
             @PathVariable("directoryId") @NotBlank Long directoryId,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
@@ -45,7 +45,7 @@ public interface DirectoryApiSpecification {
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PutMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponse<DirectoryUpdateResponseDto>> updatedirecotry(
+    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryUpdateResponseDto>> updatedirecotry(
             @RequestBody DirectoryUpdateRequestDto directoryUpdateRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
