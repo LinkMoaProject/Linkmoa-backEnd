@@ -28,7 +28,7 @@ public class DirectoryApiController implements DirectoryApiSpecification {
     private final DirectoryService directoryService;
     private final DirectorySendRequestService directorySendRequestService;
 
-    @PostMapping
+  /*  @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> saveDirectory(
             @RequestBody @Validated DirectoryCreateRequestDto directoryCreateRequestDto,
@@ -80,7 +80,7 @@ public class DirectoryApiController implements DirectoryApiSpecification {
                 .data(sendRequest.getDirectorySendRequestId())
                 .build();
         return ResponseEntity.ok().body(response);
-    }
+    }*/
 
 
 

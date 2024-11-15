@@ -33,6 +33,7 @@ public class SiteService {
 
     private final String successCode="200";
 
+/*
 
     @Transactional
     public ApiSiteResponse<Long> saveSite(SiteCreateRequestDto siteCreateRequestDto, PrincipalDetails principalDetails){
@@ -58,13 +59,15 @@ public class SiteService {
                 .build();
     }
 
-    /** 삭제, 조회 그리고 수정은 site 데이터의
+    */
+/** 삭제, 조회 그리고 수정은 site 데이터의
      *  memberId와 principal의 정보를 이용해서 데이터에 관한 올바른 접근 권한이 있는지 확인 해야됨
      *  1.site의 memberId == principalDetails로 찾은 memberId
      *  2.일치 => 정상 응답
      *    불일치 => 에러 응답
      *  AOP로 추후 구현 예정
-     **/
+     **//*
+
 
     @Transactional
     public ApiSiteResponse<Long> deleteSite(Long siteId, PrincipalDetails principalDetails){
@@ -155,6 +158,7 @@ public class SiteService {
                 .successMessage("Directory 내 site 목록 조회에 성공했습니다.")
                 .build();
     }
+*/
 
 
 
