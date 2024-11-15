@@ -17,11 +17,13 @@ public class SseEmitterRepositoryImpl implements SseEmitterRepository {
      * SseEmitter를 조회하기 위해 사용함
      */
     private final Map<String,SseEmitter> emitters = new ConcurrentHashMap<>();
+
     /**
      * eventCahce는 알림을 받을 사용자의 식별자를 키로 저장하고,
      * 해당 사용자에게 전송되지 못한 이벤트를 캐시로 저장하는 역할
      * 저장된 이벤트는 사용자가 구독할 때, 클라이언트로 전송되어 이벤트의 유실을 방지함
      */
+
     private final Map<String,Object> eventCache = new ConcurrentHashMap<>();
 
     /**
@@ -61,7 +63,8 @@ public class SseEmitterRepositoryImpl implements SseEmitterRepository {
                         Map.Entry::getKey // entry -> entry.getKey()
                          ,Map.Entry::getValue // entry -> entry.getValue()
                         ));
-    }
+        }
+
 
     /**
      * 해당 회원과 관련된 모든 event를 조회

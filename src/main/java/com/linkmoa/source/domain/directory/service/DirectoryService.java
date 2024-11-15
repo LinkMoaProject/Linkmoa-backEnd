@@ -4,7 +4,7 @@ package com.linkmoa.source.domain.directory.service;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequestDto;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequestDto;
-import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponse;
+import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryUpdateResponseDto;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
@@ -25,11 +25,8 @@ public class DirectoryService {
     private final MemberService memberService;
 
 
-    public void test(){
-
-    }
     @Transactional
-    public ApiDirectoryResponse<Long> saveDirectory(DirectoryCreateRequestDto directoryCreateRequestDto, PrincipalDetails principalDetails){
+    public ApiDirectoryResponseSpec<Long> saveDirectory(DirectoryCreateRequestDto directoryCreateRequestDto, PrincipalDetails principalDetails){
         Member member = memberService.findMemberByEmail(principalDetails.getEmail());
 
         Directory newDirectory =Directory.builder()
@@ -50,7 +47,7 @@ public class DirectoryService {
             directoryRepository.save(newDirectory);
         }
 
-        return ApiDirectoryResponse.<Long>builder()
+        return ApiDirectoryResponseSpec.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
                 .successMessage("Directory 생성에 성공했습니다.")
                 .data(newDirectory.getId())
@@ -67,7 +64,7 @@ public class DirectoryService {
      **/
 
     @Transactional
-    public ApiDirectoryResponse<Long> deleteDirectory(Long directoryId,PrincipalDetails principalDetails){
+    public ApiDirectoryResponseSpec<Long> deleteDirectory(Long directoryId, PrincipalDetails principalDetails){
         Directory deleteDirectory =directoryRepository.findById(directoryId)
                 .orElseThrow(()->new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
@@ -77,7 +74,7 @@ public class DirectoryService {
 
         directoryRepository.delete(deleteDirectory);
 
-        return ApiDirectoryResponse.<Long>builder()
+        return ApiDirectoryResponseSpec.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
                 .successMessage("Directory 삭제에 성공하였습니다.")
                 .data(deleteDirectory.getId())
@@ -87,7 +84,7 @@ public class DirectoryService {
 
 
     @Transactional
-    public ApiDirectoryResponse<DirectoryUpdateResponseDto> updateDirectory(DirectoryUpdateRequestDto directoryUpdateRequestDto, PrincipalDetails principalDetails){
+    public ApiDirectoryResponseSpec<DirectoryUpdateResponseDto> updateDirectory(DirectoryUpdateRequestDto directoryUpdateRequestDto, PrincipalDetails principalDetails){
         Directory updateDirectory = directoryRepository.findById(directoryUpdateRequestDto.directoryId())
                 .orElseThrow(()->new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
@@ -101,12 +98,13 @@ public class DirectoryService {
                 .build();
 
 
-        return ApiDirectoryResponse.<DirectoryUpdateResponseDto>builder()
+        return ApiDirectoryResponseSpec.<DirectoryUpdateResponseDto>builder()
                 .httpStatusCode(HttpStatus.OK)
                 .successMessage("directory 수정에 성공했습니다.")
                 .data(directoryUpdateResponseDto)
                 .build();
     }
+
 
 
 
