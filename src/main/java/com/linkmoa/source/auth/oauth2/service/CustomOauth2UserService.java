@@ -4,7 +4,7 @@ import com.linkmoa.source.auth.oauth2.entity.GoogleUserDetails;
 import com.linkmoa.source.auth.oauth2.entity.OAuth2UserInfo;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.member.entity.Member;
-import com.linkmoa.source.domain.member.entity.Role;
+import com.linkmoa.source.domain.member.constant.Role;
 import com.linkmoa.source.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

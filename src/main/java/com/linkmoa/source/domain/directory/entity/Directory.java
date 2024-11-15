@@ -2,6 +2,7 @@ package com.linkmoa.source.domain.directory.entity;
 
 
 import com.linkmoa.source.domain.member.entity.Member;
+import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.site.entity.Site;
 import com.linkmoa.source.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -49,27 +50,23 @@ public class Directory extends BaseEntity {
     )
     private List<Site> sites =new ArrayList<>();
 
+
     @ManyToOne(
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL
     )
-    @JoinColumn(name="member_id")
-    private Member member;
+    @JoinColumn(name="page_id")
+    private Page page;
 
 
-    @Builder
-    public Directory(String directoryName,Member member){
-        this.directoryName=directoryName;
-        setMember(member);
-    }
-
-    public void setMember(Member member){
-        this.member=member;
-        member.getDirectory().add(this);
-    }
 
     public void setParentDirectory(Directory parentDirectory){
         this.parentDirectory=parentDirectory;
+    }
+
+    public void setPage(Page page){
+        this.page = page;
+        page.getDirectories().add(this);
     }
 
     public void addChildDirectory(Directory child){

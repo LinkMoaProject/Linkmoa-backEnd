@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 public interface SiteApiSpecification {
 
+/*
 
     @Tag(name="Post",description = "사이트 관련 API")
     @Operation(summary = "사이트 저장",description = "사이트를 저장합니다.")
@@ -61,5 +62,6 @@ public interface SiteApiSpecification {
     );
 
 
+*/
 
 }
