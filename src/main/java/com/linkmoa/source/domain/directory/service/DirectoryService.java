@@ -27,8 +27,8 @@ public class DirectoryService {
 
 /*    @Transactional
     @ValidationApplied
-    public ApiDirectoryResponseSpec<Long> createDirectory(DirectoryCreateRequestDto directoryCreateRequestDto){
-        //pageRepository.findById()
+    public ApiDirectoryResponseSpec<Long> createDirectory(DirectoryCreateRequestDto directoryCreateRequestDto,Long memberId){
+
 
         return
     }*/
