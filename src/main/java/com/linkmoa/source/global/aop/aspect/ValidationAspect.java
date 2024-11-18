@@ -1,6 +1,8 @@
 package com.linkmoa.source.global.aop.aspect;
 
 
+import com.linkmoa.source.domain.member.entity.Member;
+import com.linkmoa.source.domain.member.repository.MemberRepository;
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.global.command.constant.CommandType;
 import com.linkmoa.source.global.command.service.CommandService;
@@ -30,21 +32,13 @@ public class ValidationAspect {
     public void validationPointCut(){}
 
 
-    /**
-     * 여기서 검증을 시도
-     * => 만약, 여기서 올바른 권한이 없다면 => 올바른 권한이 없다고 출력해주기
-     * => 만약, 올바른 권한이 있다면 => 그냥 메서드를 실행하면됨.
-     * @param joinPoint
-     * @return
-     * @throws Throwable
-     */
-    @Around("validationPointCut() && args(baseRequestDto,memberId)")
-    public Object validate(ProceedingJoinPoint joinPoint,final BaseRequestDto baseRequestDto,final Long memberId) throws Throwable {
+    @Around("validationPointCut() && args(baseRequestDto,member)")
+    public Object validate(ProceedingJoinPoint joinPoint,final BaseRequestDto baseRequestDto,final Member member) throws Throwable {
 
         Long pageId = baseRequestDto.pageId();
         CommandType commandType = baseRequestDto.commandType();
 
-        PermissionType userPermissionType = commandService.getUserPermissionType(memberId, pageId);
+        PermissionType userPermissionType = commandService.getUserPermissionType(member.getId(), pageId);
 
         if (!commandService.canExecute(userPermissionType, commandType)) {
             log.info("해당 요청에 관한 권한이 없습니다. userPermissionType={} , commandType={} ",userPermissionType,commandType);

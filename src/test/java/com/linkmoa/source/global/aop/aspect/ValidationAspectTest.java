@@ -3,9 +3,6 @@ package com.linkmoa.source.global.aop.aspect;
 import com.linkmoa.source.domain.member.constant.Role;
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
-import com.linkmoa.source.domain.memberPageLink.entity.MemberPageLink;
-import com.linkmoa.source.domain.page.contant.PageType;
-import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.global.command.constant.CommandType;
 import com.linkmoa.source.global.command.service.CommandService;
 import com.linkmoa.source.global.dto.request.BaseRequestDto;
@@ -19,8 +16,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
+
+import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -39,27 +36,40 @@ class ValidationAspectTest {
     private ValidationAspect validationAspect;
 
     private BaseRequestDto baseRequestDto;
-    private Long memberId;
+    private Member member;
 
     @BeforeEach
-    void setUp() {
-        //given
+    void setUp() throws NoSuchFieldException, IllegalAccessException {
+        // BaseRequestDto 생성
         baseRequestDto = new BaseRequestDto(
                 1L,           // pageId
                 CommandType.EDIT  // commandType
         );
-       memberId = 1L;
+
+        // Member 객체 생성
+        member = Member.builder()
+                .email("test@example.com")
+                .password("password")
+                .role(Role.ROLE_USER)
+                .nickname("TestUser")
+                .provider("google")
+                .providerId("google123")
+                .build();
+        // id 필드 값 강제 설정
+        Field idField = member.getClass().getDeclaredField("id");
+        idField.setAccessible(true);
+        idField.set(member, 1L);  // 원하는 id 값 설정
     }
 
     @Test
     void validate_WithAuthorizedAccess_ShouldProceed() throws Throwable {
         // 권한이 있는 경우
-        when(commandService.getUserPermissionType(memberId, baseRequestDto.pageId())).thenReturn(PermissionType.HOST);
+        when(commandService.getUserPermissionType(member.getId(), baseRequestDto.pageId())).thenReturn(PermissionType.HOST);
         when(commandService.canExecute(PermissionType.HOST, CommandType.EDIT)).thenReturn(true);
         when(proceedingJoinPoint.proceed()).thenReturn("Proceed Success");
 
         // 메서드 실행
-        Object result = validationAspect.validate(proceedingJoinPoint, baseRequestDto, memberId);
+        Object result = validationAspect.validate(proceedingJoinPoint, baseRequestDto, member);
 
         // 검증
         assertEquals("Proceed Success", result);
@@ -69,12 +79,12 @@ class ValidationAspectTest {
     @Test
     void validate_WithUnauthorizedAccess_ShouldThrowException() throws Throwable {
         // 권한이 없는 경우
-        when(commandService.getUserPermissionType(memberId, baseRequestDto.pageId())).thenReturn(PermissionType.VIEWER);
+        when(commandService.getUserPermissionType(member.getId(), baseRequestDto.pageId())).thenReturn(PermissionType.VIEWER);
         when(commandService.canExecute(PermissionType.VIEWER, CommandType.EDIT)).thenReturn(false);
 
         // 예외가 발생하는지 검증
         ValidationException exception = assertThrows(ValidationException.class, () -> {
-            validationAspect.validate(proceedingJoinPoint, baseRequestDto, memberId);
+            validationAspect.validate(proceedingJoinPoint, baseRequestDto, member);
         });
 
         assertEquals(ValidationErrorCode.UNAUTHORIZED_ACCESS, exception.getValidationErrorCode());
@@ -82,10 +92,4 @@ class ValidationAspectTest {
         // 타겟 메서드가 호출되지 않는지 확인
         verify(proceedingJoinPoint, never()).proceed();
     }
-
-
-
-
-
-
 }
