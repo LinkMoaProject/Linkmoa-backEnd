@@ -25,7 +25,7 @@ public class DirectoryService {
 
     private final PageRepository pageRepository;
 
-/*    @Transactional
+   /* @Transactional
     @ValidationApplied
     public ApiDirectoryResponseSpec<Long> createDirectory(DirectoryCreateRequestDto directoryCreateRequestDto,Long memberId){
 
