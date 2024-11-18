@@ -1,13 +1,12 @@
-package com.linkmoa.source.global.error.dto;
+package com.linkmoa.source.global.spec;
 
 
-import com.linkmoa.source.global.error.code.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class ResponseError {
+public class ApiResponseErrorSpec {
 
     private HttpStatus httpStatusCode;
     private String errorMessage;
@@ -15,7 +14,7 @@ public class ResponseError {
 
 
     @Builder
-    public ResponseError(HttpStatus httpStatusCode,String errorMessage) {
+    public ApiResponseErrorSpec(HttpStatus httpStatusCode, String errorMessage) {
         this.httpStatusCode = httpStatusCode;
         this.errorMessage = errorMessage;
         this.status="FAIL";

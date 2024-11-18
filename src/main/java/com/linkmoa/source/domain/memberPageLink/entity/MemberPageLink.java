@@ -41,6 +41,13 @@ public class MemberPageLink extends BaseEntity {
     private PermissionType permissionType;
 
 
+    @Builder
+    public MemberPageLink(Member member,Page page,PermissionType permissionType){
+        this.permissionType=permissionType;
+        setMember(member);
+        setPage(page);
+
+    }
 
     public void setMember(Member member){
         this.member=member;

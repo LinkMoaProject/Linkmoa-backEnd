@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Size;
 
 public record DirectoryCreateRequestDto(
         @NotNull @Size(max=20) String directoryName,
-        Long parentDirectoryId
+        Long parentDirectoryId,
+        Long pageId,
+        String directoryDescription
 ) {
 }

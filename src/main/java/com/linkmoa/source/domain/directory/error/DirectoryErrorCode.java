@@ -1,8 +1,7 @@
 package com.linkmoa.source.domain.directory.error;
 
-import com.linkmoa.source.global.error.code.ErrorCode;
+import com.linkmoa.source.global.error.code.spec.ErrorCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter
