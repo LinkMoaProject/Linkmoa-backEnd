@@ -1,7 +1,9 @@
 package com.linkmoa.source.global.aop.aspect;
 
+import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.member.constant.Role;
 import com.linkmoa.source.domain.member.entity.Member;
+import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.global.command.constant.CommandType;
 import com.linkmoa.source.global.command.service.CommandService;
@@ -30,13 +32,16 @@ class ValidationAspectTest {
     private CommandService commandService;
 
     @Mock
+    private MemberService memberService;
+
+    @Mock
     private ProceedingJoinPoint proceedingJoinPoint;
 
     @InjectMocks
     private ValidationAspect validationAspect;
 
     private BaseRequestDto baseRequestDto;
-    private Member member;
+    private PrincipalDetails principalDetails;
 
     @BeforeEach
     void setUp() throws NoSuchFieldException, IllegalAccessException {
@@ -47,7 +52,7 @@ class ValidationAspectTest {
         );
 
         // Member 객체 생성
-        member = Member.builder()
+        Member member = Member.builder()
                 .email("test@example.com")
                 .password("password")
                 .role(Role.ROLE_USER)
@@ -55,21 +60,28 @@ class ValidationAspectTest {
                 .provider("google")
                 .providerId("google123")
                 .build();
-        // id 필드 값 강제 설정
+
+        // Member의 id 필드 값 강제 설정
         Field idField = member.getClass().getDeclaredField("id");
         idField.setAccessible(true);
-        idField.set(member, 1L);  // 원하는 id 값 설정
+        idField.set(member, 1L);
+
+        // PrincipalDetails 생성
+        principalDetails = new PrincipalDetails(member);
+
+        // memberService의 동작 설정
+        when(memberService.findMemberByEmail("test@example.com")).thenReturn(member);
     }
 
     @Test
     void validate_WithAuthorizedAccess_ShouldProceed() throws Throwable {
         // 권한이 있는 경우
-        when(commandService.getUserPermissionType(member.getId(), baseRequestDto.pageId())).thenReturn(PermissionType.HOST);
+        when(commandService.getUserPermissionType(principalDetails.getId(), baseRequestDto.pageId())).thenReturn(PermissionType.HOST);
         when(commandService.canExecute(PermissionType.HOST, CommandType.EDIT)).thenReturn(true);
         when(proceedingJoinPoint.proceed()).thenReturn("Proceed Success");
 
         // 메서드 실행
-        Object result = validationAspect.validate(proceedingJoinPoint, baseRequestDto, member);
+        Object result = validationAspect.validate(proceedingJoinPoint, baseRequestDto, principalDetails);
 
         // 검증
         assertEquals("Proceed Success", result);
@@ -79,12 +91,12 @@ class ValidationAspectTest {
     @Test
     void validate_WithUnauthorizedAccess_ShouldThrowException() throws Throwable {
         // 권한이 없는 경우
-        when(commandService.getUserPermissionType(member.getId(), baseRequestDto.pageId())).thenReturn(PermissionType.VIEWER);
+        when(commandService.getUserPermissionType(principalDetails.getId(), baseRequestDto.pageId())).thenReturn(PermissionType.VIEWER);
         when(commandService.canExecute(PermissionType.VIEWER, CommandType.EDIT)).thenReturn(false);
 
         // 예외가 발생하는지 검증
         ValidationException exception = assertThrows(ValidationException.class, () -> {
-            validationAspect.validate(proceedingJoinPoint, baseRequestDto, member);
+            validationAspect.validate(proceedingJoinPoint, baseRequestDto, principalDetails);
         });
 
         assertEquals(ValidationErrorCode.UNAUTHORIZED_ACCESS, exception.getValidationErrorCode());

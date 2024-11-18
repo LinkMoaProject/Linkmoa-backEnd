@@ -1,8 +1,10 @@
 package com.linkmoa.source.global.aop.aspect;
 
 
+import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.member.repository.MemberRepository;
+import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.global.command.constant.CommandType;
 import com.linkmoa.source.global.command.service.CommandService;
@@ -26,14 +28,15 @@ public class ValidationAspect {
 
 
     private final CommandService commandService;
-
+    private final MemberService memberService;
 
     @Pointcut("@annotation(com.linkmoa.source.global.aop.annotation.ValidationApplied)")
     public void validationPointCut(){}
 
 
-    @Around("validationPointCut() && args(baseRequestDto,member)")
-    public Object validate(ProceedingJoinPoint joinPoint,final BaseRequestDto baseRequestDto,final Member member) throws Throwable {
+    @Around("validationPointCut() && args(baseRequestDto,principalDetails)")
+    public Object validate(ProceedingJoinPoint joinPoint,final BaseRequestDto baseRequestDto,final PrincipalDetails principalDetails) throws Throwable {
+        Member member = memberService.findMemberByEmail(principalDetails.getEmail());
 
         Long pageId = baseRequestDto.pageId();
         CommandType commandType = baseRequestDto.commandType();

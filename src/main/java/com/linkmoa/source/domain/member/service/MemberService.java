@@ -18,7 +18,6 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-
     public Member saveOrUpdate(Member member){
         Optional<Member> optionalMember = memberRepository.findByEmail(member.getEmail());
 
