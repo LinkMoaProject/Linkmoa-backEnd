@@ -38,10 +38,9 @@ public class ValidationAspect {
      * @return
      * @throws Throwable
      */
-    @Around("validationPointCut() && args(baseRequestDto)")
-    public Object validate(ProceedingJoinPoint joinPoint,final BaseRequestDto baseRequestDto) throws Throwable {
+    @Around("validationPointCut() && args(baseRequestDto,memberId)")
+    public Object validate(ProceedingJoinPoint joinPoint,final BaseRequestDto baseRequestDto,final Long memberId) throws Throwable {
 
-        Long memberId = baseRequestDto.memberId();
         Long pageId = baseRequestDto.pageId();
         CommandType commandType = baseRequestDto.commandType();
 
