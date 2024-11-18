@@ -39,31 +39,29 @@ class ValidationAspectTest {
     private ValidationAspect validationAspect;
 
     private BaseRequestDto baseRequestDto;
+    private Long memberId;
 
     @BeforeEach
     void setUp() {
         //given
         baseRequestDto = new BaseRequestDto(
-                1L,           // memberId
                 1L,           // pageId
                 CommandType.EDIT  // commandType
         );
+       memberId = 1L;
     }
 
     @Test
     void validate_WithAuthorizedAccess_ShouldProceed() throws Throwable {
-
         // 권한이 있는 경우
-        // when
-        when(commandService.getUserPermissionType(1L, 1L)).thenReturn(PermissionType.HOST);
+        when(commandService.getUserPermissionType(memberId, baseRequestDto.pageId())).thenReturn(PermissionType.HOST);
         when(commandService.canExecute(PermissionType.HOST, CommandType.EDIT)).thenReturn(true);
         when(proceedingJoinPoint.proceed()).thenReturn("Proceed Success");
 
         // 메서드 실행
-        Object result = validationAspect.validate(proceedingJoinPoint, baseRequestDto);
+        Object result = validationAspect.validate(proceedingJoinPoint, baseRequestDto, memberId);
 
-        // 검즘
-        // than
+        // 검증
         assertEquals("Proceed Success", result);
         verify(proceedingJoinPoint, times(1)).proceed();
     }
@@ -71,18 +69,18 @@ class ValidationAspectTest {
     @Test
     void validate_WithUnauthorizedAccess_ShouldThrowException() throws Throwable {
         // 권한이 없는 경우
-        when(commandService.getUserPermissionType(1L, 1L)).thenReturn(PermissionType.VIEWER);
+        when(commandService.getUserPermissionType(memberId, baseRequestDto.pageId())).thenReturn(PermissionType.VIEWER);
         when(commandService.canExecute(PermissionType.VIEWER, CommandType.EDIT)).thenReturn(false);
 
         // 예외가 발생하는지 검증
         ValidationException exception = assertThrows(ValidationException.class, () -> {
-            validationAspect.validate(proceedingJoinPoint, baseRequestDto);
+            validationAspect.validate(proceedingJoinPoint, baseRequestDto, memberId);
         });
 
         assertEquals(ValidationErrorCode.UNAUTHORIZED_ACCESS, exception.getValidationErrorCode());
 
         // 타겟 메서드가 호출되지 않는지 확인
-       verify(proceedingJoinPoint, never()).proceed();
+        verify(proceedingJoinPoint, never()).proceed();
     }
 
 
