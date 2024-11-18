@@ -12,6 +12,7 @@ import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.member.service.MemberService;
+import com.linkmoa.source.domain.page.repository.PageRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,15 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class DirectoryService {
 
+    private final PageRepository pageRepository;
+
+ /*   @Transactional
+    public ApiDirectoryResponseSpec<Long> createDirectory(DirectoryCreateRequestDto directoryCreateRequestDto){
+        //pageRepository.findById()
+
+        return
+    }
+*/
 
     /*
     @Transactional

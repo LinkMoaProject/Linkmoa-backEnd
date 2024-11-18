@@ -1,25 +1,5 @@
 package com.linkmoa.source.domain.site.controller.spec;
 
-import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.site.dto.request.SiteCreateRequestDto;
-import com.linkmoa.source.domain.site.dto.request.SiteUpdateRequestDto;
-import com.linkmoa.source.domain.site.dto.response.ApiSiteResponse;
-import com.linkmoa.source.domain.site.dto.response.SiteGetResponseDto;
-import com.linkmoa.source.domain.site.error.SiteErrorCode;
-import com.linkmoa.source.global.error.dto.ResponseError;
-import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.NotBlank;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
 public interface SiteApiSpecification {
 
 /*

@@ -1,6 +1,6 @@
 package com.linkmoa.source.global.swagger;
 
-import com.linkmoa.source.global.error.code.ErrorCode;
+import com.linkmoa.source.global.error.code.spec.ErrorCode;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
