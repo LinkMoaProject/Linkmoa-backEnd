@@ -61,14 +61,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             //JWT 토큰을 파싱해서 member 정보를 가져옴
             String email = jwtService.getEmail(accessToken);
             member = memberService.findMemberByEmail(email);
-
         }
 
-
         PrincipalDetails principalDetails = new PrincipalDetails(member);
-
         Authentication authToken = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
-
         // 최종적으로 SecurityContextHolder에 유저의 세션을 등록시킴.
         SecurityContextHolder.getContext().setAuthentication(authToken);
 

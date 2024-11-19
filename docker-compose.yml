@@ -20,7 +20,7 @@ services:
 #        target: ${STORAGE_PATH}         # 컨테이너 내부의 저장 경로 1
 
   database:
-    image: mysql:latest
+    image: mysql:8.0
     container_name: linkmoa-database
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}  # MySQL 루트 비밀번호

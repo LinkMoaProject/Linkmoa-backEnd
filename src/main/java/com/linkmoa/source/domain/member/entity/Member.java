@@ -8,7 +8,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,9 +41,7 @@ public class Member extends BaseEntity {
     @Column(name="provider_id")
     private String providerId;
 
-    @OneToMany(
-            mappedBy = "member"
-    )
+    @OneToMany(mappedBy = "member")
     private List<MemberPageLink> memberPageLinks =new ArrayList<>();
 
 
@@ -71,7 +68,4 @@ public class Member extends BaseEntity {
             this.role = member.getRole();
         }
     }
-
-
-
 }
