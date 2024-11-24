@@ -30,6 +30,7 @@ public class JwtService {
 
 
     //@Value("${spring.jwt.secret}")
+    //private String secret;
     private String secret="jwt_seceret=eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcxMTM2MDk1MywiaWF0IjoxNzExMzYwOTUzfQ.DZzz_c2IrVkUDrhK1rRLiHRZTCMG7fav1Nz7tZZ4RU0";
     private final Long ACCESS_TOKEN_EXPIRATION = 1000L * 60 * 60;
     private final Long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 14L;

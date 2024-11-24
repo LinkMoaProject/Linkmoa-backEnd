@@ -26,7 +26,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class ValidationAspect {
 
-
     private final CommandService commandService;
     private final MemberService memberService;
 

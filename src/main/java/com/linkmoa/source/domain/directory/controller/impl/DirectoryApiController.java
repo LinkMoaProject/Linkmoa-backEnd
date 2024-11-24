@@ -13,6 +13,7 @@ import com.linkmoa.source.domain.notify.entity.DirectorySendRequest;
 import com.linkmoa.source.domain.notify.service.DirectorySendRequestService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,10 +24,29 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/directory")
+@Slf4j
 public class DirectoryApiController implements DirectoryApiSpecification {
 
     private final DirectoryService directoryService;
     private final DirectorySendRequestService directorySendRequestService;
+
+
+    @PostMapping()
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiDirectoryResponseSpec<Long>> createDirectory(
+            @RequestBody @Validated DirectoryCreateRequestDto directoryCreateRequestDto,
+            @AuthenticationPrincipal PrincipalDetails principalDetails){
+
+        log.info("Received DirectoryCreateRequestDto: {}", directoryCreateRequestDto);
+        log.info("Authenticated PrincipalDetails: {}", principalDetails);
+
+
+        ApiDirectoryResponseSpec<Long> createDirectroyResponse = directoryService.createDirectory(directoryCreateRequestDto,principalDetails);
+        log.info("Response from service: {}", createDirectroyResponse);
+                return ResponseEntity.ok().body(createDirectroyResponse);
+    }
+
+
 
   /*  @PostMapping
     @PreAuthorize("isAuthenticated()")

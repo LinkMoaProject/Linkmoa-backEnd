@@ -12,6 +12,9 @@ import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.member.service.MemberService;
+import com.linkmoa.source.domain.page.entity.Page;
+import com.linkmoa.source.domain.page.error.PageErrorCode;
+import com.linkmoa.source.domain.page.exception.PageException;
 import com.linkmoa.source.domain.page.repository.PageRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import lombok.AllArgsConstructor;
@@ -19,19 +22,46 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class DirectoryService {
 
     private final PageRepository pageRepository;
+    private final MemberService memberService;
+    private final DirectoryRepository directoryRepository;
 
-   /* @Transactional
+
+    @Transactional
     @ValidationApplied
-    public ApiDirectoryResponseSpec<Long> createDirectory(DirectoryCreateRequestDto directoryCreateRequestDto,Long memberId){
+    public ApiDirectoryResponseSpec<Long> createDirectory(DirectoryCreateRequestDto directoryCreateRequestDto,PrincipalDetails principalDetails){
+
+        Page page =pageRepository.findById(directoryCreateRequestDto.baseRequestDto().pageId())
+                .orElseThrow(()-> new PageException(PageErrorCode.PAGE_NOT_FOUND));
 
 
-        return
-    }*/
+        Directory parentDirectory = directoryCreateRequestDto.parentDirectoryId() == null
+                ? null
+                : directoryRepository.findById(directoryCreateRequestDto.parentDirectoryId())
+                .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+
+
+        Directory newDirectory = Directory.builder()
+                .directoryName(directoryCreateRequestDto.directoryName())
+                .directoryDescription(directoryCreateRequestDto.directoryDescription())
+                .page(page)
+                .parentDirectory(parentDirectory)
+                .build();
+
+        directoryRepository.save(newDirectory);
+
+        return ApiDirectoryResponseSpec.<Long>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("Directory 생성에 성공했습니다.")
+                .data(newDirectory.getId())
+                .build();
+    }
 
 
     /*
