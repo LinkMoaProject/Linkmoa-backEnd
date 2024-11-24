@@ -5,7 +5,6 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequestDto;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequestDto;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryUpdateResponseDto;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
@@ -61,6 +60,24 @@ public class DirectoryService {
                 .successMessage("Directory 생성에 성공했습니다.")
                 .data(newDirectory.getId())
                 .build();
+    }
+
+    @Transactional
+    public ApiDirectoryResponseSpec<Long> updateDirectory(DirectoryUpdateRequestDto directoryUpdateRequestDto,PrincipalDetails principalDetails){
+
+        Directory updateDirectory = directoryRepository.findById(directoryUpdateRequestDto.directoryId())
+                .orElseThrow(()->new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+
+
+        updateDirectory.updateDirectoryNameAndDescription(directoryUpdateRequestDto.direcotryName(),directoryUpdateRequestDto.directoryDescription());
+
+
+        return ApiDirectoryResponseSpec.<Long>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("Directory 수정에 성공했습니다.")
+                .data(updateDirectory.getId())
+                .build();
+
     }
 
 

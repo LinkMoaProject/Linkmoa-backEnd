@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 public record DirectoryUpdateRequestDto(
         BaseRequestDto baseRequestDto,
         @NotNull @Size(max=20) String direcotryName,
+        String directoryDescription,
         Long directoryId
 
 ) {
