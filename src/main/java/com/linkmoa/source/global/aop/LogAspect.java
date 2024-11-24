@@ -1,4 +1,4 @@
-package com.linkmoa.source.global.aop.aspect;
+package com.linkmoa.source.global.aop;
 
 
 import jakarta.servlet.http.HttpServletRequest;

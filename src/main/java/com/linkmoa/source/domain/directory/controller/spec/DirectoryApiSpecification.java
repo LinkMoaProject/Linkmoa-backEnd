@@ -3,7 +3,8 @@ package com.linkmoa.source.domain.directory.controller.spec;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequestDto;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequestDto;
-import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
+import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponse;
+import com.linkmoa.source.domain.directory.dto.response.DirectoryUpdateResponseDto;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,12 +19,12 @@ import org.springframework.web.bind.annotation.*;
 public interface DirectoryApiSpecification {
 
 
-   /* @Tag(name = "Post",description = "디렉토리 관련 API")
+    @Tag(name = "Post",description = "디렉토리 관련 API")
     @Operation(summary = "디렉토리 생성",description = "디렉토리를 생성합니다.")
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<Long>> saveDirectory(
+    public ResponseEntity<ApiDirectoryResponse<Long>> saveDirectory(
             @RequestBody @Validated DirectoryCreateRequestDto directoryCreateRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
@@ -33,7 +34,7 @@ public interface DirectoryApiSpecification {
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @DeleteMapping("/{directoryId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<Long>> deleteDirecotry(
+    public ResponseEntity<ApiDirectoryResponse<Long>> deleteDirecotry(
             @PathVariable("directoryId") @NotBlank Long directoryId,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
@@ -44,8 +45,8 @@ public interface DirectoryApiSpecification {
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PutMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryUpdateResponseDto>> updatedirecotry(
+    public ResponseEntity<ApiDirectoryResponse<DirectoryUpdateResponseDto>> updatedirecotry(
             @RequestBody DirectoryUpdateRequestDto directoryUpdateRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
-    );*/
+    );
 }

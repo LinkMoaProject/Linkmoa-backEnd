@@ -12,26 +12,23 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-@EnableRedisRepositories(enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP,basePackages = {"com.linkmoa.source.auth.jwt.refresh"})
+@EnableRedisRepositories(enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP,basePackages = {"com.linkmoa.source.auth.jwt.refresh.repository"})
 @Slf4j
 public class RedisConfig {
     //Redis는 TTL이 만료되는 시점에 보조 인덱스(@Indexed)는 삭제하지 않음.
     //Redis의 Key Space Notifications 기능을 활용하면, TTL이 만료되는 시점에 이벤트를 감지하고, 보조인덱스를 삭제할 수 있음
 
 
-    @Value("${spring.data.redis.host}")
-    private String host;
+    @Value("${spring.jwt.redis.host}")
+    private String host ;
 
-    @Value("${spring.data.redis.port}")
-    private int port;
+    @Value("${spring.jwt.redis.port}")
+    private int port ;
 
-    @Value("${spring.data.redis.password}")
-    private String password;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory(){
         LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(host, port);
-        lettuceConnectionFactory.setPassword(password);
         return lettuceConnectionFactory;
     }
 
