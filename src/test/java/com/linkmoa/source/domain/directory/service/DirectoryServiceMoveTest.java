@@ -1,7 +1,7 @@
 package com.linkmoa.source.domain.directory.service;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.directory.dto.request.DirectoryDeleteRequestDto;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryMoveRequestDto;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
@@ -29,9 +29,10 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+
 @ExtendWith(MockitoExtension.class)
 @Slf4j
-class DirectoryServiceDeleteTest {
+class DirectoryServiceMoveTest {
 
     @Mock
     private MemberService memberService;
@@ -70,44 +71,54 @@ class DirectoryServiceDeleteTest {
     }
 
     @Test
-    @DisplayName("directory 삭제")
-    void testDirectoryDelete_Success() throws NoSuchFieldException, IllegalAccessException{
-
-        DirectoryDeleteRequestDto requestDto= new DirectoryDeleteRequestDto(
+    @DisplayName("같은 부모를 가진 다른 디렉토리로 위치 이동( 드래그 앤 드롭 )")
+    void testDirectoryMove_success(){
+        DirectoryMoveRequestDto requestDto= new DirectoryMoveRequestDto(
                 new BaseRequestDto(1L, CommandType.EDIT),
-                1L);
+                2L,
+                3L
+        );
+        Page page = createPage(requestDto.baseRequestDto().pageId(), "page title", "page description", PageType.PERSONAL);
 
-        Page page = Page.builder()
-                .pageTitle("Sample Page")
-                .pageDescription("Sample Description")
-                .pageType(PageType.PERSONAL)
-                .build();
-
-        Directory directory = createDirectory(1L, page);
+        Directory sourceDirectory = createDirectory(requestDto.sourceDirectoryId(), page, "source Directory", "source Directory");
+        Directory targetDirectory = createDirectory(requestDto.targetDirectoryId(), page, "target direcotry", "taget directory ");
 
         // Mock 설정
-        when(directoryRepository.findById(1L)).thenReturn(Optional.of(directory));
+        when(directoryRepository.findById(2L)).thenReturn(Optional.of(sourceDirectory));
+        when(directoryRepository.findById(3L)).thenReturn(Optional.of(targetDirectory));
 
         // when
-        ApiDirectoryResponseSpec<Long> response = directoryService.deleteDirectory(requestDto, principalDetails);
+        ApiDirectoryResponseSpec<Long> response = directoryService.moveDirectory(requestDto, principalDetails);
 
-        // Then
+        // then
         assertNotNull(response);
+        assertEquals(2L, response.getData());
+        assertEquals(targetDirectory, sourceDirectory.getParentDirectory()); // 소스 디렉토리의 부모가 타겟 디렉토리로 변경되었는지 확인
         assertEquals(HttpStatus.OK, response.getHttpStatusCode());
-        assertEquals(1L, response.getData());
-        assertEquals("Directory 삭제에 성공했습니다.", response.getSuccessMessage());
+        assertEquals("Directory 위치 이동에 성공했습니다.", response.getSuccessMessage());
 
-        // Verify
-        verify(directoryRepository, times(1)).findById(1L);
-        verify(directoryRepository, times(1)).delete(directory);
+        verify(directoryRepository, times(1)).findById(2L); // 소스 디렉토리 조회
+        verify(directoryRepository, times(1)).findById(3L); // 타겟 디렉토리 조회
 
     }
 
-    private Directory createDirectory(Long id,Page page){
+    private Page createPage(Long id,String pageTitle,String pageDescription,PageType pageType){
+
+        Page page = Page.builder()
+                .pageTitle(pageTitle)
+                .pageDescription(pageDescription)
+                .pageType(pageType)
+                .build();
+        ReflectionTestUtils.setField(page,"id",id);
+
+        return page;
+
+    }
+    private Directory createDirectory(Long id, Page page,String directoryName,String directoryDescripton){
 
         Directory directory = Directory.builder()
-                .directoryName("디렉토리 이름 수정 전")
-                .directoryDescription("디렉토리 설명 수정 전")
+                .directoryName(directoryName)
+                .directoryDescription(directoryDescripton)
                 .page(page)
                 .parentDirectory(null)
                 .build();
@@ -116,6 +127,7 @@ class DirectoryServiceDeleteTest {
 
         return directory;
     }
+
 
 
 

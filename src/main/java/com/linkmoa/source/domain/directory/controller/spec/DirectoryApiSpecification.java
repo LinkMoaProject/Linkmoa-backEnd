@@ -2,6 +2,8 @@ package com.linkmoa.source.domain.directory.controller.spec;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequestDto;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryDeleteRequestDto;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryMoveRequestDto;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequestDto;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
@@ -18,34 +20,44 @@ import org.springframework.web.bind.annotation.*;
 public interface DirectoryApiSpecification {
 
 
-   /* @Tag(name = "Post",description = "디렉토리 관련 API")
-    @Operation(summary = "디렉토리 생성",description = "디렉토리를 생성합니다.")
+    @Tag(name = "Post", description = "디렉토리 관련 API")
+    @Operation(summary = "디렉토리 생성", description = "디렉토리를 생성합니다.")
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<Long>> saveDirectory(
+    public ResponseEntity<ApiDirectoryResponseSpec<Long>> createDirectory(
             @RequestBody @Validated DirectoryCreateRequestDto directoryCreateRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
-    @Tag(name = "Delete",description = "디렉토리 관련 API")
-    @Operation(summary = "디렉토리 삭제",description = "디렉토리를 삭제합니다.")
+    @Tag(name = "Delete", description = "디렉토리 관련 API")
+    @Operation(summary = "디렉토리 삭제", description = "디렉토리를 삭제합니다.")
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
-    @DeleteMapping("/{directoryId}")
+    @DeleteMapping()
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<Long>> deleteDirecotry(
-            @PathVariable("directoryId") @NotBlank Long directoryId,
+    public ResponseEntity<ApiDirectoryResponseSpec<Long>> deleteDirectory(
+            @RequestBody @Validated DirectoryDeleteRequestDto directoryDeleteRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
 
-    @Tag(name = "Put",description = "디렉토리 관련 API")
-    @Operation(summary = "디렉토리 수정",description = "디렉토리를 수정(이름,부모 디렉토리)합니다.")
+    @Tag(name = "Put", description = "디렉토리 관련 API")
+    @Operation(summary = "디렉토리 수정", description = "디렉토리를 수정(이름,설명)합니다.")
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PutMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryUpdateResponseDto>> updatedirecotry(
+    public ResponseEntity<ApiDirectoryResponseSpec<Long>> updateDirectory(
             @RequestBody DirectoryUpdateRequestDto directoryUpdateRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
-    );*/
+    );
+
+    @Tag(name = "Post", description = "디렉토리 관련 API")
+    @Operation(summary = "디렉토리 이동", description = "같은 부모 디렉토리를 가진 디렉토리를 다른 디렉토리로 이동(드래그 앤 스탑)")
+    @ApiErrorCodeExamples(DirectoryErrorCode.class)
+    @PutMapping("/move")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiDirectoryResponseSpec<Long>> moveDirectory(
+            @RequestBody@Validated DirectoryMoveRequestDto directoryMoveRequestDto,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
 }

@@ -12,8 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@WebMvcTest(DirectoryApiController.class)
-@MockBean(JpaMetamodelMappingContext.class)
+
 @Slf4j
 class DirectoryApiControllerTest {
 
