@@ -4,7 +4,6 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequestDto;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequestDto;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryUpdateResponseDto;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
 import io.swagger.v3.oas.annotations.Operation;

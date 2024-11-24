@@ -85,8 +85,9 @@ public class Directory extends BaseEntity {
         child.setParentDirectory(this);
     }
 
-    public void updateDirectoryName(String directoryName){
+    public void updateDirectoryNameAndDescription(String directoryName,String directoryDescription){
         this.directoryName=directoryName;
+        this.directoryDescription=directoryDescription;
     }
 
 

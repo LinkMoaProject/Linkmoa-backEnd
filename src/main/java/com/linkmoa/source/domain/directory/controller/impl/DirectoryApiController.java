@@ -6,7 +6,6 @@ import com.linkmoa.source.domain.directory.controller.spec.DirectoryApiSpecifica
 import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequestDto;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequestDto;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryUpdateResponseDto;
 import com.linkmoa.source.domain.directory.service.DirectoryService;
 import com.linkmoa.source.domain.notify.dto.request.DirectorySendRequestDto;
 import com.linkmoa.source.domain.notify.entity.DirectorySendRequest;
@@ -35,15 +34,20 @@ public class DirectoryApiController implements DirectoryApiSpecification {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> createDirectory(
             @RequestBody @Validated DirectoryCreateRequestDto directoryCreateRequestDto,
-            @AuthenticationPrincipal PrincipalDetails principalDetails){
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        log.info("Received DirectoryCreateRequestDto: {}", directoryCreateRequestDto);
-        log.info("Authenticated PrincipalDetails: {}", principalDetails);
+        ApiDirectoryResponseSpec<Long> createDirectroyResponse = directoryService.createDirectory(directoryCreateRequestDto, principalDetails);
+        return ResponseEntity.ok().body(createDirectroyResponse);
+    }
 
-
-        ApiDirectoryResponseSpec<Long> createDirectroyResponse = directoryService.createDirectory(directoryCreateRequestDto,principalDetails);
-        log.info("Response from service: {}", createDirectroyResponse);
-                return ResponseEntity.ok().body(createDirectroyResponse);
+    @PutMapping
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiDirectoryResponseSpec<Long>> updateDirectory(
+            @RequestBody @Validated DirectoryUpdateRequestDto directoryUpdateRequestDto,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        ApiDirectoryResponseSpec<Long> updateDirectoryResponse = directoryService.updateDirectory(directoryUpdateRequestDto, principalDetails);
+        return ResponseEntity.ok().body(updateDirectoryResponse);
     }
 
 
@@ -101,7 +105,6 @@ public class DirectoryApiController implements DirectoryApiSpecification {
                 .build();
         return ResponseEntity.ok().body(response);
     }*/
-
 
 
 }
