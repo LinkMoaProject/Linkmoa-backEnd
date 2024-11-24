@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class SiteApiController implements SiteApiSpecification {
 
     private final SiteService siteService;
+/*
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
@@ -70,6 +71,7 @@ public class SiteApiController implements SiteApiSpecification {
 
         return ResponseEntity.ok().body(siteGetResponseDtoApiSiteResponse);
     }
+*/
 
 
 /*    @GetMapping("/{directoryId}")

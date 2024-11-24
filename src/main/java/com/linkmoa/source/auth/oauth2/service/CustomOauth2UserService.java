@@ -4,7 +4,7 @@ import com.linkmoa.source.auth.oauth2.entity.GoogleUserDetails;
 import com.linkmoa.source.auth.oauth2.entity.OAuth2UserInfo;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.member.entity.Member;
-import com.linkmoa.source.domain.member.entity.Role;
+import com.linkmoa.source.domain.member.constant.Role;
 import com.linkmoa.source.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +24,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
+
         log.info("CustomOauth2UserService getAttributes : {}",oAuth2User.getAttributes());
        String provider = userRequest.getClientRegistration().getRegistrationId();
 

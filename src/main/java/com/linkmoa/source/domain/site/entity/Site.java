@@ -34,15 +34,10 @@ public class Site extends BaseEntity {
     private Directory directory;
 
 
-    @Column(name="member_id")
-    private Long memberId;
-
-
     @Builder
-    public Site(String siteName,String siteUrl,Long memberId){
+    public Site(String siteName,String siteUrl){
         this.siteName=siteName;
         this.siteUrl=siteUrl;
-        this.memberId=memberId;
     }
 
     public void setDirectory(Directory directory){

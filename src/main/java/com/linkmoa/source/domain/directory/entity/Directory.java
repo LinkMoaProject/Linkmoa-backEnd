@@ -2,6 +2,7 @@ package com.linkmoa.source.domain.directory.entity;
 
 
 import com.linkmoa.source.domain.member.entity.Member;
+import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.site.entity.Site;
 import com.linkmoa.source.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -24,6 +25,9 @@ public class Directory extends BaseEntity {
 
     @Column(name="directory_name")
     private String directoryName;
+
+    @Column(name="directory_description")
+    private String directoryDescription;
 
     @ManyToOne(
             fetch = FetchType.LAZY,
@@ -49,27 +53,31 @@ public class Directory extends BaseEntity {
     )
     private List<Site> sites =new ArrayList<>();
 
+
     @ManyToOne(
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL
     )
-    @JoinColumn(name="member_id")
-    private Member member;
+    @JoinColumn(name="page_id")
+    private Page page;
 
 
     @Builder
-    public Directory(String directoryName,Member member){
+    public Directory(String directoryName,Directory parentDirectory,Page page,String directoryDescription){
         this.directoryName=directoryName;
-        setMember(member);
+        this.parentDirectory=parentDirectory;
+        this.page=page;
+        this.directoryDescription=directoryDescription;
     }
 
-    public void setMember(Member member){
-        this.member=member;
-        member.getDirectory().add(this);
-    }
 
     public void setParentDirectory(Directory parentDirectory){
         this.parentDirectory=parentDirectory;
+    }
+
+    public void setPage(Page page){
+        this.page = page;
+        page.getDirectories().add(this);
     }
 
     public void addChildDirectory(Directory child){
@@ -77,8 +85,9 @@ public class Directory extends BaseEntity {
         child.setParentDirectory(this);
     }
 
-    public void updateDirectoryName(String directoryName){
+    public void updateDirectoryNameAndDescription(String directoryName,String directoryDescription){
         this.directoryName=directoryName;
+        this.directoryDescription=directoryDescription;
     }
 
 
