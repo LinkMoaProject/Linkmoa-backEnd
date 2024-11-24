@@ -4,6 +4,8 @@ package com.linkmoa.source.domain.directory.controller.impl;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.controller.spec.DirectoryApiSpecification;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequestDto;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryDeleteRequestDto;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryMoveRequestDto;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequestDto;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.directory.service.DirectoryService;
@@ -22,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/directory")
+@RequestMapping("/api/directories")
 @Slf4j
 public class DirectoryApiController implements DirectoryApiSpecification {
 
@@ -48,6 +50,29 @@ public class DirectoryApiController implements DirectoryApiSpecification {
     ) {
         ApiDirectoryResponseSpec<Long> updateDirectoryResponse = directoryService.updateDirectory(directoryUpdateRequestDto, principalDetails);
         return ResponseEntity.ok().body(updateDirectoryResponse);
+    }
+
+    @DeleteMapping
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiDirectoryResponseSpec<Long>> deleteDirectory(
+            @RequestBody @Validated DirectoryDeleteRequestDto directoryDeleteRequestDto,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        ApiDirectoryResponseSpec<Long> deleteDirectoryResponse = directoryService.deleteDirectory(directoryDeleteRequestDto, principalDetails);
+
+        return ResponseEntity.ok().body(deleteDirectoryResponse);
+    }
+
+    @PutMapping("/move")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiDirectoryResponseSpec<Long>> moveDirectory(
+        @RequestBody@Validated DirectoryMoveRequestDto directoryMoveRequestDto,
+        @AuthenticationPrincipal PrincipalDetails principalDetails
+    ){
+        ApiDirectoryResponseSpec<Long> moveDirectoryResponse = directoryService.moveDirectory(directoryMoveRequestDto, principalDetails);
+
+        return ResponseEntity.ok().body(moveDirectoryResponse);
+
     }
 
 

@@ -4,6 +4,7 @@ package com.linkmoa.source.domain.directory.service;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequestDto;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryDeleteRequestDto;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryMoveRequestDto;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequestDto;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.directory.entity.Directory;
@@ -18,6 +19,7 @@ import com.linkmoa.source.domain.page.exception.PageException;
 import com.linkmoa.source.domain.page.repository.PageRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class DirectoryService {
 
     private final PageRepository pageRepository;
@@ -80,14 +83,9 @@ public class DirectoryService {
                 .build();
 
     }
-
-
-
-
-
-
     @Transactional
-    public ApiDirectoryResponseSpec<Long> deleteDirectory(DirectoryDeleteRequestDto directoryDeleteRequestDto, PrincipalDetails principalDetails){
+    public ApiDirectoryResponseSpec<Long> deleteDirectory(DirectoryDeleteRequestDto directoryDeleteRequestDto,
+                                                          PrincipalDetails principalDetails){
 
         Directory deleteDirectory = directoryRepository.findById(directoryDeleteRequestDto.directoryId())
                 .orElseThrow(()-> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
@@ -97,8 +95,27 @@ public class DirectoryService {
 
         return ApiDirectoryResponseSpec.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successMessage("Directory 삭제에 성공 했습니다.")
+                .successMessage("Directory 삭제에 성공했습니다.")
                 .data(deleteDirectory.getId())
+                .build();
+    }
+
+    @Transactional
+    public ApiDirectoryResponseSpec<Long> moveDirectory(DirectoryMoveRequestDto directoryMoveRequestDto,
+                                                        PrincipalDetails principalDetails){
+
+        Directory sourceDirectory = directoryRepository.findById(directoryMoveRequestDto.sourceDirectoryId())
+                .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+
+        Directory targetDirectory = directoryRepository.findById(directoryMoveRequestDto.targetDirectoryId())
+                .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+
+        sourceDirectory.setParentDirectory(targetDirectory);
+
+        return ApiDirectoryResponseSpec.<Long>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("Directory 위치 이동에 성공했습니다.")
+                .data(sourceDirectory.getId())
                 .build();
     }
 
