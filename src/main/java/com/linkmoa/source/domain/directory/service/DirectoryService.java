@@ -3,6 +3,7 @@ package com.linkmoa.source.domain.directory.service;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequestDto;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryDeleteRequestDto;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequestDto;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.directory.entity.Directory;
@@ -81,36 +82,29 @@ public class DirectoryService {
     }
 
 
-    /*
+
+
+
+
     @Transactional
-    public ApiDirectoryResponseSpec<Long> saveDirectory(DirectoryCreateRequestDto directoryCreateRequestDto, PrincipalDetails principalDetails){
-        Member member = memberService.findMemberByEmail(principalDetails.getEmail());
+    public ApiDirectoryResponseSpec<Long> deleteDirectory(DirectoryDeleteRequestDto directoryDeleteRequestDto, PrincipalDetails principalDetails){
 
-        Directory newDirectory =Directory.builder()
-                .directoryName(directoryCreateRequestDto.directoryName())
-                .member(member)
-                .build();
+        Directory deleteDirectory = directoryRepository.findById(directoryDeleteRequestDto.directoryId())
+                .orElseThrow(()-> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-        if(directoryCreateRequestDto.parentDirectoryId()!=null){
-            Directory parentDirectory = directoryRepository.findById(directoryCreateRequestDto.parentDirectoryId())
-                    .orElseThrow(()->new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-            parentDirectory.addChildDirectory(newDirectory);
-
-            directoryRepository.save(newDirectory);
-            directoryRepository.save(parentDirectory);
-        }
-        else{
-            directoryRepository.save(newDirectory);
-        }
+        directoryRepository.delete(deleteDirectory);
 
         return ApiDirectoryResponseSpec.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successMessage("Directory 생성에 성공했습니다.")
-                .data(newDirectory.getId())
+                .successMessage("Directory 삭제에 성공 했습니다.")
+                .data(deleteDirectory.getId())
                 .build();
-
     }
+
+
+    /*
+
 
     *//** 삭제, 조회 그리고 수정은 direcotry 데이터의
      *  memberId와 principal의 정보를 이용해서 데이터에 관한 올바른 접근 권한이 있는지 확인 해야됨
