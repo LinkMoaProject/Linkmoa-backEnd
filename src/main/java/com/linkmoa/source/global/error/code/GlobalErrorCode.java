@@ -1,16 +1,17 @@
-package com.linkmoa.source.global.error.code.impl;
+package com.linkmoa.source.global.error.code;
 
 
-import com.linkmoa.source.global.error.code.spec.ErrorCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public enum ValidationErrorCode implements ErrorCode {
+public enum GlobalErrorCode implements ErrorCode {
 
-    UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN, "해당 명령에 대한 권한이 없습니다.");
+    UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
 
-    ValidationErrorCode(HttpStatus httpStatus, String errorMessage) {
+
+
+    GlobalErrorCode(HttpStatus httpStatus, String errorMessage) {
         this.httpStatus = httpStatus;
         this.errorMessage = errorMessage;
     }

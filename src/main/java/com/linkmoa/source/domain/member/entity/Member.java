@@ -1,7 +1,6 @@
 package com.linkmoa.source.domain.member.entity;
 
-import com.linkmoa.source.domain.member.constant.Role;
-import com.linkmoa.source.domain.memberPageLink.entity.MemberPageLink;
+import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -35,17 +34,16 @@ public class Member extends BaseEntity {
     private String nickname;
 
     // provider : google이 들어감
-    @Column(name="provider")
     private String provider;
 
     // providerId : 구굴 로그인 한 유저의 고유 ID가 들어감
-    @Column(name="provider_id")
     private String providerId;
 
     @OneToMany(
             mappedBy = "member"
     )
-    private List<MemberPageLink> memberPageLinks =new ArrayList<>();
+    @Column(name="directory_id")
+    private List<Directory> directory = new ArrayList<>();
 
 
     @Builder

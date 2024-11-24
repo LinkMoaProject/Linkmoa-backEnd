@@ -21,19 +21,16 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url : ${DB_URL}
-    #url : jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}?autoReconnect=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-    username: ${DB_USERNAME}
+    url: jdbc:mysql://localhost:3306/linkmoa?autoReconnect=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    #url : ${DB_URL}
+    username: root
     password: ${DB_PASSWORD}
 
   jwt:
     secret: ${JWT_SECRET}
-
-  data:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
-      password: ${REDIS_PASSWORD}
 
 
   servlet:

@@ -1,9 +1,9 @@
 package com.linkmoa.source.global.config;
 
 
-import com.linkmoa.source.global.spec.ApiResponseErrorSpec;
+import com.linkmoa.source.global.error.dto.ResponseError;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
-import com.linkmoa.source.global.error.code.spec.ErrorCode;
+import com.linkmoa.source.global.error.code.ErrorCode;
 import com.linkmoa.source.global.swagger.ExampleHolder;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.examples.Example;
@@ -101,13 +101,13 @@ public class SwaggerConfig {
         ErrorCode errorCode = (ErrorCode) errorCodeEnum;
 
         // ResponseError 객체 생성
-        ApiResponseErrorSpec apiResponseErrorSpec = ApiResponseErrorSpec.builder()
+        ResponseError responseError = ResponseError.builder()
                 .httpStatusCode(errorCode.getHttpStatus())
                 .errorMessage(errorCode.getErrorMessage())
                 .build();
 
        Example example =new Example();
-       example.setValue(apiResponseErrorSpec);
+       example.setValue(responseError);
 
        return example;
 

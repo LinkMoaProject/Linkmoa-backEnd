@@ -1,6 +1,6 @@
 package com.linkmoa.source.auth.jwt.error;
 
-import com.linkmoa.source.global.error.code.spec.ErrorCode;
+import com.linkmoa.source.global.error.code.ErrorCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
