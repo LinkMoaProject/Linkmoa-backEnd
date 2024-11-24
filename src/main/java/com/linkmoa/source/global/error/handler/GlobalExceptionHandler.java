@@ -2,6 +2,7 @@ package com.linkmoa.source.global.error.handler;
 
 
 import com.linkmoa.source.domain.member.exception.MemberException;
+import com.linkmoa.source.domain.page.exception.PageException;
 import com.linkmoa.source.domain.site.exception.SiteException;
 import com.linkmoa.source.global.exception.ValidationException;
 import com.linkmoa.source.global.spec.ApiResponseErrorSpec;
@@ -39,6 +40,16 @@ public class GlobalExceptionHandler {
                 .errorMessage(e.getValidationErrorCode().getErrorMessage())
                 .build();
         return ResponseEntity.status(e.getValidationErrorCode().getHttpStatus()).body(validationExceptionResponse);
+    }
+
+
+    @ExceptionHandler(PageException.class)
+    public ResponseEntity<?> handleValidationException(PageException e){
+        ApiResponseErrorSpec pageExceptionResponse = ApiResponseErrorSpec.builder()
+                .httpStatusCode(e.getPageErrorCode().getHttpStatus())
+                .errorMessage(e.getPageErrorCode().getErrorMessage())
+                .build();
+        return ResponseEntity.status(e.getPageErrorCode().getHttpStatus()).body(pageExceptionResponse);
     }
 
 
