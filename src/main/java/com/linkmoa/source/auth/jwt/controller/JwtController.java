@@ -30,11 +30,6 @@ public class JwtController {
             @CookieValue(value = "refresh_token") String refreshToken,
             HttpServletResponse response) throws IOException {
 
-        //log.info("token : {}", refreshToken);
-        //String accessToken = jwtService.createAccessToken("bag083278@gmail.com","ROLE_USER");
-        //log.info("access token = {}",accessToken);
-
-        // AOP로 사용자의 회원가입 유무룰 확인할 듯 ?
 
         String accessToken = null;
 

@@ -66,7 +66,6 @@ class DirectoryServiceCreateTest {
         // PrincipalDetails 생성
         principalDetails = new PrincipalDetails(member);
 
-
         // lenient를 사용하여 memberService의 동작 설정을 무시 가능하도록 설정
         lenient().when(memberService.findMemberByEmail("test@example.com")).thenReturn(member);
     }

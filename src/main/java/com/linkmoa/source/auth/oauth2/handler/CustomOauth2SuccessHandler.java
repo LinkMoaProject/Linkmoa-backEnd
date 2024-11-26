@@ -45,6 +45,7 @@ public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String role = authorities.iterator().next().getAuthority();
 
 
+
         String refreshToken =  jwtService.createRefreshToken();
         refreshTokenService.saveRefreshToken(email,refreshToken);
         response.addCookie(jwtService.createCookie("refresh_token", refreshToken));
