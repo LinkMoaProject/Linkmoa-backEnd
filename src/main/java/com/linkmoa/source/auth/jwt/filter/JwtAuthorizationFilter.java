@@ -78,6 +78,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
      * 유저를 authentication 해주는 메소드
      */
     private static void authentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, Member member) throws IOException, ServletException {
+
         // PrincipalDetails에 유저 정보를 담기
         PrincipalDetails principalDetails = new PrincipalDetails(member);
 

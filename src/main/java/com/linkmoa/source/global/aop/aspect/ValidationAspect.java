@@ -19,6 +19,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
+
 
 @Component
 @Slf4j
@@ -33,9 +35,28 @@ public class ValidationAspect {
     public void validationPointCut(){}
 
 
-    @Around("validationPointCut() && args(baseRequestDto,principalDetails)")
-    public Object validate(ProceedingJoinPoint joinPoint,final BaseRequestDto baseRequestDto,final PrincipalDetails principalDetails) throws Throwable {
+    @Around("validationPointCut() && args(requestDto,principalDetails)")
+    public Object validate(ProceedingJoinPoint joinPoint,final Object requestDto,final PrincipalDetails principalDetails) throws Throwable {
+
+
+        BaseRequestDto baseRequestDto = null;
+
+        for (Field field : requestDto.getClass().getDeclaredFields()) {
+            if (field.getType().equals(BaseRequestDto.class)) {
+                field.setAccessible(true); // private 필드 접근 허용
+                baseRequestDto = (BaseRequestDto) field.get(requestDto); // BaseRequestDto 필드 추출
+                break;
+            }
+        }
+
+        if (baseRequestDto == null) {
+            throw new IllegalArgumentException("BaseRequestDto is missing in the request DTO.");
+        }
+
         Member member = memberService.findMemberByEmail(principalDetails.getEmail());
+        log.info("AOP ValidationAspect triggered with BaseRequestDto: {}", baseRequestDto);
+        log.info("PrincipalDetails: {}", principalDetails.getEmail());
+
 
         Long pageId = baseRequestDto.pageId();
         CommandType commandType = baseRequestDto.commandType();

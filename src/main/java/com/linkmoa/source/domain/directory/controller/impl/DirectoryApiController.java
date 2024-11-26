@@ -37,8 +37,9 @@ public class DirectoryApiController implements DirectoryApiSpecification {
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> createDirectory(
             @RequestBody @Validated DirectoryCreateRequestDto directoryCreateRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
-
+        log.info("createDirectory 호출됨1: {}", directoryCreateRequestDto);
         ApiDirectoryResponseSpec<Long> createDirectroyResponse = directoryService.createDirectory(directoryCreateRequestDto, principalDetails);
+        log.info("createDirectory 호출됨2: {}", createDirectroyResponse.getData());
         return ResponseEntity.ok().body(createDirectroyResponse);
     }
 

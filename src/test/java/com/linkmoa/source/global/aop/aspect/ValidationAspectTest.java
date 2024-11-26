@@ -41,8 +41,22 @@ class ValidationAspectTest {
     private ValidationAspect validationAspect;
 
     private BaseRequestDto baseRequestDto;
+
+    private  TestRequestDto requestDto;
     private PrincipalDetails principalDetails;
 
+    // 새 DTO 정의 (BaseRequestDto를 포함)
+    class TestRequestDto {
+        private BaseRequestDto baseRequestDto;
+
+        public TestRequestDto(BaseRequestDto baseRequestDto) {
+            this.baseRequestDto = baseRequestDto;
+        }
+
+        public BaseRequestDto getBaseRequestDto() {
+            return baseRequestDto;
+        }
+    }
     @BeforeEach
     void setUp() throws NoSuchFieldException, IllegalAccessException {
         // BaseRequestDto 생성
@@ -50,6 +64,10 @@ class ValidationAspectTest {
                 1L,           // pageId
                 CommandType.EDIT  // commandType
         );
+
+        // TestRequestDto 생성
+        requestDto = new TestRequestDto(baseRequestDto);
+
 
         // Member 객체 생성
         Member member = Member.builder()
@@ -75,13 +93,15 @@ class ValidationAspectTest {
 
     @Test
     void validate_WithAuthorizedAccess_ShouldProceed() throws Throwable {
+
+
         // 권한이 있는 경우
         when(commandService.getUserPermissionType(principalDetails.getId(), baseRequestDto.pageId())).thenReturn(PermissionType.HOST);
         when(commandService.canExecute(PermissionType.HOST, CommandType.EDIT)).thenReturn(true);
         when(proceedingJoinPoint.proceed()).thenReturn("Proceed Success");
 
         // 메서드 실행
-        Object result = validationAspect.validate(proceedingJoinPoint, baseRequestDto, principalDetails);
+        Object result = validationAspect.validate(proceedingJoinPoint, requestDto, principalDetails);
 
         // 검증
         assertEquals("Proceed Success", result);

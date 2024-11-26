@@ -38,21 +38,21 @@ public class DirectoryService {
 
     @Transactional
     @ValidationApplied
-    public ApiDirectoryResponseSpec<Long> createDirectory(DirectoryCreateRequestDto directoryCreateRequestDto,PrincipalDetails principalDetails){
+    public ApiDirectoryResponseSpec<Long> createDirectory(DirectoryCreateRequestDto requestDto,PrincipalDetails principalDetails){
 
-        Page page =pageRepository.findById(directoryCreateRequestDto.baseRequestDto().pageId())
+        Page page =pageRepository.findById(requestDto.baseRequestDto().pageId())
                 .orElseThrow(()-> new PageException(PageErrorCode.PAGE_NOT_FOUND));
 
 
-        Directory parentDirectory = directoryCreateRequestDto.parentDirectoryId() == null
+        Directory parentDirectory = requestDto.parentDirectoryId() == null
                 ? null
-                : directoryRepository.findById(directoryCreateRequestDto.parentDirectoryId())
+                : directoryRepository.findById(requestDto.parentDirectoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
 
         Directory newDirectory = Directory.builder()
-                .directoryName(directoryCreateRequestDto.directoryName())
-                .directoryDescription(directoryCreateRequestDto.directoryDescription())
+                .directoryName(requestDto.directoryName())
+                .directoryDescription(requestDto.directoryDescription())
                 .page(page)
                 .parentDirectory(parentDirectory)
                 .build();
@@ -67,13 +67,14 @@ public class DirectoryService {
     }
 
     @Transactional
-    public ApiDirectoryResponseSpec<Long> updateDirectory(DirectoryUpdateRequestDto directoryUpdateRequestDto,PrincipalDetails principalDetails){
+    @ValidationApplied
+    public ApiDirectoryResponseSpec<Long> updateDirectory(DirectoryUpdateRequestDto requestDto,PrincipalDetails principalDetails){
 
-        Directory updateDirectory = directoryRepository.findById(directoryUpdateRequestDto.directoryId())
+        Directory updateDirectory = directoryRepository.findById(requestDto.directoryId())
                 .orElseThrow(()->new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
 
-        updateDirectory.updateDirectoryNameAndDescription(directoryUpdateRequestDto.direcotryName(),directoryUpdateRequestDto.directoryDescription());
+        updateDirectory.updateDirectoryNameAndDescription(requestDto.direcotryName(),requestDto.directoryDescription());
 
 
         return ApiDirectoryResponseSpec.<Long>builder()
@@ -84,10 +85,11 @@ public class DirectoryService {
 
     }
     @Transactional
-    public ApiDirectoryResponseSpec<Long> deleteDirectory(DirectoryDeleteRequestDto directoryDeleteRequestDto,
+    @ValidationApplied
+    public ApiDirectoryResponseSpec<Long> deleteDirectory(DirectoryDeleteRequestDto requestDto,
                                                           PrincipalDetails principalDetails){
 
-        Directory deleteDirectory = directoryRepository.findById(directoryDeleteRequestDto.directoryId())
+        Directory deleteDirectory = directoryRepository.findById(requestDto.directoryId())
                 .orElseThrow(()-> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
 
@@ -101,13 +103,14 @@ public class DirectoryService {
     }
 
     @Transactional
-    public ApiDirectoryResponseSpec<Long> moveDirectory(DirectoryMoveRequestDto directoryMoveRequestDto,
+    @ValidationApplied
+    public ApiDirectoryResponseSpec<Long> moveDirectory(DirectoryMoveRequestDto requestDto,
                                                         PrincipalDetails principalDetails){
 
-        Directory sourceDirectory = directoryRepository.findById(directoryMoveRequestDto.sourceDirectoryId())
+        Directory sourceDirectory = directoryRepository.findById(requestDto.sourceDirectoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-        Directory targetDirectory = directoryRepository.findById(directoryMoveRequestDto.targetDirectoryId())
+        Directory targetDirectory = directoryRepository.findById(requestDto.targetDirectoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
         sourceDirectory.setParentDirectory(targetDirectory);

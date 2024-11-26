@@ -31,6 +31,8 @@ public class WithMockUserSecurityContextFactory implements WithSecurityContextFa
     private String secret="jwt_seceret=eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcxMTM2MDk1MywiaWF0IjoxNzExMzYwOTUzfQ.DZzz_c2IrVkUDrhK1rRLiHRZTCMG7fav1Nz7tZZ4RU0";
     private final Long ACCESS_TOKEN_EXPIRATION = 1000L * 60 * 60;
 
+    private static String accessToken; // 토큰 저장용
+
     @Override
     public SecurityContext createSecurityContext(WithMockCustomUser mockUser) {
 
@@ -50,12 +52,9 @@ public class WithMockUserSecurityContextFactory implements WithSecurityContextFa
 
         // PrincipalDetails 생성
         PrincipalDetails principalDetails = new PrincipalDetails(member);
-        log.info("WithMockUserSecurityContextFactory principalDetails : {} ", principalDetails.getEmail());
-        log.info("WithMockUserSecurityContextFactory member.getRole.name : {} ",member.getRole().name());
 
         // JWT 생성
-        String accessToken = createAccessToken(member.getEmail(), member.getRole().name());
-        log.info("WithMockUserSecurityContextFactory : {} ", accessToken);
+        accessToken = createAccessToken(member.getEmail(), member.getRole().name());
 
         // Authentication 객체 생성 및 SecurityContext에 설정
         Authentication authToken = new UsernamePasswordAuthenticationToken(
@@ -85,5 +84,9 @@ public class WithMockUserSecurityContextFactory implements WithSecurityContextFa
                 .expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
                 .signWith(secretKey)
                 .compact();
+    }
+
+    public static String getAccessToken(){
+        return accessToken;
     }
 }
