@@ -26,7 +26,7 @@ public class NotifyAspect {
 
 
     @Async
-    @AfterReturning(pointcut = "annotationPointcut()",returning = "result")
+    @AfterReturning(pointcut = "notifyPointcut()",returning = "result")
     public void createAndSendNotification(JoinPoint joinPoint,Object result) throws Throwable{
         NotifyInfo notifyInfo = (NotifyInfo) result;
         String message = NotifyMessage.getMessageByType(notifyInfo.getNotificationType());

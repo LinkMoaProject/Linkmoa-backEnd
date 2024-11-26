@@ -13,9 +13,11 @@ import jakarta.servlet.http.Cookie;
 @Service
 @RequiredArgsConstructor
 public class JwtService {
+
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtClaimExtractor jwtClaimExtractor;
     private final JwtCookieManager jwtCookieManager;
+
 
     public String createAccessToken(String email, String role) {
         return jwtTokenProvider.createAccessToken(email, role);

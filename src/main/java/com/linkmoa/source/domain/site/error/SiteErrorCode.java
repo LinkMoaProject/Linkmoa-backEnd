@@ -1,6 +1,6 @@
 package com.linkmoa.source.domain.site.error;
 
-import com.linkmoa.source.global.error.code.ErrorCode;
+import com.linkmoa.source.global.error.code.spec.ErrorCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 

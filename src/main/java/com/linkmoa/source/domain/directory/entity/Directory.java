@@ -26,6 +26,9 @@ public class Directory extends BaseEntity {
     @Column(name="directory_name")
     private String directoryName;
 
+    @Column(name="directory_description")
+    private String directoryDescription;
+
     @ManyToOne(
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL
@@ -59,6 +62,14 @@ public class Directory extends BaseEntity {
     private Page page;
 
 
+    @Builder
+    public Directory(String directoryName,Directory parentDirectory,Page page,String directoryDescription){
+        this.directoryName=directoryName;
+        this.parentDirectory=parentDirectory;
+        this.page=page;
+        this.directoryDescription=directoryDescription;
+    }
+
 
     public void setParentDirectory(Directory parentDirectory){
         this.parentDirectory=parentDirectory;
@@ -74,8 +85,9 @@ public class Directory extends BaseEntity {
         child.setParentDirectory(this);
     }
 
-    public void updateDirectoryName(String directoryName){
+    public void updateDirectoryNameAndDescription(String directoryName,String directoryDescription){
         this.directoryName=directoryName;
+        this.directoryDescription=directoryDescription;
     }
 
 
