@@ -1,6 +1,7 @@
 package com.linkmoa.source.auth.jwt.filter;
 
 
+import com.linkmoa.source.auth.jwt.provider.JwtTokenProvider;
 import com.linkmoa.source.auth.jwt.service.JwtService;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.member.entity.Member;
@@ -27,6 +28,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final MemberService memberService;
     private final JwtService jwtService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -57,18 +59,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         log.info("jwt doFilterInternal access token : {} ",accessToken);
         Member member = null;
-        if (jwtService.validateToken(accessToken)) {
+        if (jwtTokenProvider.validateToken(accessToken)) {
             //JWT 토큰을 파싱해서 member 정보를 가져옴
             String email = jwtService.getEmail(accessToken);
             member = memberService.findMemberByEmail(email);
-
         }
 
-
         PrincipalDetails principalDetails = new PrincipalDetails(member);
-
         Authentication authToken = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
-
         // 최종적으로 SecurityContextHolder에 유저의 세션을 등록시킴.
         SecurityContextHolder.getContext().setAuthentication(authToken);
 

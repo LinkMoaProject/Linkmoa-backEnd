@@ -1,4 +1,4 @@
-package com.linkmoa.source.auth.jwt.refresh.service;
+package com.linkmoa.source.auth.jwt.service;
 
 
 

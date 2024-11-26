@@ -2,10 +2,7 @@ package com.linkmoa.source.auth.jwt.controller;
 
 
 import com.linkmoa.source.auth.jwt.service.JwtService;
-import com.linkmoa.source.domain.member.entity.Member;
-import com.linkmoa.source.domain.member.repository.MemberRepository;
 import com.linkmoa.source.global.spec.ApiResponseSpec;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +49,11 @@ public class JwtController {
                 .header("Authorization", "Bearer " + accessToken)
                 .body(apiResponseSpec);
     }
+
+
+
+        //log.info("token : {}", refreshToken);
+        //String accessToken = jwtService.createAccessToken("
 
     /*@GetMapping("/reissue")
     public ResponseEntity<ApiResponseSpec> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {

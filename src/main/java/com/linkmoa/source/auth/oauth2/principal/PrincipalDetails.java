@@ -57,6 +57,9 @@ public class PrincipalDetails implements OAuth2User, UserDetails {
 
     @Override
     public String getUsername() {
+        if (member.getEmail() == null) {
+            return new IllegalStateException("member.getEmail() is null").toString();
+        }
         return member.getEmail();
     }
 
