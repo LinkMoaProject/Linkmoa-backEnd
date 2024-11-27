@@ -55,40 +55,24 @@ public class SiteService {
                 .build();
     }
 
-/*
-
     @Transactional
-    public ApiSiteResponse<Long> saveSite(SiteCreateRequestDto siteCreateRequestDto, PrincipalDetails principalDetails){
-        Site newSite =Site.builder()
-                .siteName(siteCreateRequestDto.siteName())
-                .siteUrl(siteCreateRequestDto.siteUrl())
-                .memberId(principalDetails.getId())
-                .build();
+    @ValidationApplied
+    public ApiSiteResponse<Long> updateSite(SiteUpdateRequestDto siteUpdateRequestDto, PrincipalDetails principalDetails) {
 
-        if(siteCreateRequestDto.directoryId()!=null){
-            Directory directory =directoryRepository.findById(siteCreateRequestDto.directoryId())
-                            .orElseThrow(()-> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
-            newSite.setDirectory(directory);
-        }
+        Site updateSite = siteRepository.findById(siteUpdateRequestDto.siteId())
+                .orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
 
-        //추가 검증이 필요한지에 대해 생각해봐야됨
-        siteRepository.save(newSite);
+        updateSite.updateSiteNameAndUrl(siteUpdateRequestDto.siteName(), siteUpdateRequestDto.siteUrl());
 
         return ApiSiteResponse.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successMessage("site 생성 및 저장에 성공하였습니다.")
-                .data(newSite.getId())
+                .successMessage("site 수정(이름,url)에 성공했습니다.")
+                .data(updateSite.getId())
                 .build();
+
     }
 
-    */
-/** 삭제, 조회 그리고 수정은 site 데이터의
-     *  memberId와 principal의 정보를 이용해서 데이터에 관한 올바른 접근 권한이 있는지 확인 해야됨
-     *  1.site의 memberId == principalDetails로 찾은 memberId
-     *  2.일치 => 정상 응답
-     *    불일치 => 에러 응답
-     *  AOP로 추후 구현 예정
-     **//*
+    /*
 
 
     @Transactional

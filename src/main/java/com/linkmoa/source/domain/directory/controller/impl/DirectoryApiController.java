@@ -32,9 +32,6 @@ public class DirectoryApiController implements DirectoryApiSpecification {
     private final DirectoryService directoryService;
     private final DirectorySendRequestService directorySendRequestService;
 
-
-    @PostMapping()
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> createDirectory(
             @RequestBody @Validated DirectoryCreateRequestDto directoryCreateRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -42,8 +39,6 @@ public class DirectoryApiController implements DirectoryApiSpecification {
         return ResponseEntity.ok().body(createDirectroyResponse);
     }
 
-    @PutMapping
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> updateDirectory(
             @RequestBody @Validated DirectoryUpdateRequestDto directoryUpdateRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
@@ -52,8 +47,6 @@ public class DirectoryApiController implements DirectoryApiSpecification {
         return ResponseEntity.ok().body(updateDirectoryResponse);
     }
 
-    @DeleteMapping
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> deleteDirectory(
             @RequestBody @Validated DirectoryDeleteRequestDto directoryDeleteRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
@@ -63,8 +56,6 @@ public class DirectoryApiController implements DirectoryApiSpecification {
         return ResponseEntity.ok().body(deleteDirectoryResponse);
     }
 
-    @PutMapping("/move")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> moveDirectory(
         @RequestBody@Validated DirectoryMoveRequestDto directoryMoveRequestDto,
         @AuthenticationPrincipal PrincipalDetails principalDetails

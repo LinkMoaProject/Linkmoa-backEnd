@@ -24,15 +24,21 @@ public class SiteApiController implements SiteApiSpecification {
 
     private final SiteService siteService;
 
-    @Override
     public ResponseEntity<ApiSiteResponse<Long>> saveSite(
             @RequestBody @Validated SiteCreateRequestDto siteCreateRequestDto,
-            @AuthenticationPrincipal PrincipalDetails principalDetails
-            )
+            @AuthenticationPrincipal PrincipalDetails principalDetails)
     {
         ApiSiteResponse<Long> siteCreateResponse = siteService.createSite(siteCreateRequestDto, principalDetails);
 
         return ResponseEntity.ok().body(siteCreateResponse);
+    }
+
+    public ResponseEntity<ApiSiteResponse<Long>> updateSite(
+            @RequestBody @Validated SiteUpdateRequestDto siteCreateRequestDto,
+            @AuthenticationPrincipal PrincipalDetails principalDetails)
+    {
+        ApiSiteResponse<Long> siteUpdateResponse = siteService.updateSite(siteCreateRequestDto, principalDetails);
+        return ResponseEntity.ok().body(siteUpdateResponse);
     }
 
 /*
