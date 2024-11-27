@@ -41,4 +41,3 @@ out/
 .env.local
 
 local.sh
-dev.sh
