@@ -23,10 +23,10 @@ jobs:
           distribution: 'temurin'
           java-version: 17
       
-      - name: Create .env.test file
+      - name: Create .env.dev file
         run: |
           touch .env.test
-          echo "${{ secrets.ENV }}" >> .env.test
+          echo "${{ secrets.ENV }}" >> .env.dev
 
       - name: Cache Gradle packages
         uses: gradle/actions/setup-gradle@v3
@@ -34,7 +34,7 @@ jobs:
           cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop' }}
 
       - name: Test with Gradle
-        run: ./test.sh
+        run: ./dev.sh
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
