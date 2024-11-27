@@ -29,6 +29,9 @@ jobs:
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop' }}
 
-      - name: Test with Gradle
+      - name: Add excutable permission to dev.sh
+        run: chmod +x ./dev.sh
+
+      - name: Run dev.sh
         run: ./dev.sh
 
