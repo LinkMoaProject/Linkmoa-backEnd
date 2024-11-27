@@ -74,7 +74,7 @@ public class DirectoryService {
                 .orElseThrow(()->new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
 
-        updateDirectory.updateDirectoryNameAndDescription(requestDto.direcotryName(),requestDto.directoryDescription());
+        updateDirectory.updateDirectoryNameAndDescription(requestDto.directoryName(),requestDto.directoryDescription());
 
 
         return ApiDirectoryResponseSpec.<Long>builder()

@@ -19,10 +19,22 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/site")
+@RequestMapping("/api/sites")
 public class SiteApiController implements SiteApiSpecification {
 
     private final SiteService siteService;
+
+    @Override
+    public ResponseEntity<ApiSiteResponse<Long>> saveSite(
+            @RequestBody @Validated SiteCreateRequestDto siteCreateRequestDto,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+            )
+    {
+        ApiSiteResponse<Long> siteCreateResponse = siteService.createSite(siteCreateRequestDto, principalDetails);
+
+        return ResponseEntity.ok().body(siteCreateResponse);
+    }
+
 /*
 
     @PostMapping

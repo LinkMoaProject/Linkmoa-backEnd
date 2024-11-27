@@ -35,9 +35,10 @@ public class Site extends BaseEntity {
 
 
     @Builder
-    public Site(String siteName,String siteUrl){
+    public Site(String siteName,String siteUrl,Directory directory){
         this.siteName=siteName;
         this.siteUrl=siteUrl;
+        setDirectory(directory);
     }
 
     public void setDirectory(Directory directory){
