@@ -1,6 +1,7 @@
 package com.linkmoa.source.domain.site.service;
 
 
+import com.google.protobuf.Api;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
@@ -15,12 +16,14 @@ import com.linkmoa.source.domain.site.entity.Site;
 import com.linkmoa.source.domain.site.error.SiteErrorCode;
 import com.linkmoa.source.domain.site.exception.SiteException;
 import com.linkmoa.source.domain.site.repository.SiteRepository;
+import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,8 +33,27 @@ public class SiteService {
     private final SiteRepository siteRepository;
     private final DirectoryRepository directoryRepository;
 
+    @Transactional
+    @ValidationApplied
+    public ApiSiteResponse<Long> createSite(SiteCreateRequestDto requestDto, PrincipalDetails principalDetails) {
 
-    private final String successCode="200";
+        Directory directory = directoryRepository.findById(requestDto.directoryId())
+                .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+
+        Site newSite = Site.builder()
+                .siteName(requestDto.siteName())
+                .siteUrl(requestDto.siteUrl())
+                .directory(directory)
+                .build();
+
+        siteRepository.save(newSite);
+
+        return ApiSiteResponse.<Long>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("site 생성에 성공했습니다.")
+                .data(newSite.getId())
+                .build();
+    }
 
 /*
 

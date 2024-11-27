@@ -54,9 +54,6 @@ public class ValidationAspect {
         }
 
         Member member = memberService.findMemberByEmail(principalDetails.getEmail());
-        log.info("AOP ValidationAspect triggered with BaseRequestDto: {}", baseRequestDto);
-        log.info("PrincipalDetails: {}", principalDetails.getEmail());
-
 
         Long pageId = baseRequestDto.pageId();
         CommandType commandType = baseRequestDto.commandType();
@@ -67,6 +64,11 @@ public class ValidationAspect {
             log.info("해당 요청에 관한 권한이 없습니다. userPermissionType={} , commandType={} ",userPermissionType,commandType);
             throw new ValidationException(ValidationErrorCode.UNAUTHORIZED_ACCESS);
         }
+
+        log.info("AOP ValidationAspect triggered with BaseRequestDto: {}", baseRequestDto);
+        log.info("member email : {}", principalDetails.getEmail());
+        log.info("userPermissionType={} , commandType={} ",userPermissionType,commandType);
+
 
         // 타겟 메서드 실행
         Object result = joinPoint.proceed();
