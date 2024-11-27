@@ -37,6 +37,8 @@ public class JwtController {
 
             response.setHeader("Authorization", accessToken);
             response.sendRedirect("http://localhost:3000/mainpage");
+
+
         }
 
         ApiResponseSpec apiResponseSpec =new ApiResponseSpec(HttpStatus.OK,"Access Token 발급 성공");

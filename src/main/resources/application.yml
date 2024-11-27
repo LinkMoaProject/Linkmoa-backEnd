@@ -12,7 +12,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
@@ -22,7 +22,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url : ${DB_URL}
-    #url : jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}?autoReconnect=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+   # url : jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}?autoReconnect=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 

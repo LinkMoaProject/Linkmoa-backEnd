@@ -12,6 +12,7 @@ import com.linkmoa.source.domain.directory.service.DirectoryService;
 import com.linkmoa.source.domain.notify.dto.request.DirectorySendRequestDto;
 import com.linkmoa.source.domain.notify.entity.DirectorySendRequest;
 import com.linkmoa.source.domain.notify.service.DirectorySendRequestService;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +38,7 @@ public class DirectoryApiController implements DirectoryApiSpecification {
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> createDirectory(
             @RequestBody @Validated DirectoryCreateRequestDto directoryCreateRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        log.info("createDirectory 호출됨1: {}", directoryCreateRequestDto);
         ApiDirectoryResponseSpec<Long> createDirectroyResponse = directoryService.createDirectory(directoryCreateRequestDto, principalDetails);
-        log.info("createDirectory 호출됨2: {}", createDirectroyResponse.getData());
         return ResponseEntity.ok().body(createDirectroyResponse);
     }
 
