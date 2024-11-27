@@ -8,6 +8,7 @@ import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.site.dto.request.SiteCreateRequestDto;
+import com.linkmoa.source.domain.site.dto.request.SiteDeleteRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteListGetRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteUpdateRequestDto;
 import com.linkmoa.source.domain.site.dto.response.ApiSiteResponse;
@@ -28,21 +29,21 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class SiteService {
 
     private final SiteRepository siteRepository;
     private final DirectoryRepository directoryRepository;
 
-    @Transactional
     @ValidationApplied
-    public ApiSiteResponse<Long> createSite(SiteCreateRequestDto requestDto, PrincipalDetails principalDetails) {
+    public ApiSiteResponse<Long> createSite(SiteCreateRequestDto siteCreateRequestDto, PrincipalDetails principalDetails) {
 
-        Directory directory = directoryRepository.findById(requestDto.directoryId())
+        Directory directory = directoryRepository.findById(siteCreateRequestDto.directoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
         Site newSite = Site.builder()
-                .siteName(requestDto.siteName())
-                .siteUrl(requestDto.siteUrl())
+                .siteName(siteCreateRequestDto.siteName())
+                .siteUrl(siteCreateRequestDto.siteUrl())
                 .directory(directory)
                 .build();
 
@@ -55,7 +56,6 @@ public class SiteService {
                 .build();
     }
 
-    @Transactional
     @ValidationApplied
     public ApiSiteResponse<Long> updateSite(SiteUpdateRequestDto siteUpdateRequestDto, PrincipalDetails principalDetails) {
 
@@ -71,6 +71,12 @@ public class SiteService {
                 .build();
 
     }
+
+
+
+/*    @Transactional
+    @ValidationApplied
+    public ApiSiteResponse<Long> deleteSite(SiteDeleteRequestDto requestDto)*/
 
     /*
 

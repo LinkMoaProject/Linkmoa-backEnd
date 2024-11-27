@@ -35,9 +35,9 @@ public class JwtController {
             String role = jwtService.getRole(refreshToken);
             accessToken = jwtService.createAccessToken(email,role);
 
-            response.setHeader("Authorization", accessToken);
-            response.sendRedirect("http://localhost:3000/mainpage");
-
+            response.setHeader("Authorization", "Bearer " + accessToken);
+            //response.sendRedirect("http://localhost:3000/mainpage");
+            response.sendRedirect("https://linkmoa-front.vercel.app/");
 
         }
 
