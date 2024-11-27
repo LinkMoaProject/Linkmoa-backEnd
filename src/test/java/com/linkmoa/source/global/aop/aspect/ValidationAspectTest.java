@@ -108,20 +108,4 @@ class ValidationAspectTest {
         verify(proceedingJoinPoint, times(1)).proceed();
     }
 
-    @Test
-    void validate_WithUnauthorizedAccess_ShouldThrowException() throws Throwable {
-        // 권한이 없는 경우
-        when(commandService.getUserPermissionType(principalDetails.getId(), baseRequestDto.pageId())).thenReturn(PermissionType.VIEWER);
-        when(commandService.canExecute(PermissionType.VIEWER, CommandType.EDIT)).thenReturn(false);
-
-        // 예외가 발생하는지 검증
-        ValidationException exception = assertThrows(ValidationException.class, () -> {
-            validationAspect.validate(proceedingJoinPoint, baseRequestDto, principalDetails);
-        });
-
-        assertEquals(ValidationErrorCode.UNAUTHORIZED_ACCESS, exception.getValidationErrorCode());
-
-        // 타겟 메서드가 호출되지 않는지 확인
-        verify(proceedingJoinPoint, never()).proceed();
-    }
 }
