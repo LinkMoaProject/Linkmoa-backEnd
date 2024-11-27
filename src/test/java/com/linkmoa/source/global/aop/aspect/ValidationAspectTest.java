@@ -107,6 +107,7 @@ class ValidationAspectTest {
         assertEquals("Proceed Success", result);
         verify(proceedingJoinPoint, times(1)).proceed();
     }
+
     @Test
     void validate_WithUnauthorizedAccess_ShouldThrowException() throws Throwable {
         // 권한이 없는 경우
@@ -123,5 +124,6 @@ class ValidationAspectTest {
         // 타겟 메서드가 호출되지 않는지 확인
         verify(proceedingJoinPoint, never()).proceed();
     }
+
 
 }
