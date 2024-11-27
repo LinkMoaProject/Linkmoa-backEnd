@@ -5,8 +5,7 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  test:
-    environment: test
+  deploy:
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -25,7 +24,7 @@ jobs:
       
       - name: Create .env.dev file
         run: |
-          touch .env.test
+          touch .env.dev
           echo "${{ secrets.ENV }}" >> .env.dev
 
       - name: Cache Gradle packages
