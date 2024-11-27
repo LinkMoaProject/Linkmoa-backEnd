@@ -54,10 +54,7 @@ public class Directory extends BaseEntity {
     private List<Site> sites =new ArrayList<>();
 
 
-    @ManyToOne(
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
-    )
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="page_id")
     private Page page;
 

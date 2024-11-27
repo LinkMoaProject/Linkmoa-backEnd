@@ -56,8 +56,8 @@ public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         // 테스트용으로 추가한 부분
         String accessToken =jwtService.createAccessToken(email,role);
-        response.addCookie(jwtCookieManager.createCookie("access_token", accessToken, 14 * 24 * 60 * 60));
-        response.setHeader("access_token",accessToken);
+        response.addCookie(jwtCookieManager.createCookie("refresh_token", refreshToken, 14 * 24 * 60 * 60));
+        response.setHeader("Authorization","Bearer "+accessToken);
 
         log.info("OAuth2 로그인에 성공 하였습니다. access Token : {}",accessToken);
         log.info("OAuth2 로그인에 성공하였습니다. 이메일 : {}",  oauth2User.getEmail());

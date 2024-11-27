@@ -43,6 +43,7 @@ public class SecurityConfig {
                                 .requestMatchers(new AntPathRequestMatcher("/v3/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/jwt/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/oauth2/**")).permitAll() // OAuth 관련 경로 허용
                                 .anyRequest().authenticated()
                         )
                         .oauth2Login((oauth2) -> oauth2
@@ -58,7 +59,11 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5173"));
+        config.setAllowedOrigins(Arrays.asList(
+                "http://localhost:3000",
+                "http://localhost:5173",
+                "https://linkmoa-front.vercel.app" // 배포된 프론트엔드 도메인 추가
+        ));
         config.setAllowedMethods(Arrays.asList("*"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setExposedHeaders(Collections.singletonList("Authorization"));
