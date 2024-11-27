@@ -79,7 +79,7 @@ public class DirectoryService {
 
         return ApiDirectoryResponseSpec.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successMessage("Directory 수정에 성공했습니다.")
+                .successMessage("Directory 수정(이름,설명)에 성공했습니다.")
                 .data(updateDirectory.getId())
                 .build();
 

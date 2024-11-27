@@ -46,7 +46,7 @@ public class Site extends BaseEntity {
         directory.getSites().add(this);
     }
 
-    public void updateSite(String siteName,String siteUrl){
+    public void updateSiteNameAndUrl(String siteName,String siteUrl){
         this.siteName=siteName;
         this.siteUrl=siteUrl;
     }
