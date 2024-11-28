@@ -41,15 +41,13 @@ public class Directory extends BaseEntity {
     @OneToMany(
             mappedBy = "parentDirectory",
             fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+            cascade = CascadeType.ALL
     )
     private List<Directory> childDirectories = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "directory",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+            cascade = CascadeType.ALL
     )
     private List<Site> sites =new ArrayList<>();
 
@@ -86,6 +84,7 @@ public class Directory extends BaseEntity {
         this.directoryName=directoryName;
         this.directoryDescription=directoryDescription;
     }
+
 
 
 

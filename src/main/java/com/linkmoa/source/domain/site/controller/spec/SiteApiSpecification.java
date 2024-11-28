@@ -1,8 +1,12 @@
 package com.linkmoa.source.domain.site.controller.spec;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryMoveRequestDto;
+import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
+import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.site.dto.request.SiteCreateRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteDeleteRequestDto;
+import com.linkmoa.source.domain.site.dto.request.SiteMoveRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteUpdateRequestDto;
 import com.linkmoa.source.domain.site.dto.response.ApiSiteResponse;
 import com.linkmoa.source.domain.site.error.SiteErrorCode;
@@ -47,6 +51,16 @@ public interface SiteApiSpecification {
     @DeleteMapping()
     ResponseEntity<ApiSiteResponse<Long>> deleteSite(
             @RequestBody @Validated SiteDeleteRequestDto siteDeleteRequestDto,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
+
+    @Tag(name = "Put", description = "사이트 관련 API")
+    @Operation(summary = "사이트 위치 이동", description = "사이트의 위치를 다른 디렉토리로 이동 (드래그 앤 스탑)")
+    @ApiErrorCodeExamples(SiteErrorCode.class)
+    @PutMapping("/move")
+    @PreAuthorize("isAuthenticated()")
+    ResponseEntity<ApiSiteResponse<Long>> moveSite(
+            @RequestBody @Validated SiteMoveRequestDto siteMoveRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 

@@ -7,10 +7,7 @@ import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
-import com.linkmoa.source.domain.site.dto.request.SiteCreateRequestDto;
-import com.linkmoa.source.domain.site.dto.request.SiteDeleteRequestDto;
-import com.linkmoa.source.domain.site.dto.request.SiteListGetRequestDto;
-import com.linkmoa.source.domain.site.dto.request.SiteUpdateRequestDto;
+import com.linkmoa.source.domain.site.dto.request.*;
 import com.linkmoa.source.domain.site.dto.response.ApiSiteResponse;
 import com.linkmoa.source.domain.site.dto.response.SiteGetResponseDto;
 import com.linkmoa.source.domain.site.entity.Site;
@@ -86,6 +83,27 @@ public class SiteService {
                 .successMessage("site 삭제에 성공했습니다.")
                 .data(deleteSite.getId())
                 .build();
+    }
+
+    @ValidationApplied
+    public ApiSiteResponse<Long> moveSite(SiteMoveRequestDto siteMoveRequestDto, PrincipalDetails principalDetails) {
+
+        Site moveSite = siteRepository.findById(siteMoveRequestDto.siteId())
+                .orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
+
+        Directory targetDirectory = directoryRepository.findById(siteMoveRequestDto.targetDirectoryId())
+                .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+
+
+        moveSite.setDirectory(targetDirectory);
+
+        return ApiSiteResponse.<Long>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("site 위치 이동에 성공했습니다.")
+                .data(moveSite.getId())
+                .build();
+
+
     }
 
 

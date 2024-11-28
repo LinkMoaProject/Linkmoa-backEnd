@@ -41,8 +41,12 @@ public class Site extends BaseEntity {
         setDirectory(directory);
     }
 
-    public void setDirectory(Directory directory){
-        this.directory=directory;
+    public void setDirectory(Directory directory) {
+        if (this.directory != null) {
+            this.directory.getSites().remove(this);
+        }
+
+        this.directory = directory;
         directory.getSites().add(this);
     }
 
@@ -50,6 +54,7 @@ public class Site extends BaseEntity {
         this.siteName=siteName;
         this.siteUrl=siteUrl;
     }
+
 
 
 

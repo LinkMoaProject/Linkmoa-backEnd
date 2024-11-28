@@ -51,8 +51,8 @@ public interface DirectoryApiSpecification {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
-    @Tag(name = "Post", description = "디렉토리 관련 API")
-    @Operation(summary = "디렉토리 이동", description = "같은 부모 디렉토리를 가진 디렉토리를 다른 디렉토리로 이동(드래그 앤 스탑)")
+    @Tag(name = "Put", description = "디렉토리 관련 API")
+    @Operation(summary = "디렉토리 위치 이동", description = "같은 부모 디렉토리를 가진 디렉토리를 다른 디렉토리로 이동(드래그 앤 스탑)")
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PutMapping("/move")
     @PreAuthorize("isAuthenticated()")
