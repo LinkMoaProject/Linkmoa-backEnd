@@ -2,9 +2,11 @@ package com.linkmoa.source.domain.site.controller.impl;
 
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.site.controller.spec.SiteApiSpecification;
 import com.linkmoa.source.domain.site.dto.request.SiteCreateRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteDeleteRequestDto;
+import com.linkmoa.source.domain.site.dto.request.SiteMoveRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteUpdateRequestDto;
 import com.linkmoa.source.domain.site.dto.response.ApiSiteResponse;
 import com.linkmoa.source.domain.site.dto.response.SiteGetResponseDto;
@@ -48,6 +50,15 @@ public class SiteApiController implements SiteApiSpecification {
         ApiSiteResponse<Long> siteDeleteResponse = siteService.deleteSite(siteDeleteRequestDto, principalDetails);
 
         return ResponseEntity.ok().body(siteDeleteResponse);
+    }
+
+    public ResponseEntity<ApiSiteResponse<Long>> moveSite(
+            SiteMoveRequestDto siteMoveRequestDto,
+            PrincipalDetails principalDetails) {
+
+        ApiSiteResponse<Long> siteMoveResponse = siteService.moveSite(siteMoveRequestDto, principalDetails);
+
+        return ResponseEntity.ok().body(siteMoveResponse);
     }
 
 
