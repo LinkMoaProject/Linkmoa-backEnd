@@ -32,38 +32,57 @@ public class PageService {
 
     @Transactional
     public ApiPageResponseSpec<Long> createPage(PageCreateRequestDto requestDto, PrincipalDetails principalDetails) {
+        Member hostMember = findHostMember(principalDetails.getEmail());
 
-        Page newPage = Page.builder()
+        Page newPage = createNewPage(requestDto);
+        Directory rootDirectory = createRootDirectory(newPage, hostMember);
+        MemberPageLink memberPageLink = createMemberPageLink(hostMember, newPage);
+
+        saveEntities(newPage, memberPageLink, rootDirectory);
+
+        return ApiPageResponseSpec.<Long>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("Page 생성에 성공했습니다.")
+                .data(newPage.getId())
+                .build();
+    }
+
+    private Member findHostMember(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL));
+    }
+
+    private Page createNewPage(PageCreateRequestDto requestDto) {
+        return Page.builder()
                 .pageType(requestDto.pageType())
                 .pageTitle(requestDto.pageTitle())
                 .pageDescription(requestDto.pageDescription())
                 .build();
+    }
 
-        Member hostMember = memberRepository.findByEmail(principalDetails.getEmail())
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL));
-
-        MemberPageLink memberPageLink = MemberPageLink.builder()
-                .member(hostMember)
-                .page(newPage)
-                .permissionType(PermissionType.HOST)
-                .build();
-
-        Directory rootDirectory = Directory.builder()
-                .directoryName(hostMember.getEmail()+"님의 Root directory name")
-                .directoryDescription(hostMember.getEmail()+"님의 Root directory description")
+    private Directory createRootDirectory(Page page, Member hostMember) {
+        return Directory.builder()
+                .directoryName(hostMember.getEmail() + "님의 Root directory name")
+                .directoryDescription(hostMember.getEmail() + "님의 Root directory description")
                 .parentDirectory(null)
-                .page(newPage)
-                .build();
-
-        pageRepository.save(newPage);
-        memberPageLinkRepository.save(memberPageLink);
-        directoryRepository.save(rootDirectory);
-
-
-        return ApiPageResponseSpec.<Long>builder()
-                .httpStatusCode(HttpStatus.OK)
-                .successMessage("site 생성에 성공했습니다.")
-                .data(newPage.getId())
+                .page(page)
                 .build();
     }
+
+    private MemberPageLink createMemberPageLink(Member hostMember, Page page) {
+        return MemberPageLink.builder()
+                .member(hostMember)
+                .page(page)
+                .permissionType(PermissionType.HOST)
+                .build();
+    }
+
+    @Transactional
+    public void saveEntities(Page page, MemberPageLink memberPageLink, Directory rootDirectory) {
+        pageRepository.save(page);
+        memberPageLinkRepository.save(memberPageLink);
+        directoryRepository.save(rootDirectory);
+    }
+
+
 }
