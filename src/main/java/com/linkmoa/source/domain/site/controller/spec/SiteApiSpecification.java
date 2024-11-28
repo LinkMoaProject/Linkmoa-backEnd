@@ -2,6 +2,7 @@ package com.linkmoa.source.domain.site.controller.spec;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.site.dto.request.SiteCreateRequestDto;
+import com.linkmoa.source.domain.site.dto.request.SiteDeleteRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteUpdateRequestDto;
 import com.linkmoa.source.domain.site.dto.response.ApiSiteResponse;
 import com.linkmoa.source.domain.site.error.SiteErrorCode;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +38,15 @@ public interface SiteApiSpecification {
     @PreAuthorize("isAuthenticated()")
     ResponseEntity<ApiSiteResponse<Long>> updateSite(
             @RequestBody @Validated SiteUpdateRequestDto siteCreateRequestDto,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
+
+    @Tag(name="Delete",description = "사이트 관련 API")
+    @Operation(summary = "사이트 삭제",description = "사이트를 삭제합니다.")
+    @ApiErrorCodeExamples(SiteErrorCode.class)
+    @DeleteMapping()
+    ResponseEntity<ApiSiteResponse<Long>> deleteSite(
+            @RequestBody @Validated SiteDeleteRequestDto siteDeleteRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 

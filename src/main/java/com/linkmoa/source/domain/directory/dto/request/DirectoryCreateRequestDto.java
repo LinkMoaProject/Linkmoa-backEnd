@@ -12,7 +12,7 @@ public record DirectoryCreateRequestDto(
 
         BaseRequestDto baseRequestDto,
         @NotBlank @Size(max=20) String directoryName,
-        Long parentDirectoryId,
+        @NotNull Long parentDirectoryId,
         @Size(max=100) String directoryDescription
 ) {
 }

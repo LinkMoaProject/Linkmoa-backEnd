@@ -51,8 +51,8 @@ public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         refreshTokenService.saveRefreshToken(email,refreshToken);
         response.addCookie(jwtService.createRefreshCookie(refreshToken));
 
-        //response.sendRedirect("http://localhost:3000/reissue");
-        response.sendRedirect("https://linkmoa-front.vercel.app/reissue");
+        response.sendRedirect("http://localhost:3000/reissue");
+        //response.sendRedirect("https://linkmoa-front.vercel.app/reissue");
 
         // 테스트용으로 추가한 부분
         String accessToken =jwtService.createAccessToken(email,role);

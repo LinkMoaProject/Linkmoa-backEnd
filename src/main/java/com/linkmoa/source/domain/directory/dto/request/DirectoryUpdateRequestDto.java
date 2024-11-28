@@ -9,7 +9,7 @@ public record DirectoryUpdateRequestDto(
         BaseRequestDto baseRequestDto,
         @NotNull @Size(max=20) String directoryName,
         String directoryDescription,
-        Long directoryId
+        @NotNull Long directoryId
 
 ) {
 }

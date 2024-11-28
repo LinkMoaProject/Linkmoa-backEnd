@@ -23,13 +23,13 @@ public class CommandService {
         this.memberPageLinkRepository=memberPageLinkRepository;
 
         permissionToCommandsMap.put(PermissionType.ADMIN, Set.of(
-                CommandType.VIEW, CommandType.EDIT, CommandType.DELETE, CommandType.CREATE,
+                CommandType.VIEW, CommandType.EDIT,
                 CommandType.DIRECTORY_TRANSMISSION, CommandType.SHARED_PAGE_INVITATION,
                 CommandType.SHARED_PAGE_DELETION, CommandType.SHARED_PAGE_USER_REMOVAL
         ));
 
         permissionToCommandsMap.put(PermissionType.HOST, Set.of(
-                CommandType.VIEW, CommandType.EDIT, CommandType.CREATE,
+                CommandType.VIEW, CommandType.EDIT,
                 CommandType.DIRECTORY_TRANSMISSION, CommandType.SHARED_PAGE_INVITATION,
                 CommandType.SHARED_PAGE_DELETION, CommandType.SHARED_PAGE_USER_REMOVAL
         ));

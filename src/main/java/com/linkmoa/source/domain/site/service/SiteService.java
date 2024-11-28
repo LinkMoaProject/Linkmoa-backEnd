@@ -72,6 +72,21 @@ public class SiteService {
 
     }
 
+    @ValidationApplied
+    public ApiSiteResponse<Long> deleteSite(SiteDeleteRequestDto siteDeleteRequestDto, PrincipalDetails principalDetails) {
+
+        Site deleteSite = siteRepository.findById(siteDeleteRequestDto.siteId())
+                .orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
+
+        siteRepository.delete(deleteSite);
+
+
+        return ApiSiteResponse.<Long>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("site 삭제에 성공했습니다.")
+                .data(deleteSite.getId())
+                .build();
+    }
 
 
 /*    @Transactional

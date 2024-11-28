@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 public record SiteUpdateRequestDto(
 
         BaseRequestDto baseRequestDto,
-        @NotNull @Size(max=30) String siteName,
+        @NotBlank @Size(max=30) String siteName,
         @NotBlank String siteUrl,
         @NotNull Long siteId
 ) {
