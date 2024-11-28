@@ -2,6 +2,7 @@ package com.linkmoa.source.domain.page.controller.spec;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.page.dto.request.PageCreateRequestDto;
+import com.linkmoa.source.domain.page.dto.request.PageDeleteRequestDto;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -26,5 +28,16 @@ public interface PageApiSpecification {
             @RequestBody @Validated PageCreateRequestDto pageCreateRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
+
+    @Tag(name = "Delete", description = "페이지 관련 API")
+    @Operation(summary = "페이지 삭제", description = "페이지를 삭제합니다.(개인,공유)")
+    @ApiErrorCodeExamples(PageErrorCode.class)
+    @DeleteMapping
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiPageResponseSpec<Long>> deletePage(
+            @RequestBody @Validated PageDeleteRequestDto pageDeleteRequestDto,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
+
 
 }

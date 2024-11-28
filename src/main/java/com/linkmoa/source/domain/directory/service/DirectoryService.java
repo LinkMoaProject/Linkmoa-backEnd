@@ -31,7 +31,6 @@ import java.util.Optional;
 @Slf4j
 public class DirectoryService {
 
-    private final PageRepository pageRepository;
     private final MemberService memberService;
     private final DirectoryRepository directoryRepository;
 
@@ -39,10 +38,6 @@ public class DirectoryService {
     @Transactional
     @ValidationApplied
     public ApiDirectoryResponseSpec<Long> createDirectory(DirectoryCreateRequestDto requestDto,PrincipalDetails principalDetails){
-
-        Page page =pageRepository.findById(requestDto.baseRequestDto().pageId())
-                .orElseThrow(()-> new PageException(PageErrorCode.PAGE_NOT_FOUND));
-
 
         Directory parentDirectory = requestDto.parentDirectoryId() == null
                 ? null
@@ -53,7 +48,6 @@ public class DirectoryService {
         Directory newDirectory = Directory.builder()
                 .directoryName(requestDto.directoryName())
                 .directoryDescription(requestDto.directoryDescription())
-                .page(page)
                 .parentDirectory(parentDirectory)
                 .build();
 

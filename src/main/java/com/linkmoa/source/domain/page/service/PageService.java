@@ -12,9 +12,11 @@ import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.domain.memberPageLink.entity.MemberPageLink;
 import com.linkmoa.source.domain.memberPageLink.repository.MemberPageLinkRepository;
 import com.linkmoa.source.domain.page.dto.request.PageCreateRequestDto;
+import com.linkmoa.source.domain.page.dto.request.PageDeleteRequestDto;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.page.repository.PageRepository;
+import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -32,12 +34,13 @@ public class PageService {
 
     @Transactional
     public ApiPageResponseSpec<Long> createPage(PageCreateRequestDto requestDto, PrincipalDetails principalDetails) {
-        Member hostMember = findHostMember(principalDetails.getEmail());
 
-        Page newPage = createNewPage(requestDto);
-        Directory rootDirectory = createRootDirectory(newPage, hostMember);
+        Member hostMember = memberRepository.findByEmail(principalDetails.getEmail())
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL));
+
+        Directory rootDirectory = createRootDirectory(hostMember);
+        Page newPage = createNewPage(requestDto,rootDirectory);
         MemberPageLink memberPageLink = createMemberPageLink(hostMember, newPage);
-
         saveEntities(newPage, memberPageLink, rootDirectory);
 
         return ApiPageResponseSpec.<Long>builder()
@@ -47,25 +50,20 @@ public class PageService {
                 .build();
     }
 
-    private Member findHostMember(String email) {
-        return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL));
-    }
-
-    private Page createNewPage(PageCreateRequestDto requestDto) {
+    private Page createNewPage(PageCreateRequestDto requestDto,Directory rootDirectory) {
         return Page.builder()
                 .pageType(requestDto.pageType())
                 .pageTitle(requestDto.pageTitle())
                 .pageDescription(requestDto.pageDescription())
+                .rootDirectory(rootDirectory)
                 .build();
     }
 
-    private Directory createRootDirectory(Page page, Member hostMember) {
+    private Directory createRootDirectory(Member hostMember) {
         return Directory.builder()
                 .directoryName(hostMember.getEmail() + "님의 Root directory name")
                 .directoryDescription(hostMember.getEmail() + "님의 Root directory description")
                 .parentDirectory(null)
-                .page(page)
                 .build();
     }
 
@@ -83,6 +81,20 @@ public class PageService {
         memberPageLinkRepository.save(memberPageLink);
         directoryRepository.save(rootDirectory);
     }
+
+
+    @Transactional
+    public ApiPageResponseSpec<Long> deletePage(PageDeleteRequestDto pageDeleteRequestDto, PrincipalDetails principalDetails) {
+        pageRepository.deleteById(pageDeleteRequestDto.baseRequestDto().pageId());
+        return ApiPageResponseSpec.<Long>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("Page 삭제에 성공했습니다.")
+                .data(pageDeleteRequestDto.baseRequestDto().pageId())
+                .build();
+    }
+
+
+
 
 
 }

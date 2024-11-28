@@ -27,8 +27,7 @@ public class Site extends BaseEntity {
     private String siteUrl;
 
     @ManyToOne(
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
+            fetch = FetchType.LAZY
     )
     @JoinColumn(name="directory_id")
     private Directory directory;

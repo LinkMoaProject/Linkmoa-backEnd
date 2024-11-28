@@ -50,7 +50,7 @@ public class ValidationAspect {
         }
 
         if (baseRequestDto == null) {
-            throw new IllegalArgumentException("BaseRequestDto is missing in the request DTO.");
+            throw new ValidationException(ValidationErrorCode.MISSING_BASE_REQUEST_DTO);
         }
 
         Member member = memberService.findMemberByEmail(principalDetails.getEmail());
