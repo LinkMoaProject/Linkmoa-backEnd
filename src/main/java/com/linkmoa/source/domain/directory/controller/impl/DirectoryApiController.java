@@ -33,23 +33,23 @@ public class DirectoryApiController implements DirectoryApiSpecification {
     private final DirectorySendRequestService directorySendRequestService;
 
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> createDirectory(
-            @RequestBody @Validated DirectoryCreateRequestDto directoryCreateRequestDto,
-            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+            DirectoryCreateRequestDto directoryCreateRequestDto,
+            PrincipalDetails principalDetails) {
         ApiDirectoryResponseSpec<Long> createDirectroyResponse = directoryService.createDirectory(directoryCreateRequestDto, principalDetails);
         return ResponseEntity.ok().body(createDirectroyResponse);
     }
 
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> updateDirectory(
-            @RequestBody @Validated DirectoryUpdateRequestDto directoryUpdateRequestDto,
-            @AuthenticationPrincipal PrincipalDetails principalDetails
+            DirectoryUpdateRequestDto directoryUpdateRequestDto,
+            PrincipalDetails principalDetails
     ) {
         ApiDirectoryResponseSpec<Long> updateDirectoryResponse = directoryService.updateDirectory(directoryUpdateRequestDto, principalDetails);
         return ResponseEntity.ok().body(updateDirectoryResponse);
     }
 
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> deleteDirectory(
-            @RequestBody @Validated DirectoryDeleteRequestDto directoryDeleteRequestDto,
-            @AuthenticationPrincipal PrincipalDetails principalDetails
+            DirectoryDeleteRequestDto directoryDeleteRequestDto,
+            PrincipalDetails principalDetails
     ) {
         ApiDirectoryResponseSpec<Long> deleteDirectoryResponse = directoryService.deleteDirectory(directoryDeleteRequestDto, principalDetails);
 
@@ -57,8 +57,8 @@ public class DirectoryApiController implements DirectoryApiSpecification {
     }
 
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> moveDirectory(
-        @RequestBody@Validated DirectoryMoveRequestDto directoryMoveRequestDto,
-        @AuthenticationPrincipal PrincipalDetails principalDetails
+        DirectoryMoveRequestDto directoryMoveRequestDto,
+        PrincipalDetails principalDetails
     ){
         ApiDirectoryResponseSpec<Long> moveDirectoryResponse = directoryService.moveDirectory(directoryMoveRequestDto, principalDetails);
 

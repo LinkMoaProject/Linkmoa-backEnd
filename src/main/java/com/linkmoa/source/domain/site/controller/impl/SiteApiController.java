@@ -4,6 +4,7 @@ package com.linkmoa.source.domain.site.controller.impl;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.site.controller.spec.SiteApiSpecification;
 import com.linkmoa.source.domain.site.dto.request.SiteCreateRequestDto;
+import com.linkmoa.source.domain.site.dto.request.SiteDeleteRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteUpdateRequestDto;
 import com.linkmoa.source.domain.site.dto.response.ApiSiteResponse;
 import com.linkmoa.source.domain.site.dto.response.SiteGetResponseDto;
@@ -25,8 +26,8 @@ public class SiteApiController implements SiteApiSpecification {
     private final SiteService siteService;
 
     public ResponseEntity<ApiSiteResponse<Long>> saveSite(
-            @RequestBody @Validated SiteCreateRequestDto siteCreateRequestDto,
-            @AuthenticationPrincipal PrincipalDetails principalDetails)
+            SiteCreateRequestDto siteCreateRequestDto,
+            PrincipalDetails principalDetails)
     {
         ApiSiteResponse<Long> siteCreateResponse = siteService.createSite(siteCreateRequestDto, principalDetails);
 
@@ -34,12 +35,22 @@ public class SiteApiController implements SiteApiSpecification {
     }
 
     public ResponseEntity<ApiSiteResponse<Long>> updateSite(
-            @RequestBody @Validated SiteUpdateRequestDto siteCreateRequestDto,
-            @AuthenticationPrincipal PrincipalDetails principalDetails)
+            SiteUpdateRequestDto siteCreateRequestDto,
+            PrincipalDetails principalDetails)
     {
         ApiSiteResponse<Long> siteUpdateResponse = siteService.updateSite(siteCreateRequestDto, principalDetails);
         return ResponseEntity.ok().body(siteUpdateResponse);
     }
+
+    public ResponseEntity<ApiSiteResponse<Long>> deleteSite(
+            SiteDeleteRequestDto siteDeleteRequestDto,
+            PrincipalDetails principalDetails) {
+        ApiSiteResponse<Long> siteDeleteResponse = siteService.deleteSite(siteDeleteRequestDto, principalDetails);
+
+        return ResponseEntity.ok().body(siteDeleteResponse);
+    }
+
+
 
 /*
 

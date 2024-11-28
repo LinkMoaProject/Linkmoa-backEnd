@@ -77,7 +77,7 @@ class DirectoryServiceCreateTest {
     public void testCreateDirectory_Success() {
         // given
         DirectoryCreateRequestDto requestDto = new DirectoryCreateRequestDto(
-                new BaseRequestDto(1L, CommandType.CREATE),
+                new BaseRequestDto(1L, CommandType.EDIT),
                 "Test Directory",
                 null,
                 "Test Description"
@@ -126,7 +126,7 @@ class DirectoryServiceCreateTest {
     public void testCreateDirectory_WithParentDirectory() {
         // given
         DirectoryCreateRequestDto requestDto = new DirectoryCreateRequestDto(
-                new BaseRequestDto(1L, CommandType.CREATE),
+                new BaseRequestDto(1L, CommandType.EDIT),
                 "Test Sub Directory",
                 2L,  // Parent directory ID가 있는 경우
                 "Test Sub Description"
