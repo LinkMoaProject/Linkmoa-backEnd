@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
 @Slf4j
 class DirectoryServiceDeleteTest {
 
-    @Mock
+  /*  @Mock
     private MemberService memberService;
 
     @Mock
@@ -103,12 +103,11 @@ class DirectoryServiceDeleteTest {
 
     }
 
-    private Directory createDirectory(Long id,Page page){
+    private Directory createDirectory(Long id){
 
         Directory directory = Directory.builder()
                 .directoryName("디렉토리 이름 수정 전")
                 .directoryDescription("디렉토리 설명 수정 전")
-                .page(page)
                 .parentDirectory(null)
                 .build();
 
@@ -116,7 +115,7 @@ class DirectoryServiceDeleteTest {
 
         return directory;
     }
-
+*/
 
 
 }

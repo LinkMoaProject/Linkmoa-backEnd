@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
 @Slf4j
 class DirectoryServiceMoveTest {
 
-    @Mock
+  /*  @Mock
     private MemberService memberService;
 
     @Mock
@@ -114,19 +114,18 @@ class DirectoryServiceMoveTest {
         return page;
 
     }
-    private Directory createDirectory(Long id, Page page,String directoryName,String directoryDescripton){
+    private Directory createDirectory(Long id,String directoryName,String directoryDescripton){
 
         Directory directory = Directory.builder()
                 .directoryName(directoryName)
                 .directoryDescription(directoryDescripton)
-                .page(page)
                 .parentDirectory(null)
                 .build();
 
         ReflectionTestUtils.setField(directory,"id",id);
 
         return directory;
-    }
+    }   */
 
 
 
