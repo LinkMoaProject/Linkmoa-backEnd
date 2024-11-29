@@ -10,7 +10,6 @@ import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.page.contant.PageType;
 import com.linkmoa.source.domain.page.entity.Page;
-import com.linkmoa.source.global.command.constant.CommandType;
 import com.linkmoa.source.global.dto.request.BaseRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;

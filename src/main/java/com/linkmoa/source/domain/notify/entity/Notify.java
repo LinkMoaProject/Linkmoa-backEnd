@@ -30,11 +30,6 @@ public class Notify extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private NotificationType notificationType;
-/*
-    @ManyToOne
-    @JoinColumn(name="member_id")
-    @OnDelete(action= OnDeleteAction.CASCADE)
-    private Member receiver;*/
 
     @Column(name="receiver_email")
     private String receiverEmail;
