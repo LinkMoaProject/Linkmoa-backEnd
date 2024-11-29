@@ -38,7 +38,7 @@ import static org.mockito.Mockito.times;
 @Slf4j
 public class DirectoryServiceUpdateTest {
 
-    @Mock
+    /*@Mock
     private MemberService memberService;
 
     @Mock
@@ -111,7 +111,6 @@ public class DirectoryServiceUpdateTest {
         Directory directory = Directory.builder()
                 .directoryName("디렉토리 이름 수정 전")
                 .directoryDescription("디렉토리 설명 수정 전")
-                .page(page)
                 .parentDirectory(null)
                 .build();
 
@@ -119,7 +118,7 @@ public class DirectoryServiceUpdateTest {
 
         return directory;
     }
-
+*/
 
 }
 

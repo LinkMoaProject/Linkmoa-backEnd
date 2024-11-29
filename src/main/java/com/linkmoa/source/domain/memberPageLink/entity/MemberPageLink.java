@@ -30,8 +30,7 @@ public class MemberPageLink extends BaseEntity {
 
 
     @ManyToOne(
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
+            fetch = FetchType.LAZY
     )
     @JoinColumn(name="page_id")
     private Page page;

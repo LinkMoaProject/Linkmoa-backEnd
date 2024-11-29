@@ -24,13 +24,6 @@ public class Page extends BaseEntity {
     @Column(name="page_id")
     private Long id;
 
-    @OneToMany(
-            mappedBy = "page",
-            cascade =CascadeType.ALL,
-            fetch = FetchType.EAGER
-    )
-    private List<Directory> directories = new ArrayList<>();
-
     @Column(name="page_title",length = 20)
     private String pageTitle;
 
@@ -41,18 +34,22 @@ public class Page extends BaseEntity {
     private PageType pageType;
 
     @OneToMany(
-            mappedBy = "page"
+            mappedBy = "page",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
     private List<MemberPageLink> memberPageLinks = new ArrayList<>();
 
-    
-
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "root_directory_id", unique = true) // rootDirectory와 1:1 매핑
+    private Directory rootDirectory;
 
     @Builder
-    public Page(String pageTitle,String pageDescription,PageType pageType){
+    public Page(String pageTitle,String pageDescription,PageType pageType,Directory rootDirectory){
         this.pageTitle=pageTitle;
         this.pageDescription=pageDescription;
         this.pageType=pageType;
+        this.rootDirectory=rootDirectory;
     }
 
 

@@ -41,7 +41,11 @@ public class Member extends BaseEntity {
     @Column(name="provider_id")
     private String providerId;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(
+            mappedBy = "member",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<MemberPageLink> memberPageLinks =new ArrayList<>();
 
 

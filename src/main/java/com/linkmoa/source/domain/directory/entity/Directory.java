@@ -30,8 +30,7 @@ public class Directory extends BaseEntity {
     private String directoryDescription;
 
     @ManyToOne(
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
+            fetch = FetchType.LAZY
     )
     @JoinColumn(
             name="parent_directory_id"
@@ -47,21 +46,15 @@ public class Directory extends BaseEntity {
 
     @OneToMany(
             mappedBy = "directory",
-            cascade = CascadeType.ALL
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
     private List<Site> sites =new ArrayList<>();
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="page_id")
-    private Page page;
-
-
     @Builder
-    public Directory(String directoryName,Directory parentDirectory,Page page,String directoryDescription){
+    public Directory(String directoryName,Directory parentDirectory,String directoryDescription){
         this.directoryName=directoryName;
         this.parentDirectory=parentDirectory;
-        this.page=page;
         this.directoryDescription=directoryDescription;
     }
 
@@ -70,10 +63,6 @@ public class Directory extends BaseEntity {
         this.parentDirectory=parentDirectory;
     }
 
-    public void setPage(Page page){
-        this.page = page;
-        page.getDirectories().add(this);
-    }
 
     public void addChildDirectory(Directory child){
         childDirectories.add(child);
