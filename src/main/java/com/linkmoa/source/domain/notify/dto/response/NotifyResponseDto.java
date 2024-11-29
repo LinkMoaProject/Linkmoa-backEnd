@@ -8,14 +8,16 @@ import lombok.Builder;
 public record NotifyResponseDto(
         String content,
         String notificationType,
-        String email
+        String receiverEmail,
+        String sendrEmail
 ) {
 
     public static NotifyResponseDto of(Notify notify){
         return NotifyResponseDto.builder()
                 .content(notify.getContent())
                 .notificationType(String.valueOf(notify.getNotificationType()))
-                .email(notify.getReceiverEmail())
+                .receiverEmail(notify.getReceiverEmail())
+                .sendrEmail(notify.getSenderEmail())
                 .build();
     }
 

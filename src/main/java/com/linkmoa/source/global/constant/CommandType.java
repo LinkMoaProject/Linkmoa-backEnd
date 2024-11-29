@@ -1,4 +1,4 @@
-package com.linkmoa.source.global.command.constant;
+package com.linkmoa.source.global.constant;
 
 public enum CommandType {
 
@@ -10,3 +10,4 @@ public enum CommandType {
     SHARED_PAGE_DELETION,
     SHARED_PAGE_USER_REMOVAL
 }
+
