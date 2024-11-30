@@ -6,7 +6,6 @@ import lombok.Builder;
 
 @Builder
 public record DirectorySendRequestDto(
-
         BaseRequestDto baseRequestDto,
         String receiverEmail,
         Long directoryId

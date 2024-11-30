@@ -1,6 +1,7 @@
 package com.linkmoa.source.global.constant;
 
-public enum CommandType {
+public enum
+CommandType {
 
     VIEW,
     EDIT,

@@ -86,8 +86,12 @@ public class DirectoryService {
         Directory newDirectory = Directory.builder()
                 .directoryName(requestDto.directoryName())
                 .directoryDescription(requestDto.directoryDescription())
-                .parentDirectory(parentDirectory)
                 .build();
+
+        // 부모 디렉토리에 새 디렉토리 추가
+        if (parentDirectory != null) {
+            parentDirectory.addChildDirectory(newDirectory);
+        }
 
         directoryRepository.save(newDirectory);
 
