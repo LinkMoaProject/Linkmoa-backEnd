@@ -52,9 +52,8 @@ public class Directory extends BaseEntity {
     private List<Site> sites =new ArrayList<>();
 
     @Builder
-    public Directory(String directoryName,Directory parentDirectory,String directoryDescription){
+    public Directory(String directoryName,String directoryDescription){
         this.directoryName=directoryName;
-        this.parentDirectory=parentDirectory;
         this.directoryDescription=directoryDescription;
     }
 
@@ -63,11 +62,13 @@ public class Directory extends BaseEntity {
         this.parentDirectory=parentDirectory;
     }
 
-
-    public void addChildDirectory(Directory child){
-        childDirectories.add(child);
-        child.setParentDirectory(this);
+    // 부모 디렉토리가 호출하는 함수
+    public void addChildDirectory(Directory childDirectory){
+        childDirectories.add(childDirectory);
+        childDirectory.setParentDirectory(this);
     }
+
+
 
     public void updateDirectoryNameAndDescription(String directoryName,String directoryDescription){
         this.directoryName=directoryName;

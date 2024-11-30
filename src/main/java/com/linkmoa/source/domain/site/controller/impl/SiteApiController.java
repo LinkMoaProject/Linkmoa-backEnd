@@ -32,7 +32,6 @@ public class SiteApiController implements SiteApiSpecification {
             PrincipalDetails principalDetails)
     {
         ApiSiteResponse<Long> siteCreateResponse = siteService.createSite(siteCreateRequestDto, principalDetails);
-
         return ResponseEntity.ok().body(siteCreateResponse);
     }
 
@@ -48,83 +47,13 @@ public class SiteApiController implements SiteApiSpecification {
             SiteDeleteRequestDto siteDeleteRequestDto,
             PrincipalDetails principalDetails) {
         ApiSiteResponse<Long> siteDeleteResponse = siteService.deleteSite(siteDeleteRequestDto, principalDetails);
-
         return ResponseEntity.ok().body(siteDeleteResponse);
     }
 
     public ResponseEntity<ApiSiteResponse<Long>> moveSite(
             SiteMoveRequestDto siteMoveRequestDto,
             PrincipalDetails principalDetails) {
-
         ApiSiteResponse<Long> siteMoveResponse = siteService.moveSite(siteMoveRequestDto, principalDetails);
-
         return ResponseEntity.ok().body(siteMoveResponse);
     }
-
-
-
-/*
-
-    @PostMapping
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiSiteResponse<Long>> saveSite(
-            @RequestBody @Validated SiteCreateRequestDto siteCreateRequestDto,
-            @AuthenticationPrincipal PrincipalDetails principalDetails
-            )
-    {
-        ApiSiteResponse<Long> apiSiteResponse = siteService.saveSite(siteCreateRequestDto,principalDetails);
-
-        return ResponseEntity.ok().body(apiSiteResponse);
-    }
-
-
-    @PutMapping
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiSiteResponse<SiteGetResponseDto>> updateSite(
-            @RequestBody @Validated SiteUpdateRequestDto siteUpdateRequestDto,
-            @AuthenticationPrincipal PrincipalDetails principalDetails
-    ){
-
-        ApiSiteResponse<SiteGetResponseDto> apiSiteUpdateResponse = siteService.updateSite(siteUpdateRequestDto, principalDetails);
-
-        return ResponseEntity.ok().body(apiSiteUpdateResponse);
-    }
-
-    @DeleteMapping("/{siteId}")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiSiteResponse<Long>> deleteSite(
-            @PathVariable("siteId") @NotBlank Long siteId,
-            @AuthenticationPrincipal PrincipalDetails principalDetails
-    ){
-        ApiSiteResponse<Long> apiSiteResponse =siteService.deleteSite(siteId,principalDetails);
-
-        return ResponseEntity.ok().body(apiSiteResponse);
-    }
-
-    @GetMapping("/{siteId}")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiSiteResponse<SiteGetResponseDto>> getSite(
-            @PathVariable("siteId") @NotBlank Long siteId,
-            @AuthenticationPrincipal PrincipalDetails principalDetails
-    ){
-        ApiSiteResponse<SiteGetResponseDto> siteGetResponseDtoApiSiteResponse = siteService.getSite(siteId, principalDetails);
-
-        return ResponseEntity.ok().body(siteGetResponseDtoApiSiteResponse);
-    }
-*/
-
-
-/*    @GetMapping("/{directoryId}")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiSiteResponse<List<SiteGetResponseDto>>> getSiteList(
-            @PathVariable @NotBlank Long directoryId,
-            @AuthenticationPrincipal PrincipalDetails principalDetails
-    ){
-
-        ApiSiteResponse<List<SiteGetResponseDto>> listApiSiteResponse = siteService.getSiteList(directoryId, principalDetails);
-
-        return ResponseEntity.ok().body(listApiSiteResponse);
-    }*/
-
-
 }

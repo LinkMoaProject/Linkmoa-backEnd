@@ -23,8 +23,6 @@ public class NotifyAspect {
 
     @Pointcut("@annotation(com.linkmoa.source.domain.notify.aop.annotation.NotifyApplied)")
     public void notifyPointcut(){}
-
-
     @Async
     @AfterReturning(pointcut = "notifyPointcut()",returning = "result")
     public void createAndSendNotification(JoinPoint joinPoint,Object result) throws Throwable{

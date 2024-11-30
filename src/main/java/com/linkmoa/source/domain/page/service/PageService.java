@@ -63,7 +63,6 @@ public class PageService {
         return Directory.builder()
                 .directoryName(hostMember.getEmail() + "님의 Root directory name")
                 .directoryDescription(hostMember.getEmail() + "님의 Root directory description")
-                .parentDirectory(null)
                 .build();
     }
 

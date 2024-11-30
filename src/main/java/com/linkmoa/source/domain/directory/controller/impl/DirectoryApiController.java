@@ -42,7 +42,6 @@ public class DirectoryApiController implements DirectoryApiSpecification {
             PrincipalDetails principalDetails
     ) {
         ApiDirectoryResponseSpec<Long> deleteDirectoryResponse = directoryService.deleteDirectory(directoryDeleteRequestDto, principalDetails);
-
         return ResponseEntity.ok().body(deleteDirectoryResponse);
     }
 
@@ -51,21 +50,16 @@ public class DirectoryApiController implements DirectoryApiSpecification {
         PrincipalDetails principalDetails
     ){
         ApiDirectoryResponseSpec<Long> moveDirectoryResponse = directoryService.moveDirectory(directoryMoveRequestDto, principalDetails);
-
         return ResponseEntity.ok().body(moveDirectoryResponse);
-
     }
     public ResponseEntity<ApiDirectoryResponseSpec<DirectorySendResponseDto>> sendDirectory(
             DirectorySendRequestDto directorySendRequestDto,
             PrincipalDetails principalDetails) {
-
         ApiDirectoryResponseSpec<DirectorySendResponseDto> direcotrySendResponse = directoryService.mapToDirectorySendResponse(
                 directoryService.createDirectorySendRequest(
                         directorySendRequestDto,
                         principalDetails)
         );
-
-
         return ResponseEntity.ok().body(direcotrySendResponse);
     }
 
