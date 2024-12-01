@@ -1,12 +1,12 @@
 package com.linkmoa.source.domain.directory.dto.request;
 
 
-import com.linkmoa.source.global.dto.request.BaseRequestDto;
+import com.linkmoa.source.global.dto.request.BaseRequest;
 import lombok.Builder;
 
 @Builder
-public record DirectorySendRequestDto(
-        BaseRequestDto baseRequestDto,
+public record DirectoryTransmissionSendRequest(
+        BaseRequest baseRequest,
         String receiverEmail,
         Long directoryId
 ) {

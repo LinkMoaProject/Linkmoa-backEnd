@@ -1,9 +1,12 @@
 package com.linkmoa.source.domain.page.controller.spec;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.page.dto.request.PageCreateRequestDto;
-import com.linkmoa.source.domain.page.dto.request.PageDeleteRequestDto;
+import com.linkmoa.source.domain.page.dto.request.PageCreateRequest;
+import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
+import com.linkmoa.source.domain.page.dto.request.PageInvitationRequestCreate;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
+import com.linkmoa.source.domain.page.dto.response.PageInvitationRequestCreateResponse;
+import com.linkmoa.source.domain.page.entity.PageInvitationRequest;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +28,7 @@ public interface PageApiSpecification {
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiPageResponseSpec<Long>> createPage(
-            @RequestBody @Validated PageCreateRequestDto pageCreateRequestDto,
+            @RequestBody @Validated PageCreateRequest pageCreateRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
@@ -35,7 +38,17 @@ public interface PageApiSpecification {
     @DeleteMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiPageResponseSpec<Long>> deletePage(
-            @RequestBody @Validated PageDeleteRequestDto pageDeleteRequestDto,
+            @RequestBody @Validated PageDeleteRequest pageDeleteRequest,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
+
+    @Tag(name = "Post", description = "페이지 관련 API")
+    @Operation(summary = "페이지 사용자 초대", description = "공유 페이지에 사용자 초대 요청을 보냅니다.")
+    @ApiErrorCodeExamples(PageErrorCode.class)
+    @PostMapping("/invite")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiPageResponseSpec<PageInvitationRequestCreateResponse>> invitePage(
+            @RequestBody @Validated PageInvitationRequestCreate pageInvitationRequestCreate,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 

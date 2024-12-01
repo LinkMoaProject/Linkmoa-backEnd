@@ -3,13 +3,12 @@ package com.linkmoa.source.global.aop.aspect;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.member.entity.Member;
-import com.linkmoa.source.domain.member.repository.MemberRepository;
 import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 
 import com.linkmoa.source.global.command.service.CommandService;
 import com.linkmoa.source.global.constant.CommandType;
-import com.linkmoa.source.global.dto.request.BaseRequestDto;
+import com.linkmoa.source.global.dto.request.BaseRequest;
 import com.linkmoa.source.global.error.code.impl.ValidationErrorCode;
 import com.linkmoa.source.global.exception.ValidationException;
 import lombok.AllArgsConstructor;
@@ -39,24 +38,24 @@ public class ValidationAspect {
     @Around("validationPointCut() && args(requestDto,principalDetails)")
     public Object validate(ProceedingJoinPoint joinPoint,final Object requestDto,final PrincipalDetails principalDetails) throws Throwable {
 
-        BaseRequestDto baseRequestDto = null;
+        BaseRequest baseRequest = null;
 
         for (Field field : requestDto.getClass().getDeclaredFields()) {
-            if (field.getType().equals(BaseRequestDto.class)) {
+            if (field.getType().equals(BaseRequest.class)) {
                 field.setAccessible(true); // private 필드 접근 허용
-                baseRequestDto = (BaseRequestDto) field.get(requestDto); // BaseRequestDto 필드 추출
+                baseRequest = (BaseRequest) field.get(requestDto); // BaseRequestDto 필드 추출
                 break;
             }
         }
 
-        if (baseRequestDto == null) {
+        if (baseRequest == null) {
             throw new ValidationException(ValidationErrorCode.MISSING_BASE_REQUEST_DTO);
         }
 
         Member member = memberService.findMemberByEmail(principalDetails.getEmail());
 
-        Long pageId = baseRequestDto.pageId();
-        CommandType commandType = baseRequestDto.commandType();
+        Long pageId = baseRequest.pageId();
+        CommandType commandType = baseRequest.commandType();
 
         PermissionType userPermissionType = commandService.getUserPermissionType(member.getId(), pageId);
 
@@ -65,11 +64,9 @@ public class ValidationAspect {
             throw new ValidationException(ValidationErrorCode.UNAUTHORIZED_ACCESS);
         }
 
-        log.info("AOP ValidationAspect triggered with BaseRequestDto: {}", baseRequestDto);
+        log.info("AOP ValidationAspect triggered with BaseRequestDto: {}", baseRequest);
         log.info("member email : {}", principalDetails.getEmail());
         log.info("userPermissionType={} , commandType={} ",userPermissionType,commandType);
-
-
         // 타겟 메서드 실행
         Object result = joinPoint.proceed();
         return result;

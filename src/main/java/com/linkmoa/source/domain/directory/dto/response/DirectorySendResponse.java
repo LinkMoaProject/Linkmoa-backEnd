@@ -4,7 +4,7 @@ package com.linkmoa.source.domain.directory.dto.response;
 import lombok.Builder;
 
 @Builder
-public record DirectorySendResponseDto(
+public record DirectorySendResponse(
         String receiverEmail,
         String senderEmail,
         String directoryName

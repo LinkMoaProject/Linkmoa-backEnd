@@ -5,8 +5,7 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.controller.spec.DirectoryApiSpecification;
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.directory.dto.response.DirectorySendResponseDto;
-import com.linkmoa.source.domain.directory.error.DirectorySendRequest;
+import com.linkmoa.source.domain.directory.dto.response.DirectorySendResponse;
 import com.linkmoa.source.domain.directory.service.DirectoryService;
 
 import lombok.RequiredArgsConstructor;
@@ -23,22 +22,22 @@ public class DirectoryApiController implements DirectoryApiSpecification {
     private final DirectoryService directoryService;
 
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> createDirectory(
-            DirectoryCreateRequestDto directoryCreateRequestDto,
+            DirectoryCreateReques directoryCreateReques,
             PrincipalDetails principalDetails) {
-        ApiDirectoryResponseSpec<Long> createDirectroyResponse = directoryService.createDirectory(directoryCreateRequestDto, principalDetails);
+        ApiDirectoryResponseSpec<Long> createDirectroyResponse = directoryService.createDirectory(directoryCreateReques, principalDetails);
         return ResponseEntity.ok().body(createDirectroyResponse);
     }
 
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> updateDirectory(
-            DirectoryUpdateRequestDto directoryUpdateRequestDto,
+            DirectoryUpdateRequest directoryUpdateRequest,
             PrincipalDetails principalDetails
     ) {
-        ApiDirectoryResponseSpec<Long> updateDirectoryResponse = directoryService.updateDirectory(directoryUpdateRequestDto, principalDetails);
+        ApiDirectoryResponseSpec<Long> updateDirectoryResponse = directoryService.updateDirectory(directoryUpdateRequest, principalDetails);
         return ResponseEntity.ok().body(updateDirectoryResponse);
     }
 
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> deleteDirectory(
-            DirectoryDeleteRequestDto directoryDeleteRequestDto,
+            DirectoryDeleteRequest directoryDeleteRequestDto,
             PrincipalDetails principalDetails
     ) {
         ApiDirectoryResponseSpec<Long> deleteDirectoryResponse = directoryService.deleteDirectory(directoryDeleteRequestDto, principalDetails);
@@ -46,18 +45,18 @@ public class DirectoryApiController implements DirectoryApiSpecification {
     }
 
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> moveDirectory(
-        DirectoryMoveRequestDto directoryMoveRequestDto,
+        DirectoryMoveRequest directoryMoveRequest,
         PrincipalDetails principalDetails
     ){
-        ApiDirectoryResponseSpec<Long> moveDirectoryResponse = directoryService.moveDirectory(directoryMoveRequestDto, principalDetails);
+        ApiDirectoryResponseSpec<Long> moveDirectoryResponse = directoryService.moveDirectory(directoryMoveRequest, principalDetails);
         return ResponseEntity.ok().body(moveDirectoryResponse);
     }
-    public ResponseEntity<ApiDirectoryResponseSpec<DirectorySendResponseDto>> sendDirectory(
-            DirectorySendRequestDto directorySendRequestDto,
+    public ResponseEntity<ApiDirectoryResponseSpec<DirectorySendResponse>> sendDirectory(
+            DirectoryTransmissionSendRequest directoryTransmissionSendRequest,
             PrincipalDetails principalDetails) {
-        ApiDirectoryResponseSpec<DirectorySendResponseDto> direcotrySendResponse = directoryService.mapToDirectorySendResponse(
-                directoryService.createDirectorySendRequest(
-                        directorySendRequestDto,
+        ApiDirectoryResponseSpec<DirectorySendResponse> direcotrySendResponse = directoryService.mapToDirectorySendResponse(
+                directoryService.createDirectoryTransmissionRequest(
+                        directoryTransmissionSendRequest,
                         principalDetails)
         );
         return ResponseEntity.ok().body(direcotrySendResponse);
