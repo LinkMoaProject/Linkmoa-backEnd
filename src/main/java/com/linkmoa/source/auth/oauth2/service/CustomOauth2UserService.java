@@ -23,6 +23,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
     private final MemberService memberService;
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         log.info("CustomOauth2UserService getAttributes : {}",oAuth2User.getAttributes());
@@ -39,9 +40,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
                 .build()) ;
 
         PrincipalDetails principalDetails = new PrincipalDetails(member, oAuth2User.getAttributes());
-
-
-        return principalDetails;
+        return principalDetails; // => DefaultOAuth2UserService의 메소드인 loadUser의 반환값은
     }
 
     // 서비스에 따라 OAuth2UserInfo 객체 생성 메서드
