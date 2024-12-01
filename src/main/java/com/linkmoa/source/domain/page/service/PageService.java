@@ -8,13 +8,22 @@ import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.member.error.MemberErrorCode;
 import com.linkmoa.source.domain.member.exception.MemberException;
 import com.linkmoa.source.domain.member.repository.MemberRepository;
+import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.domain.memberPageLink.entity.MemberPageLink;
 import com.linkmoa.source.domain.memberPageLink.repository.MemberPageLinkRepository;
-import com.linkmoa.source.domain.page.dto.request.PageCreateRequestDto;
-import com.linkmoa.source.domain.page.dto.request.PageDeleteRequestDto;
+import com.linkmoa.source.domain.notify.aop.annotation.NotifyApplied;
+import com.linkmoa.source.domain.page.contant.PageType;
+import com.linkmoa.source.domain.page.dto.request.PageCreateRequest;
+import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
+import com.linkmoa.source.domain.page.dto.request.PageInvitationRequestCreate;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
+import com.linkmoa.source.domain.page.dto.response.PageInvitationRequestCreateResponse;
 import com.linkmoa.source.domain.page.entity.Page;
+import com.linkmoa.source.domain.page.entity.PageInvitationRequest;
+import com.linkmoa.source.domain.page.error.PageErrorCode;
+import com.linkmoa.source.domain.page.exception.PageException;
+import com.linkmoa.source.domain.page.repository.PageInviteRequestRepository;
 import com.linkmoa.source.domain.page.repository.PageRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import lombok.AllArgsConstructor;
@@ -27,16 +36,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class PageService {
 
     private final PageRepository pageRepository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final DirectoryRepository directoryRepository;
     private final MemberPageLinkRepository memberPageLinkRepository;
+    private final PageInviteRequestRepository pageInviteRequestRepository;
 
 
     @Transactional
-    public ApiPageResponseSpec<Long> createPage(PageCreateRequestDto requestDto, PrincipalDetails principalDetails) {
+    public ApiPageResponseSpec<Long> createPage(PageCreateRequest requestDto, PrincipalDetails principalDetails) {
 
-        Member hostMember = memberRepository.findByEmail(principalDetails.getEmail())
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL));
+        Member hostMember = memberService.findMemberByEmail(principalDetails.getEmail());
 
         Directory rootDirectory = createRootDirectory(hostMember);
         Page newPage = createNewPage(requestDto,rootDirectory);
@@ -50,7 +59,7 @@ public class PageService {
                 .build();
     }
 
-    private Page createNewPage(PageCreateRequestDto requestDto,Directory rootDirectory) {
+    private Page createNewPage(PageCreateRequest requestDto, Directory rootDirectory) {
         return Page.builder()
                 .pageType(requestDto.pageType())
                 .pageTitle(requestDto.pageTitle())
@@ -83,14 +92,55 @@ public class PageService {
 
 
     @Transactional
-    public ApiPageResponseSpec<Long> deletePage(PageDeleteRequestDto pageDeleteRequestDto, PrincipalDetails principalDetails) {
-        pageRepository.deleteById(pageDeleteRequestDto.baseRequestDto().pageId());
+    public ApiPageResponseSpec<Long> deletePage(PageDeleteRequest pageDeleteRequest, PrincipalDetails principalDetails) {
+        pageRepository.deleteById(pageDeleteRequest.baseRequest().pageId());
         return ApiPageResponseSpec.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
                 .successMessage("Page 삭제에 성공했습니다.")
-                .data(pageDeleteRequestDto.baseRequestDto().pageId())
+                .data(pageDeleteRequest.baseRequest().pageId())
                 .build();
     }
+    @Transactional
+    @ValidationApplied
+    @NotifyApplied
+    public PageInvitationRequest createPageInviteRequest(PageInvitationRequestCreate pageInvitationRequestCreate, PrincipalDetails principalDetails){
+
+        if (!memberService.isMemberExist(pageInvitationRequestCreate.receiverEmail())) {
+            throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL); // 유저가 없으면 예외 발생
+        }
+
+        Page page = pageRepository.findById(pageInvitationRequestCreate.baseRequest().pageId())
+                .orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
+
+        if (page.getPageType() == PageType.PERSONAL) {
+            throw new PageException(PageErrorCode.CANNOT_INVITE_TO_PERSONAL_PAGE);
+        }
+
+        PageInvitationRequest pageInvitationRequest = PageInvitationRequest.builder()
+                .senderEmail(principalDetails.getEmail())
+                .receiverEmail(pageInvitationRequestCreate.receiverEmail())
+                .page(page)
+                .build();
+
+        return pageInviteRequestRepository.save(pageInvitationRequest);
+    }
+
+    public ApiPageResponseSpec<PageInvitationRequestCreateResponse> mapToPageInviteRequestResponse(PageInvitationRequest pageInvitationRequest){
+
+        PageInvitationRequestCreateResponse pageInvitationRequestCreateResponse = PageInvitationRequestCreateResponse.builder()
+                .pageTitle(pageInvitationRequest.getPage().getPageTitle())
+                .receiverEmail(pageInvitationRequest.getSenderEmail())
+                .senderEmail(pageInvitationRequest.getSenderEmail())
+                .build();
+
+        return ApiPageResponseSpec.<PageInvitationRequestCreateResponse>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("공유 page 초대를 보냈습니다.")
+                .data(pageInvitationRequestCreateResponse)
+                .build();
+    }
+
+
 
 
 

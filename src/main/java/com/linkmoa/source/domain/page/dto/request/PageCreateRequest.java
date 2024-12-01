@@ -6,7 +6,7 @@ import com.linkmoa.source.global.constant.CommandType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record PageCreateRequestDto(
+public record PageCreateRequest(
         @Size(max=20) String pageTitle,
         @Size(max=100)String pageDescription,
         @NotNull PageType pageType,

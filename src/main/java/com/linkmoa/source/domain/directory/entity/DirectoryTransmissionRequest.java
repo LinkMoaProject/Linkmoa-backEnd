@@ -1,9 +1,8 @@
-package com.linkmoa.source.domain.directory.error;
+package com.linkmoa.source.domain.directory.entity;
 
 
-import com.linkmoa.source.domain.directory.entity.Directory;
+import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
-import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.notify.aop.proxy.NotifyInfo;
 
 import com.linkmoa.source.domain.notify.constant.NotificationType;
@@ -15,7 +14,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Entity
-public class DirectorySendRequest extends BaseEntity implements NotifyInfo {
+public class DirectoryTransmissionRequest extends BaseEntity implements NotifyInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,13 +35,13 @@ public class DirectorySendRequest extends BaseEntity implements NotifyInfo {
     @Column(nullable = false)
     private RequestStatus requestStatus = RequestStatus.WAITING;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Directory와의 관계 매핑
-    @JoinColumn(name = "directory_id", nullable = false) // directory_id를 외래키로 설정
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "directory_id", nullable = false)
     private Directory directory;
 
 
     @Builder
-    public DirectorySendRequest(String receiverEmail, String senderEmail, Directory directory) {
+    public DirectoryTransmissionRequest(String receiverEmail, String senderEmail, Directory directory) {
         this.senderEmail = senderEmail;
         this.receiverEmail = receiverEmail;
         this.directory = directory;

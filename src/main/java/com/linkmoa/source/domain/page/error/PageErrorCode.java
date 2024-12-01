@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 public enum PageErrorCode implements ErrorCode {
 
 
-    PAGE_NOT_FOUND(HttpStatus.NOT_FOUND,"Page를 찾을 수 없습니다.");
+    PAGE_NOT_FOUND(HttpStatus.NOT_FOUND,"Page를 찾을 수 없습니다."),
+    CANNOT_INVITE_TO_PERSONAL_PAGE(HttpStatus.FORBIDDEN, "개인 페이지에는 초대를 보낼 수 없습니다.");
+
 
     private HttpStatus httpStatus;
     private String errorMessage;

@@ -4,29 +4,23 @@ package com.linkmoa.source.domain.directory.service;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.directory.dto.response.DirectorySendResponseDto;
+import com.linkmoa.source.domain.directory.dto.response.DirectorySendResponse;
 import com.linkmoa.source.domain.directory.entity.Directory;
+import com.linkmoa.source.domain.directory.entity.DirectoryTransmissionRequest;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
-import com.linkmoa.source.domain.directory.error.DirectorySendRequest;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.directory.repository.DirectorySendRequestRepository;
-import com.linkmoa.source.domain.member.entity.Member;
+import com.linkmoa.source.domain.member.error.MemberErrorCode;
+import com.linkmoa.source.domain.member.exception.MemberException;
 import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.notify.aop.annotation.NotifyApplied;
-import com.linkmoa.source.domain.page.entity.Page;
-import com.linkmoa.source.domain.page.error.PageErrorCode;
-import com.linkmoa.source.domain.page.exception.PageException;
-import com.linkmoa.source.domain.page.repository.PageRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -41,32 +35,36 @@ public class DirectoryService {
     @Transactional
     @ValidationApplied
     @NotifyApplied
-    public DirectorySendRequest createDirectorySendRequest(DirectorySendRequestDto directorySendRequestDto, PrincipalDetails principalDetails) {
-        Directory directory = directoryRepository.findById(directorySendRequestDto.directoryId())
+    public DirectoryTransmissionRequest createDirectoryTransmissionRequest(DirectoryTransmissionSendRequest directoryTransmissionSendRequest, PrincipalDetails principalDetails) {
+
+        if (!memberService.isMemberExist(directoryTransmissionSendRequest.receiverEmail())) {
+            throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL);
+        }
+
+        Directory directory = directoryRepository.findById(directoryTransmissionSendRequest.directoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-        DirectorySendRequest directorySendRequest = DirectorySendRequest.builder()
+        DirectoryTransmissionRequest directoryTransmissionRequest = DirectoryTransmissionRequest.builder()
                 .senderEmail(principalDetails.getEmail())
-                .receiverEmail(directorySendRequestDto.receiverEmail())
+                .receiverEmail(directoryTransmissionSendRequest.receiverEmail())
                 .directory(directory)
                 .build();
 
-        return directorySendRequestRepository.save(directorySendRequest);
+        return directorySendRequestRepository.save(directoryTransmissionRequest);
     }
 
-    public ApiDirectoryResponseSpec<DirectorySendResponseDto> mapToDirectorySendResponse(DirectorySendRequest directorySendRequest)
+    public ApiDirectoryResponseSpec<DirectorySendResponse> mapToDirectorySendResponse(DirectoryTransmissionRequest directoryTransmissionRequest)
     {
-
-        DirectorySendResponseDto directorySendResponseDto = DirectorySendResponseDto.builder()
-                .directoryName(directorySendRequest.getDirectory().getDirectoryName())
-                .receiverEmail(directorySendRequest.getReceiverEmail())
-                .senderEmail(directorySendRequest.getSenderEmail())
+        DirectorySendResponse directorySendResponse = DirectorySendResponse.builder()
+                .directoryName(directoryTransmissionRequest.getDirectory().getDirectoryName())
+                .receiverEmail(directoryTransmissionRequest.getReceiverEmail())
+                .senderEmail(directoryTransmissionRequest.getSenderEmail())
                 .build();
 
-        return ApiDirectoryResponseSpec.<DirectorySendResponseDto>builder()
+        return ApiDirectoryResponseSpec.<DirectorySendResponse>builder()
                 .httpStatusCode(HttpStatus.OK)
                 .successMessage("Directory 전송 요청을 보냈습니다.")
-                .data(directorySendResponseDto)
+                .data(directorySendResponse)
                 .build();
     }
 
@@ -75,7 +73,7 @@ public class DirectoryService {
 
     @Transactional
     @ValidationApplied
-    public ApiDirectoryResponseSpec<Long> createDirectory(DirectoryCreateRequestDto requestDto,PrincipalDetails principalDetails){
+    public ApiDirectoryResponseSpec<Long> createDirectory(DirectoryCreateReques requestDto, PrincipalDetails principalDetails){
 
         Directory parentDirectory = requestDto.parentDirectoryId() == null
                 ? null
@@ -104,7 +102,7 @@ public class DirectoryService {
 
     @Transactional
     @ValidationApplied
-    public ApiDirectoryResponseSpec<Long> updateDirectory(DirectoryUpdateRequestDto requestDto,PrincipalDetails principalDetails){
+    public ApiDirectoryResponseSpec<Long> updateDirectory(DirectoryUpdateRequest requestDto, PrincipalDetails principalDetails){
 
         Directory updateDirectory = directoryRepository.findById(requestDto.directoryId())
                 .orElseThrow(()->new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
@@ -122,7 +120,7 @@ public class DirectoryService {
     }
     @Transactional
     @ValidationApplied
-    public ApiDirectoryResponseSpec<Long> deleteDirectory(DirectoryDeleteRequestDto requestDto,
+    public ApiDirectoryResponseSpec<Long> deleteDirectory(DirectoryDeleteRequest requestDto,
                                                           PrincipalDetails principalDetails){
 
         Directory deleteDirectory = directoryRepository.findById(requestDto.directoryId())
@@ -140,7 +138,7 @@ public class DirectoryService {
 
     @Transactional
     @ValidationApplied
-    public ApiDirectoryResponseSpec<Long> moveDirectory(DirectoryMoveRequestDto requestDto,
+    public ApiDirectoryResponseSpec<Long> moveDirectory(DirectoryMoveRequest requestDto,
                                                         PrincipalDetails principalDetails){
 
         Directory sourceDirectory = directoryRepository.findById(requestDto.sourceDirectoryId())

@@ -2,6 +2,8 @@ package com.linkmoa.source.domain.member.service;
 
 
 import com.linkmoa.source.domain.member.entity.Member;
+import com.linkmoa.source.domain.member.error.MemberErrorCode;
+import com.linkmoa.source.domain.member.exception.MemberException;
 import com.linkmoa.source.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,12 +33,15 @@ public class MemberService {
         }
     }
 
-    public Member findMemberByEmail(String email) throws UsernameNotFoundException {
+    public Member findMemberByEmail(String email)  {
 
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다"));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL));
 
         return member;
+    }
+    public boolean isMemberExist(String email) {
+        return memberRepository.existsByEmail(email);
     }
 
 

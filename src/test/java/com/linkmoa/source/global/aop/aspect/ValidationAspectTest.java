@@ -8,7 +8,7 @@ import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 
 import com.linkmoa.source.global.command.service.CommandService;
 import com.linkmoa.source.global.constant.CommandType;
-import com.linkmoa.source.global.dto.request.BaseRequestDto;
+import com.linkmoa.source.global.dto.request.BaseRequest;
 import com.linkmoa.source.global.error.code.impl.ValidationErrorCode;
 import com.linkmoa.source.global.exception.ValidationException;
 import lombok.extern.slf4j.Slf4j;
@@ -41,33 +41,33 @@ class ValidationAspectTest {
     @InjectMocks
     private ValidationAspect validationAspect;
 
-    private BaseRequestDto baseRequestDto;
+    private BaseRequest baseRequest;
 
     private  TestRequestDto requestDto;
     private PrincipalDetails principalDetails;
 
     // 새 DTO 정의 (BaseRequestDto를 포함)
     class TestRequestDto {
-        private BaseRequestDto baseRequestDto;
+        private BaseRequest baseRequest;
 
-        public TestRequestDto(BaseRequestDto baseRequestDto) {
-            this.baseRequestDto = baseRequestDto;
+        public TestRequestDto(BaseRequest baseRequest) {
+            this.baseRequest = baseRequest;
         }
 
-        public BaseRequestDto getBaseRequestDto() {
-            return baseRequestDto;
+        public BaseRequest getBaseRequestDto() {
+            return baseRequest;
         }
     }
     @BeforeEach
     void setUp() throws NoSuchFieldException, IllegalAccessException {
         // BaseRequestDto 생성
-        baseRequestDto = new BaseRequestDto(
+        baseRequest = new BaseRequest(
                 1L,           // pageId
                 CommandType.EDIT  // commandType
         );
 
         // TestRequestDto 생성
-        requestDto = new TestRequestDto(baseRequestDto);
+        requestDto = new TestRequestDto(baseRequest);
 
 
         // Member 객체 생성
@@ -97,7 +97,7 @@ class ValidationAspectTest {
 
 
         // 권한이 있는 경우
-        when(commandService.getUserPermissionType(principalDetails.getId(), baseRequestDto.pageId())).thenReturn(PermissionType.HOST);
+        when(commandService.getUserPermissionType(principalDetails.getId(), baseRequest.pageId())).thenReturn(PermissionType.HOST);
         when(commandService.canExecute(PermissionType.HOST, CommandType.EDIT)).thenReturn(true);
         when(proceedingJoinPoint.proceed()).thenReturn("Proceed Success");
 
@@ -112,7 +112,7 @@ class ValidationAspectTest {
     @Test
     void validate_WithUnauthorizedAccess_ShouldThrowException() throws Throwable {
         // 권한이 없는 경우
-        when(commandService.getUserPermissionType(principalDetails.getId(), baseRequestDto.pageId())).thenReturn(PermissionType.VIEWER);
+        when(commandService.getUserPermissionType(principalDetails.getId(), baseRequest.pageId())).thenReturn(PermissionType.VIEWER);
         when(commandService.canExecute(PermissionType.VIEWER, CommandType.EDIT)).thenReturn(false);
 
         // 예외가 발생하는지 검증

@@ -1,9 +1,6 @@
 package com.linkmoa.source.domain.site.controller.spec;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.directory.dto.request.DirectoryMoveRequestDto;
-import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.site.dto.request.SiteCreateRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteDeleteRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteMoveRequestDto;

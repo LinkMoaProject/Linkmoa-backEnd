@@ -3,13 +3,11 @@ package com.linkmoa.source.domain.directory.controller.spec;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.directory.dto.response.DirectorySendResponseDto;
+import com.linkmoa.source.domain.directory.dto.response.DirectorySendResponse;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
-import com.linkmoa.source.domain.directory.error.DirectorySendRequest;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,7 +23,7 @@ public interface DirectoryApiSpecification {
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> createDirectory(
-            @RequestBody @Validated DirectoryCreateRequestDto directoryCreateRequestDto,
+            @RequestBody @Validated DirectoryCreateReques directoryCreateReques,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
@@ -35,7 +33,7 @@ public interface DirectoryApiSpecification {
     @DeleteMapping()
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> deleteDirectory(
-            @RequestBody @Validated DirectoryDeleteRequestDto directoryDeleteRequestDto,
+            @RequestBody @Validated DirectoryDeleteRequest directoryDeleteRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
@@ -46,7 +44,7 @@ public interface DirectoryApiSpecification {
     @PutMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> updateDirectory(
-            @RequestBody DirectoryUpdateRequestDto directoryUpdateRequestDto,
+            @RequestBody DirectoryUpdateRequest directoryUpdateRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
@@ -56,7 +54,7 @@ public interface DirectoryApiSpecification {
     @PutMapping("/move")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> moveDirectory(
-            @RequestBody @Validated DirectoryMoveRequestDto directoryMoveRequestDto,
+            @RequestBody @Validated DirectoryMoveRequest directoryMoveRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
@@ -65,8 +63,8 @@ public interface DirectoryApiSpecification {
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PostMapping("/send")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<DirectorySendResponseDto>> sendDirectory(
-            @RequestBody @Validated DirectorySendRequestDto directorySendRequestDto,
+    public ResponseEntity<ApiDirectoryResponseSpec<DirectorySendResponse>> sendDirectory(
+            @RequestBody @Validated DirectoryTransmissionSendRequest directoryTransmissionSendRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
             );
 

@@ -1,16 +1,13 @@
 package com.linkmoa.source.domain.directory.dto.request;
 
-import com.linkmoa.source.global.dto.request.BaseRequestDto;
+import com.linkmoa.source.global.dto.request.BaseRequest;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.NoArgsConstructor;
 
 
+public record DirectoryCreateReques(
 
-public record DirectoryCreateRequestDto(
-
-        BaseRequestDto baseRequestDto,
+        BaseRequest baseRequest,
         @NotBlank @Size(max=20) String directoryName,
         Long parentDirectoryId,
         @Size(max=100) String directoryDescription
