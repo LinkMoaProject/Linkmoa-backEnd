@@ -3,6 +3,8 @@ package com.linkmoa.source.auth.oauth2.principal;
 
 import com.linkmoa.source.domain.member.entity.Member;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;

@@ -27,9 +27,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
 
         log.info("CustomOauth2UserService getAttributes : {}",oAuth2User.getAttributes());
        String provider = userRequest.getClientRegistration().getRegistrationId();
-
        OAuth2UserInfo oAuth2UserInfo = toOAuth2UserInfo(provider,oAuth2User);
-
 
         Member member = memberService.saveOrUpdate(Member.builder()
                         .email(oAuth2UserInfo.getEmail())
@@ -37,6 +35,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
                         .provider(provider)
                         .providerId(oAuth2UserInfo.getProviderId())
                 .build()) ;
+
 
         PrincipalDetails principalDetails = new PrincipalDetails(member, oAuth2User.getAttributes());
 

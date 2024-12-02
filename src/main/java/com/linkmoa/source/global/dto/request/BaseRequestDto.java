@@ -8,3 +8,4 @@ public record BaseRequestDto(
         CommandType commandType
 ) {
 }
+

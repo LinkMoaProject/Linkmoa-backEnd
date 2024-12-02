@@ -1,7 +1,7 @@
 package com.linkmoa.source.auth.oauth2.handler;
 
 import com.linkmoa.source.auth.jwt.provider.JwtCookieManager;
-import com.linkmoa.source.auth.jwt.service.RefreshTokenService;
+import com.linkmoa.source.auth.jwt.refresh.service.RefreshTokenService;
 import com.linkmoa.source.auth.jwt.service.JwtService;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import jakarta.servlet.ServletException;
@@ -45,10 +45,8 @@ public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String email = oauth2User.getEmail();
         String role = authorities.iterator().next().getAuthority();
 
-
-
         String refreshToken =  jwtService.createRefreshToken();
-        refreshTokenService.saveRefreshToken(email,refreshToken);
+        refreshTokenService.saveRefreshToken(refreshToken,email);
         response.addCookie(jwtService.createRefreshCookie(refreshToken));
 
         response.sendRedirect("http://localhost:3000/reissue");
@@ -62,6 +60,7 @@ public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         log.info("OAuth2 로그인에 성공 하였습니다. access Token : {}",accessToken);
         log.info("OAuth2 로그인에 성공하였습니다. 이메일 : {}",  oauth2User.getEmail());
         log.info("OAuth2 로그인에 성공하였습니다. Refresh Token : {}",  refreshToken);
+
 
         /**
          * 자체 회원가입 로직
