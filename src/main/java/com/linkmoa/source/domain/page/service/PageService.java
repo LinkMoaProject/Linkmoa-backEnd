@@ -108,45 +108,7 @@ public class PageService {
                 .build();
     }
 
-    @Transactional
-    @ValidationApplied
-    @NotifyApplied
-    public SharePageInvitationRequest createSharePageInviteRequest(SharePageInvitationRequestCreate sharePageInvitationRequestCreate, PrincipalDetails principalDetails){
 
-        if (!memberService.isMemberExist(sharePageInvitationRequestCreate.receiverEmail())) {
-            throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL); // 유저가 없으면 예외 발생
-        }
-
-        Page page = pageRepository.findById(sharePageInvitationRequestCreate.baseRequest().pageId())
-                .orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
-
-        if (page.getPageType() == PageType.PERSONAL) {
-            throw new PageException(PageErrorCode.CANNOT_INVITE_TO_PERSONAL_PAGE);
-        }
-
-        SharePageInvitationRequest sharePageInvitationRequest = SharePageInvitationRequest.builder()
-                .senderEmail(principalDetails.getEmail())
-                .receiverEmail(sharePageInvitationRequestCreate.receiverEmail())
-                .page(page)
-                .permissionType(sharePageInvitationRequestCreate.permissionType())
-                .build();
-        return sharePageInviteRequestRepository.save(sharePageInvitationRequest);
-    }
-    public ApiPageResponseSpec<SharePageInvitationRequestCreateResponse> mapToPageInviteRequestResponse(SharePageInvitationRequest sharePageInvitationRequest){
-
-        SharePageInvitationRequestCreateResponse sharePageInvitationRequestCreateResponse = SharePageInvitationRequestCreateResponse.builder()
-                .pageTitle(sharePageInvitationRequest.getPage().getPageTitle())
-                .receiverEmail(sharePageInvitationRequest.getReceiverEmail())
-                .senderEmail(sharePageInvitationRequest.getSenderEmail())
-                .PageInvitationRequestId(sharePageInvitationRequest.getId())
-                .build();
-
-        return ApiPageResponseSpec.<SharePageInvitationRequestCreateResponse>builder()
-                .httpStatusCode(HttpStatus.OK)
-                .successMessage("공유 페이지 초대를 보냈습니다.")
-                .data(sharePageInvitationRequestCreateResponse)
-                .build();
-    }
 
 
     @Transactional

@@ -43,15 +43,6 @@ public interface PageApiSpecification {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
-    @Tag(name = "Post", description = "페이지 관련 API")
-    @Operation(summary = "공유 페이지 사용자 초대", description = "공유 페이지에 사용자 초대 요청을 보냅니다.")
-    @ApiErrorCodeExamples(PageErrorCode.class)
-    @PostMapping("/invite")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiPageResponseSpec<SharePageInvitationRequestCreateResponse>> inviteSharePage(
-            @RequestBody @Validated SharePageInvitationRequestCreate sharePageInvitationRequestCreate,
-            @AuthenticationPrincipal PrincipalDetails principalDetails
-    );
 
     @Tag(name = "Post", description = "페이지 관련 API")
     @Operation(summary = "공유 페이지 탈퇴", description = "사용자가 공유 페이지를 탈퇴합니다.")

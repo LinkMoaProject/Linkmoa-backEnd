@@ -39,14 +39,7 @@ public class PageApiController implements PageApiSpecification {
 
         return ResponseEntity.ok().body(deletePageResponse);
     }
-    public ResponseEntity<ApiPageResponseSpec<SharePageInvitationRequestCreateResponse>> inviteSharePage(
-            SharePageInvitationRequestCreate pageInvitationRequest,
-            PrincipalDetails principalDetails) {
-        ApiPageResponseSpec<SharePageInvitationRequestCreateResponse> pageInviteRequestResponse =
-                pageService.mapToPageInviteRequestResponse(pageService.createSharePageInviteRequest(pageInvitationRequest, principalDetails));
 
-        return ResponseEntity.ok().body(pageInviteRequestResponse);
-    }
 
     public ResponseEntity<ApiPageResponseSpec<SharePageLeaveResponse>> leaveSharePage(
             BaseRequest baseRequest,
