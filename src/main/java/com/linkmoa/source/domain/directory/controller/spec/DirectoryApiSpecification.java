@@ -3,7 +3,6 @@ package com.linkmoa.source.domain.directory.controller.spec;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.directory.dto.response.DirectorySendResponse;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
 import io.swagger.v3.oas.annotations.Operation;
@@ -58,14 +57,6 @@ public interface DirectoryApiSpecification {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
-    @Tag(name = "Post", description = "디렉토리 관련 API")
-    @Operation(summary = "디렉토리 전송 요청", description = "다른 유저에게 디렉토리 전송 요청을 보냅니다.")
-    @ApiErrorCodeExamples(DirectoryErrorCode.class)
-    @PostMapping("/send")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<DirectorySendResponse>> sendDirectory(
-            @RequestBody @Validated DirectoryTransmissionSendRequest directoryTransmissionSendRequest,
-            @AuthenticationPrincipal PrincipalDetails principalDetails
-            );
+
 
 }

@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface MemberPageLinkRepository extends JpaRepository<MemberPageLink,Long> {
 
 
@@ -14,6 +16,10 @@ public interface MemberPageLinkRepository extends JpaRepository<MemberPageLink,L
 
     @Query("DELETE FROM member_page_link m WHERE m.member.id = :memberId AND m.page.id = :pageId")
     void deleteByMemberIdAndPageId(@Param("memberId") Long memberId, @Param("pageId") Long pageId);
+
+    @Query("SELECT m FROM member_page_link m WHERE m.member.id = :memberId AND m.page.id = :pageId")
+    Optional<MemberPageLink> findByMemberAndPage(@Param("memberId") Long memberId, @Param("pageId") Long pageId);
+
 
 
 

@@ -1,10 +1,11 @@
-package com.linkmoa.source.domain.page.entity;
+package com.linkmoa.source.domain.dispatch.entity;
 
 
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.domain.notify.aop.proxy.NotifyInfo;
 import com.linkmoa.source.domain.notify.constant.NotificationType;
-import com.linkmoa.source.global.constant.RequestStatus;
+import com.linkmoa.source.domain.page.entity.Page;
+import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import com.linkmoa.source.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -46,11 +47,15 @@ public class SharePageInvitationRequest extends BaseEntity implements NotifyInfo
 
 
     @Builder
-    SharePageInvitationRequest(String receiverEmail, String senderEmail, Page page, PermissionType permissionType){
+    public SharePageInvitationRequest(String receiverEmail, String senderEmail, Page page, PermissionType permissionType){
         this.senderEmail=senderEmail;
         this.receiverEmail=receiverEmail;
         this.page=page;
         this.permissionType =permissionType;
+    }
+
+    public void changeRequestStatus(RequestStatus requestStatus){
+        this.requestStatus=requestStatus;
     }
 
     @Override
@@ -65,4 +70,6 @@ public class SharePageInvitationRequest extends BaseEntity implements NotifyInfo
     public NotificationType getNotificationType() {
         return notificationType;
     }
+
+
 }

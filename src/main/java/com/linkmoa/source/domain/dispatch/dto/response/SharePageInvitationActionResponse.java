@@ -1,6 +1,6 @@
-package com.linkmoa.source.domain.page.dto.response;
+package com.linkmoa.source.domain.dispatch.dto.response;
 
-import com.linkmoa.source.global.constant.RequestStatus;
+import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import lombok.Builder;
 
 @Builder

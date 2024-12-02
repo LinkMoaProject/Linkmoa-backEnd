@@ -1,4 +1,4 @@
-package com.linkmoa.source.domain.directory.dto.request;
+package com.linkmoa.source.domain.dispatch.dto.request;
 
 
 import com.linkmoa.source.global.dto.request.BaseRequest;

@@ -1,11 +1,11 @@
-package com.linkmoa.source.domain.page.dto.request;
+package com.linkmoa.source.domain.dispatch.dto.request;
 
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
-import com.linkmoa.source.global.constant.RequestStatus;
+import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import lombok.Builder;
 
 @Builder
-public record SharePageInvitationAction(
+public record SharePageInvitationActionRequest(
         Long sharePageInvitationRequestId,
         RequestStatus requestStatus,
         PermissionType permissionType
