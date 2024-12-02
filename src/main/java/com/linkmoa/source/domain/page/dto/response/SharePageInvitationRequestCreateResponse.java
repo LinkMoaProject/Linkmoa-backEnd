@@ -6,6 +6,7 @@ import lombok.Builder;
 public record SharePageInvitationRequestCreateResponse(
         String receiverEmail,
         String senderEmail,
-        String pageTitle
+        String pageTitle,
+        Long PageInvitationRequestId
 ) {
 }

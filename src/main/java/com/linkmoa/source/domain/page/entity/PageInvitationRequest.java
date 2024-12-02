@@ -1,6 +1,7 @@
 package com.linkmoa.source.domain.page.entity;
 
 
+import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.domain.notify.aop.proxy.NotifyInfo;
 import com.linkmoa.source.domain.notify.constant.NotificationType;
 import com.linkmoa.source.global.constant.RequestStatus;
@@ -19,7 +20,7 @@ public class PageInvitationRequest extends BaseEntity implements NotifyInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="page_invite_request_id")
-    private Long PageInviteRequest;
+    private Long id;
 
     @Column(name="receiver_email")
     private String receiverEmail;
@@ -39,12 +40,17 @@ public class PageInvitationRequest extends BaseEntity implements NotifyInfo {
     @JoinColumn(name = "page_id", nullable = false)
     private Page page;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name="permission_type")
+    private PermissionType permissionType;
+
 
     @Builder
-    PageInvitationRequest(String receiverEmail, String senderEmail, Page page){
+    PageInvitationRequest(String receiverEmail, String senderEmail, Page page,PermissionType permissionType){
         this.senderEmail=senderEmail;
         this.receiverEmail=receiverEmail;
         this.page=page;
+        this.permissionType =permissionType;
     }
 
     @Override
