@@ -5,9 +5,10 @@ import com.linkmoa.source.global.constant.RequestStatus;
 import lombok.Builder;
 
 @Builder
-public record SharePageInvitationActionDto(
+public record SharePageInvitationAction(
         Long sharePageInvitationRequestId,
-        RequestStatus requestStatus
+        RequestStatus requestStatus,
+        PermissionType permissionType
 
 ) {
 }
