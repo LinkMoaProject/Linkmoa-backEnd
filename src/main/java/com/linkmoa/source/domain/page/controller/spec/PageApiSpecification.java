@@ -3,11 +3,12 @@ package com.linkmoa.source.domain.page.controller.spec;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.page.dto.request.PageCreateRequest;
 import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
-import com.linkmoa.source.domain.page.dto.request.PageInvitationRequestCreate;
+import com.linkmoa.source.domain.page.dto.request.SharePageInvitationRequestCreate;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
-import com.linkmoa.source.domain.page.dto.response.PageInvitationRequestCreateResponse;
-import com.linkmoa.source.domain.page.entity.PageInvitationRequest;
+import com.linkmoa.source.domain.page.dto.response.SharePageInvitationRequestCreateResponse;
+import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
+import com.linkmoa.source.global.dto.request.BaseRequest;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,12 +44,22 @@ public interface PageApiSpecification {
     );
 
     @Tag(name = "Post", description = "페이지 관련 API")
-    @Operation(summary = "페이지 사용자 초대", description = "공유 페이지에 사용자 초대 요청을 보냅니다.")
+    @Operation(summary = "공유 페이지 사용자 초대", description = "공유 페이지에 사용자 초대 요청을 보냅니다.")
     @ApiErrorCodeExamples(PageErrorCode.class)
     @PostMapping("/invite")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiPageResponseSpec<PageInvitationRequestCreateResponse>> invitePage(
-            @RequestBody @Validated PageInvitationRequestCreate pageInvitationRequestCreate,
+    public ResponseEntity<ApiPageResponseSpec<SharePageInvitationRequestCreateResponse>> inviteSharePage(
+            @RequestBody @Validated SharePageInvitationRequestCreate sharePageInvitationRequestCreate,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
+
+    @Tag(name = "Post", description = "페이지 관련 API")
+    @Operation(summary = "공유 페이지 탈퇴", description = "사용자가 공유 페이지를 탈퇴합니다.")
+    @ApiErrorCodeExamples(PageErrorCode.class)
+    @PostMapping("/leave")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiPageResponseSpec<SharePageLeaveResponse>> leaveSharePage(
+            @RequestBody @Validated BaseRequest baseRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 

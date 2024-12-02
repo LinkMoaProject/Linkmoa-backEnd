@@ -7,7 +7,6 @@ import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.member.error.MemberErrorCode;
 import com.linkmoa.source.domain.member.exception.MemberException;
-import com.linkmoa.source.domain.member.repository.MemberRepository;
 import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.domain.memberPageLink.entity.MemberPageLink;
@@ -16,9 +15,10 @@ import com.linkmoa.source.domain.notify.aop.annotation.NotifyApplied;
 import com.linkmoa.source.domain.page.contant.PageType;
 import com.linkmoa.source.domain.page.dto.request.PageCreateRequest;
 import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
-import com.linkmoa.source.domain.page.dto.request.PageInvitationRequestCreate;
+import com.linkmoa.source.domain.page.dto.request.SharePageInvitationRequestCreate;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
-import com.linkmoa.source.domain.page.dto.response.PageInvitationRequestCreateResponse;
+import com.linkmoa.source.domain.page.dto.response.SharePageInvitationRequestCreateResponse;
+import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.page.entity.PageInvitationRequest;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
@@ -26,6 +26,7 @@ import com.linkmoa.source.domain.page.exception.PageException;
 import com.linkmoa.source.domain.page.repository.PageInviteRequestRepository;
 import com.linkmoa.source.domain.page.repository.PageRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
+import com.linkmoa.source.global.dto.request.BaseRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,7 @@ public class PageService {
 
         return ApiPageResponseSpec.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successMessage("Page 생성에 성공했습니다.")
+                .successMessage(newPage.getPageType().toString()+"페이지 생성에 성공했습니다.")
                 .data(newPage.getId())
                 .build();
     }
@@ -92,24 +93,26 @@ public class PageService {
 
 
     @Transactional
+    @ValidationApplied
     public ApiPageResponseSpec<Long> deletePage(PageDeleteRequest pageDeleteRequest, PrincipalDetails principalDetails) {
         pageRepository.deleteById(pageDeleteRequest.baseRequest().pageId());
         return ApiPageResponseSpec.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successMessage("Page 삭제에 성공했습니다.")
+                .successMessage("페이지 삭제에 성공했습니다.")
                 .data(pageDeleteRequest.baseRequest().pageId())
                 .build();
     }
+
     @Transactional
     @ValidationApplied
     @NotifyApplied
-    public PageInvitationRequest createPageInviteRequest(PageInvitationRequestCreate pageInvitationRequestCreate, PrincipalDetails principalDetails){
+    public PageInvitationRequest createSharePageInviteRequest(SharePageInvitationRequestCreate sharePageInvitationRequestCreate, PrincipalDetails principalDetails){
 
-        if (!memberService.isMemberExist(pageInvitationRequestCreate.receiverEmail())) {
+        if (!memberService.isMemberExist(sharePageInvitationRequestCreate.receiverEmail())) {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL); // 유저가 없으면 예외 발생
         }
 
-        Page page = pageRepository.findById(pageInvitationRequestCreate.baseRequest().pageId())
+        Page page = pageRepository.findById(sharePageInvitationRequestCreate.baseRequest().pageId())
                 .orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
 
         if (page.getPageType() == PageType.PERSONAL) {
@@ -118,26 +121,60 @@ public class PageService {
 
         PageInvitationRequest pageInvitationRequest = PageInvitationRequest.builder()
                 .senderEmail(principalDetails.getEmail())
-                .receiverEmail(pageInvitationRequestCreate.receiverEmail())
+                .receiverEmail(sharePageInvitationRequestCreate.receiverEmail())
                 .page(page)
                 .build();
 
         return pageInviteRequestRepository.save(pageInvitationRequest);
     }
+    public ApiPageResponseSpec<SharePageInvitationRequestCreateResponse> mapToPageInviteRequestResponse(PageInvitationRequest pageInvitationRequest){
 
-    public ApiPageResponseSpec<PageInvitationRequestCreateResponse> mapToPageInviteRequestResponse(PageInvitationRequest pageInvitationRequest){
-
-        PageInvitationRequestCreateResponse pageInvitationRequestCreateResponse = PageInvitationRequestCreateResponse.builder()
+        SharePageInvitationRequestCreateResponse sharePageInvitationRequestCreateResponse = SharePageInvitationRequestCreateResponse.builder()
                 .pageTitle(pageInvitationRequest.getPage().getPageTitle())
                 .receiverEmail(pageInvitationRequest.getSenderEmail())
                 .senderEmail(pageInvitationRequest.getSenderEmail())
                 .build();
 
-        return ApiPageResponseSpec.<PageInvitationRequestCreateResponse>builder()
+        return ApiPageResponseSpec.<SharePageInvitationRequestCreateResponse>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successMessage("공유 page 초대를 보냈습니다.")
-                .data(pageInvitationRequestCreateResponse)
+                .successMessage("공유 페이지 초대를 보냈습니다.")
+                .data(sharePageInvitationRequestCreateResponse)
                 .build();
+    }
+
+
+
+    /**
+     *1.개인 페이지면 , 탈퇴할 수가 없음
+     *2.공유 페이지라도, host면 탈퇴할 수 없음. 삭제가 선행되야함
+     *3. request : pageId,commandType만 있으면 됨
+     *   response : pageTitle,pageId,
+     */
+
+    @Transactional
+    @ValidationApplied
+    public ApiPageResponseSpec<SharePageLeaveResponse> leaveSharePage(BaseRequest baseRequest, PrincipalDetails principalDetails){
+
+        Page page = pageRepository.findById(baseRequest.pageId()).orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
+        Member member = memberService.findMemberByEmail(principalDetails.getEmail());
+
+        if(page.getPageType()==PageType.PERSONAL){
+            throw new PageException(PageErrorCode.CANNOT_LEAVE_PERSONAL_PAGE);
+        }
+
+        memberPageLinkRepository.deleteByMemberIdAndPageId(member.getId(),page.getId());
+
+        SharePageLeaveResponse sharePageLeaveResponse = SharePageLeaveResponse.builder()
+                .pageId(page.getId())
+                .pageTitle(page.getPageTitle())
+                .build();
+
+        return ApiPageResponseSpec.<SharePageLeaveResponse>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("공유 페이지 탈퇴에 성공했습니다.")
+                .data(sharePageLeaveResponse)
+                .build();
+
     }
 
 
