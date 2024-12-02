@@ -123,8 +123,8 @@ public class PageService {
                 .senderEmail(principalDetails.getEmail())
                 .receiverEmail(sharePageInvitationRequestCreate.receiverEmail())
                 .page(page)
+                .permissionType(sharePageInvitationRequestCreate.permissionType())
                 .build();
-
         return pageInviteRequestRepository.save(pageInvitationRequest);
     }
     public ApiPageResponseSpec<SharePageInvitationRequestCreateResponse> mapToPageInviteRequestResponse(PageInvitationRequest pageInvitationRequest){
@@ -133,6 +133,7 @@ public class PageService {
                 .pageTitle(pageInvitationRequest.getPage().getPageTitle())
                 .receiverEmail(pageInvitationRequest.getSenderEmail())
                 .senderEmail(pageInvitationRequest.getSenderEmail())
+                .PageInvitationRequestId(pageInvitationRequest.getId())
                 .build();
 
         return ApiPageResponseSpec.<SharePageInvitationRequestCreateResponse>builder()
@@ -142,14 +143,6 @@ public class PageService {
                 .build();
     }
 
-
-
-    /**
-     *1.개인 페이지면 , 탈퇴할 수가 없음
-     *2.공유 페이지라도, host면 탈퇴할 수 없음. 삭제가 선행되야함
-     *3. request : pageId,commandType만 있으면 됨
-     *   response : pageTitle,pageId,
-     */
 
     @Transactional
     @ValidationApplied
@@ -176,6 +169,8 @@ public class PageService {
                 .build();
 
     }
+
+
 
 
 
