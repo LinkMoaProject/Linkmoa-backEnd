@@ -20,7 +20,7 @@ import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.dto.response.SharePageInvitationRequestCreateResponse;
 import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.entity.Page;
-import com.linkmoa.source.domain.page.entity.PageInvitationRequest;
+import com.linkmoa.source.domain.page.entity.SharePageInvitationRequest;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
 import com.linkmoa.source.domain.page.exception.PageException;
 import com.linkmoa.source.domain.page.repository.PageInviteRequestRepository;
@@ -106,7 +106,7 @@ public class PageService {
     @Transactional
     @ValidationApplied
     @NotifyApplied
-    public PageInvitationRequest createSharePageInviteRequest(SharePageInvitationRequestCreate sharePageInvitationRequestCreate, PrincipalDetails principalDetails){
+    public SharePageInvitationRequest createSharePageInviteRequest(SharePageInvitationRequestCreate sharePageInvitationRequestCreate, PrincipalDetails principalDetails){
 
         if (!memberService.isMemberExist(sharePageInvitationRequestCreate.receiverEmail())) {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL); // 유저가 없으면 예외 발생
@@ -119,21 +119,21 @@ public class PageService {
             throw new PageException(PageErrorCode.CANNOT_INVITE_TO_PERSONAL_PAGE);
         }
 
-        PageInvitationRequest pageInvitationRequest = PageInvitationRequest.builder()
+        SharePageInvitationRequest sharePageInvitationRequest = SharePageInvitationRequest.builder()
                 .senderEmail(principalDetails.getEmail())
                 .receiverEmail(sharePageInvitationRequestCreate.receiverEmail())
                 .page(page)
                 .permissionType(sharePageInvitationRequestCreate.permissionType())
                 .build();
-        return pageInviteRequestRepository.save(pageInvitationRequest);
+        return pageInviteRequestRepository.save(sharePageInvitationRequest);
     }
-    public ApiPageResponseSpec<SharePageInvitationRequestCreateResponse> mapToPageInviteRequestResponse(PageInvitationRequest pageInvitationRequest){
+    public ApiPageResponseSpec<SharePageInvitationRequestCreateResponse> mapToPageInviteRequestResponse(SharePageInvitationRequest sharePageInvitationRequest){
 
         SharePageInvitationRequestCreateResponse sharePageInvitationRequestCreateResponse = SharePageInvitationRequestCreateResponse.builder()
-                .pageTitle(pageInvitationRequest.getPage().getPageTitle())
-                .receiverEmail(pageInvitationRequest.getSenderEmail())
-                .senderEmail(pageInvitationRequest.getSenderEmail())
-                .PageInvitationRequestId(pageInvitationRequest.getId())
+                .pageTitle(sharePageInvitationRequest.getPage().getPageTitle())
+                .receiverEmail(sharePageInvitationRequest.getReceiverEmail())
+                .senderEmail(sharePageInvitationRequest.getSenderEmail())
+                .PageInvitationRequestId(sharePageInvitationRequest.getId())
                 .build();
 
         return ApiPageResponseSpec.<SharePageInvitationRequestCreateResponse>builder()

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class PageInvitationRequest extends BaseEntity implements NotifyInfo {
+public class SharePageInvitationRequest extends BaseEntity implements NotifyInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +46,7 @@ public class PageInvitationRequest extends BaseEntity implements NotifyInfo {
 
 
     @Builder
-    PageInvitationRequest(String receiverEmail, String senderEmail, Page page,PermissionType permissionType){
+    SharePageInvitationRequest(String receiverEmail, String senderEmail, Page page, PermissionType permissionType){
         this.senderEmail=senderEmail;
         this.receiverEmail=receiverEmail;
         this.page=page;

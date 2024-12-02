@@ -28,7 +28,6 @@ public class MemberPageLink extends BaseEntity {
     @JoinColumn(name="member_id")
     private Member member;
 
-
     @ManyToOne(
             fetch = FetchType.LAZY
     )
