@@ -5,7 +5,7 @@ import lombok.Builder;
 
 
 @Builder
-public record PageInvitationRequestCreate(
+public record SharePageInvitationRequestCreate(
         BaseRequest baseRequest,
         String receiverEmail
 

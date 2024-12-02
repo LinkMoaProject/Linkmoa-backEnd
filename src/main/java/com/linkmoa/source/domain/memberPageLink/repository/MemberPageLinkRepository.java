@@ -12,5 +12,9 @@ public interface MemberPageLinkRepository extends JpaRepository<MemberPageLink,L
     @Query("SELECT m.permissionType FROM member_page_link m where m.member.id =:memberId AND m.page.id =:pageId")
     PermissionType findPermissionTypeByMemberIdAndPageId(@Param("memberId")Long memberId,@Param("pageId") Long pageId);
 
+    @Query("DELETE FROM member_page_link m WHERE m.member.id = :memberId AND m.page.id = :pageId")
+    void deleteByMemberIdAndPageId(@Param("memberId") Long memberId, @Param("pageId") Long pageId);
+
+
 
 }

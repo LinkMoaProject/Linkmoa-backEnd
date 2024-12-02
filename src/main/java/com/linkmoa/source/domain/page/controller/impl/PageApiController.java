@@ -5,11 +5,12 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.page.controller.spec.PageApiSpecification;
 import com.linkmoa.source.domain.page.dto.request.PageCreateRequest;
 import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
-import com.linkmoa.source.domain.page.dto.request.PageInvitationRequestCreate;
+import com.linkmoa.source.domain.page.dto.request.SharePageInvitationRequestCreate;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
-import com.linkmoa.source.domain.page.dto.response.PageInvitationRequestCreateResponse;
-import com.linkmoa.source.domain.page.entity.PageInvitationRequest;
+import com.linkmoa.source.domain.page.dto.response.SharePageInvitationRequestCreateResponse;
+import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.service.PageService;
+import com.linkmoa.source.global.dto.request.BaseRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,12 +39,20 @@ public class PageApiController implements PageApiSpecification {
 
         return ResponseEntity.ok().body(deletePageResponse);
     }
-    public ResponseEntity<ApiPageResponseSpec<PageInvitationRequestCreateResponse>> invitePage(
-            PageInvitationRequestCreate pageInvitationRequest,
+    public ResponseEntity<ApiPageResponseSpec<SharePageInvitationRequestCreateResponse>> inviteSharePage(
+            SharePageInvitationRequestCreate pageInvitationRequest,
             PrincipalDetails principalDetails) {
-        ApiPageResponseSpec<PageInvitationRequestCreateResponse> pageInviteRequestResponse =
-                pageService.mapToPageInviteRequestResponse(pageService.createPageInviteRequest(pageInvitationRequest, principalDetails));
+        ApiPageResponseSpec<SharePageInvitationRequestCreateResponse> pageInviteRequestResponse =
+                pageService.mapToPageInviteRequestResponse(pageService.createSharePageInviteRequest(pageInvitationRequest, principalDetails));
 
         return ResponseEntity.ok().body(pageInviteRequestResponse);
+    }
+
+    public ResponseEntity<ApiPageResponseSpec<SharePageLeaveResponse>> leaveSharePage(
+            BaseRequest baseRequest,
+            PrincipalDetails principalDetails) {
+        ApiPageResponseSpec<SharePageLeaveResponse> sharePageLeaveResponse= pageService.leaveSharePage(baseRequest, principalDetails);
+
+        return ResponseEntity.ok().body(sharePageLeaveResponse);
     }
 }

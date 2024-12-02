@@ -1,7 +1,6 @@
 package com.linkmoa.source.global.constant;
 
-public enum
-CommandType {
+public enum CommandType {
 
     VIEW,
     EDIT,
@@ -9,6 +8,7 @@ CommandType {
     DIRECTORY_TRANSMISSION,
     SHARED_PAGE_INVITATION,
     SHARED_PAGE_DELETION,
-    SHARED_PAGE_USER_REMOVAL
+    SHARED_PAGE_USER_REMOVAL,
+    SHARED_PAGE_LEAVE
 }
 
