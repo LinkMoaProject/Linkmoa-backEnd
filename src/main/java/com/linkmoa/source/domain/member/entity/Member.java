@@ -1,7 +1,7 @@
 package com.linkmoa.source.domain.member.entity;
 
 import com.linkmoa.source.domain.member.constant.Role;
-import com.linkmoa.source.domain.member.constant.Sex;
+import com.linkmoa.source.domain.member.constant.Gender;
 import com.linkmoa.source.domain.memberPageLink.entity.MemberPageLink;
 import com.linkmoa.source.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -45,8 +45,8 @@ public class Member extends BaseEntity {
     @Column(name = "member_age")
     private Integer age;
 
-    @Column(name="member_sex")
-    private Sex sex;
+    @Column(name="member_gender")
+    private Gender gender;
 
     @Column(name="member_job")
     private String job;
@@ -83,9 +83,9 @@ public class Member extends BaseEntity {
         }
     }
 
-    public void updateSignUpMember(Integer age, Sex sex, String job){
+    public void updateSignUpMember(Integer age, Gender gender, String job){
         this.age = age;
-        this.sex = sex;
+        this.gender = gender;
         this.job = job;
     }
 }
