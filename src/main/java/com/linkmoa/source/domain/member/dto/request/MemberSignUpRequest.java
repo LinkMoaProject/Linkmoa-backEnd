@@ -1,7 +1,6 @@
 package com.linkmoa.source.domain.member.dto.request;
 
 import com.linkmoa.source.domain.member.constant.Sex;
-import com.linkmoa.source.global.dto.request.BaseRequestDto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
