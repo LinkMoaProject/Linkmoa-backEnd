@@ -1,5 +1,5 @@
 package com.linkmoa.source.domain.member.constant;
 
-public enum Sex {
+public enum Gender {
     FEMALE, MALE, ETC
 }
