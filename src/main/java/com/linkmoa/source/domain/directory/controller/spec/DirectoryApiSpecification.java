@@ -30,7 +30,7 @@ public interface DirectoryApiSpecification {
     @Operation(summary = "디렉토리 삭제", description = "디렉토리를 삭제합니다.")
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @DeleteMapping()
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAutheetnticated()")
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> deleteDirectory(
             @RequestBody @Validated DirectoryDeleteRequest directoryDeleteRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails

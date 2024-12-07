@@ -1,9 +1,11 @@
 package com.linkmoa.source.auth.jwt.provider;
 
+import com.linkmoa.source.domain.member.exception.JwtTokenException;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +14,11 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+import static com.linkmoa.source.domain.member.error.JwtErrorCode.*;
+
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtTokenProvider {
     @Getter
     private SecretKey secretKey;
@@ -53,14 +58,31 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token) throws JwtTokenException {
         try {
-            Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
+            Jwts.parser()
+                    .verifyWith(secretKey) // 서명 검증
+                    .build()
+                    .parseSignedClaims(token); // JWT 파싱
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            log.info("Invalid JWT Token", e);
+            throw new JwtTokenException(NOT_VALID_TOKEN_EXCEPTION); // 서명이 유효하지 않음
+        } catch (ExpiredJwtException e) {
+            log.info("Expired JWT Token", e);
+            if (isExpired(token)) {
+                throw new JwtTokenException(EXPIRED_REFRESH_TOKEN_EXCEPTION); // Refresh Token 만료
+            }
+            throw new JwtTokenException(EXPIRED_ACCESS_TOKEN_EXCEPTION); // Access Token 만료
+        } catch (UnsupportedJwtException e) {
+            log.info("Unsupported JWT Token", e);
+            throw new JwtTokenException(UNSUPPORTED_TOKEN_EXCEPTION); // 지원되지 않는 토큰
+        } catch (IllegalArgumentException e) {
+            log.info("JWT claims string is empty.", e);
+            throw new JwtTokenException(MISMATCH_CLAIMS_EXCEPTION); // 클레임이 비었음
         }
     }
+
 
     public boolean isExpired(String token) {
         return Jwts.parser()

@@ -1,7 +1,7 @@
 package com.linkmoa.source.auth.oauth2.handler;
 
 import com.linkmoa.source.auth.jwt.provider.JwtCookieManager;
-import com.linkmoa.source.auth.jwt.service.RefreshTokenService;
+import com.linkmoa.source.auth.jwt.refresh.service.RefreshTokenService;
 import com.linkmoa.source.auth.jwt.service.JwtService;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import jakarta.servlet.ServletException;
@@ -37,7 +37,7 @@ public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String role = authorities.iterator().next().getAuthority();
 
         String refreshToken =  jwtService.createRefreshToken();
-        refreshTokenService.saveRefreshToken(email,refreshToken);
+        refreshTokenService.saveRefreshToken(refreshToken,email);
         response.addCookie(jwtService.createRefreshCookie(refreshToken));
 
         response.sendRedirect("http://localhost:3000/reissue");

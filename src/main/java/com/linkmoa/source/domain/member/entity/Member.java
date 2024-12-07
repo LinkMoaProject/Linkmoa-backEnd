@@ -1,6 +1,7 @@
 package com.linkmoa.source.domain.member.entity;
 
 import com.linkmoa.source.domain.member.constant.Role;
+import com.linkmoa.source.domain.member.constant.Gender;
 import com.linkmoa.source.domain.memberPageLink.entity.MemberPageLink;
 import com.linkmoa.source.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -41,6 +42,15 @@ public class Member extends BaseEntity {
     @Column(name="provider_id")
     private String providerId;
 
+    @Column(name = "member_age")
+    private Integer age;
+
+    @Column(name="member_gender")
+    private Gender gender;
+
+    @Column(name="member_job")
+    private String job;
+
     @OneToMany(
             mappedBy = "member",
             cascade = CascadeType.ALL,
@@ -71,5 +81,11 @@ public class Member extends BaseEntity {
         if (member.getRole() != null) {
             this.role = member.getRole();
         }
+    }
+
+    public void updateSignUpMember(Integer age, Gender gender, String job){
+        this.age = age;
+        this.gender = gender;
+        this.job = job;
     }
 }
