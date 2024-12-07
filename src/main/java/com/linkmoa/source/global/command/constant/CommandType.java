@@ -1,4 +1,4 @@
-package com.linkmoa.source.global.constant;
+package com.linkmoa.source.global.command.constant;
 
 public enum CommandType {
     VIEW,

@@ -13,8 +13,8 @@ import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionSendR
 import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationRequestCreateResponse;
 import com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest;
 import com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest;
-import com.linkmoa.source.domain.dispatch.repository.DirectorySendRequestRepository;
-import com.linkmoa.source.domain.dispatch.repository.SharePageInviteRequestRepository;
+import com.linkmoa.source.domain.dispatch.repository.DirectoryTransmissionRequestRepository;
+import com.linkmoa.source.domain.dispatch.repository.SharePageInvitationRequestRepository;
 import com.linkmoa.source.domain.member.error.MemberErrorCode;
 import com.linkmoa.source.domain.member.exception.MemberException;
 import com.linkmoa.source.domain.member.service.MemberService;
@@ -33,13 +33,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
-public class DispatchService {
-
+public class DispatchRequestService {
+ 
     private final MemberService memberService;
     private final DirectoryRepository directoryRepository;
-    private final DirectorySendRequestRepository directorySendRequestRepository;
+    private final DirectoryTransmissionRequestRepository directoryTransmissionRequestRepository;
     private final PageRepository pageRepository;
-    private final SharePageInviteRequestRepository sharePageInviteRequestRepository;
+    private final SharePageInvitationRequestRepository sharePageInvitationRequestRepository;
 
     @Transactional
     @ValidationApplied
@@ -59,7 +59,7 @@ public class DispatchService {
                 .directory(directory)
                 .build();
 
-        return directorySendRequestRepository.save(directoryTransmissionRequest);
+        return directoryTransmissionRequestRepository.save(directoryTransmissionRequest);
     }
 
     public ApiDirectoryResponseSpec<DirectorySendResponse> mapToDirectorySendResponse(DirectoryTransmissionRequest directoryTransmissionRequest)
@@ -72,7 +72,7 @@ public class DispatchService {
 
         return ApiDirectoryResponseSpec.<DirectorySendResponse>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successMessage("Directory 전송 요청을 보냈습니다.")
+                .successMessage("디렉토리 전송 요청을 보냈습니다.")
                 .data(directorySendResponse)
                 .build();
     }
@@ -100,7 +100,7 @@ public class DispatchService {
                 .page(page)
                 .permissionType(sharePageInvitationRequestCreate.permissionType())
                 .build();
-        return sharePageInviteRequestRepository.save(sharePageInvitationRequest);
+        return sharePageInvitationRequestRepository.save(sharePageInvitationRequest);
     }
     public ApiPageResponseSpec<SharePageInvitationRequestCreateResponse> mapToPageInviteRequestResponse(SharePageInvitationRequest sharePageInvitationRequest){
 

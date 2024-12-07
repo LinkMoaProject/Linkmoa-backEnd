@@ -7,7 +7,7 @@ import com.linkmoa.source.domain.dispatch.dto.response.DirectorySendResponse;
 import com.linkmoa.source.domain.dispatch.controller.spec.DispatchApiSpecification;
 import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionSendRequest;
 import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationRequestCreateResponse;
-import com.linkmoa.source.domain.dispatch.service.DispatchService;
+import com.linkmoa.source.domain.dispatch.service.DispatchRequestService;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/dispatch")
 public class DispatchApiContorller implements DispatchApiSpecification {
 
-    private final DispatchService dispatchService;
+    private final DispatchRequestService dispatchRequestService;
 
     public ResponseEntity<ApiDirectoryResponseSpec<DirectorySendResponse>> sendDirectory(
             DirectoryTransmissionSendRequest directoryTransmissionSendRequest,
             PrincipalDetails principalDetails) {
-        ApiDirectoryResponseSpec<DirectorySendResponse> direcotrySendResponse = dispatchService.mapToDirectorySendResponse(
-                dispatchService.createDirectoryTransmissionRequest(
+        ApiDirectoryResponseSpec<DirectorySendResponse> direcotrySendResponse = dispatchRequestService.mapToDirectorySendResponse(
+                dispatchRequestService.createDirectoryTransmissionRequest(
                         directoryTransmissionSendRequest,
                         principalDetails)
         );
@@ -36,7 +36,7 @@ public class DispatchApiContorller implements DispatchApiSpecification {
             SharePageInvitationRequestCreate pageInvitationRequest,
             PrincipalDetails principalDetails) {
         ApiPageResponseSpec<SharePageInvitationRequestCreateResponse> pageInviteRequestResponse =
-                dispatchService.mapToPageInviteRequestResponse(dispatchService.createSharePageInviteRequest(pageInvitationRequest, principalDetails));
+                dispatchRequestService.mapToPageInviteRequestResponse(dispatchRequestService.createSharePageInviteRequest(pageInvitationRequest, principalDetails));
 
         return ResponseEntity.ok().body(pageInviteRequestResponse);
     }
