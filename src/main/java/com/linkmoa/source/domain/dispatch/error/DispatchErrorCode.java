@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum DispatchErrorCode implements ErrorCode {
 
-    REQUESR_ALREADY_PROCESSED(HttpStatus.NOT_FOUND , "이미 처리된 요청입니다.");
+    REQUEST_ALREADY_PROCESSED(HttpStatus.NOT_FOUND , "이미 처리된 요청입니다.");
 
     private HttpStatus httpStatus;
     private String errorMessage;
