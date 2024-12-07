@@ -26,13 +26,14 @@ import com.linkmoa.source.domain.page.error.PageErrorCode;
 import com.linkmoa.source.domain.page.exception.PageException;
 import com.linkmoa.source.domain.page.repository.PageRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
-import lombok.AllArgsConstructor;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class DispatchRequestService {
  
     private final MemberService memberService;

@@ -38,8 +38,6 @@ public class DispatchProcessingService {
     private final SharePageInvitationRequestRepository sharePageInvitationRequestRepository;
     private final MemberPageLinkRepository memberPageLinkRepository;
 
-
-
     @Transactional
     public ApiPageResponseSpec<SharePageInvitationActionResponse> actionSharePageInvitaion(
             SharePageInvitationActionRequest sharePageInvitationActionRequest,
@@ -59,7 +57,7 @@ public class DispatchProcessingService {
 
         Page page =sharePageInvitationRequest.getPage();
         Member member = memberService.findMemberByEmail(principalDetails.getEmail());
-        PermissionType permissionType = sharePageInvitationActionRequest.permissionType();
+        PermissionType permissionType = sharePageInvitationRequest.getPermissionType();
 
         sharePageInvitationRequest.changeRequestStatus(sharePageInvitationActionRequest.requestStatus());
 

@@ -7,8 +7,7 @@ import lombok.Builder;
 @Builder
 public record SharePageInvitationActionRequest(
         Long sharePageInvitationRequestId,
-        RequestStatus requestStatus,
-        PermissionType permissionType
+        RequestStatus requestStatus
 
 ) {
 }
