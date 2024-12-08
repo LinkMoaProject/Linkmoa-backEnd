@@ -21,6 +21,10 @@ public interface MemberPageLinkRepository extends JpaRepository<MemberPageLink,L
     Optional<MemberPageLink> findByMemberAndPage(@Param("memberId") Long memberId, @Param("pageId") Long pageId);
 
 
+    @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END " +
+            "FROM member_page_link m WHERE m.member.id = :memberId AND m.page.id = :pageId")
+    boolean existsByMemberAndPage(@Param("memberId") Long memberId, @Param("pageId") Long pageId);
+
 
 
 }

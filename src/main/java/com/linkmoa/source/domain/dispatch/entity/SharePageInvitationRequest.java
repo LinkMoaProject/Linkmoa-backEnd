@@ -20,7 +20,7 @@ public class SharePageInvitationRequest extends BaseEntity implements NotifyInfo
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="page_invite_request_id")
+    @Column(name="share_page_invite_request_id")
     private Long id;
 
     @Column(name="receiver_email")
