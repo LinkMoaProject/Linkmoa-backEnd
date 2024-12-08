@@ -3,7 +3,7 @@ package com.linkmoa.source.global.command.service;
 
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.domain.memberPageLink.repository.MemberPageLinkRepository;
-import com.linkmoa.source.global.constant.CommandType;
+import com.linkmoa.source.global.command.constant.CommandType;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumMap;

@@ -7,7 +7,7 @@ import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 
 import com.linkmoa.source.global.command.service.CommandService;
-import com.linkmoa.source.global.constant.CommandType;
+import com.linkmoa.source.global.command.constant.CommandType;
 import com.linkmoa.source.global.dto.request.BaseRequest;
 import com.linkmoa.source.global.error.code.impl.ValidationErrorCode;
 import com.linkmoa.source.global.exception.ValidationException;

@@ -1,4 +1,4 @@
-package com.linkmoa.source.global.constant;
+package com.linkmoa.source.domain.dispatch.constant;
 
 
 public enum RequestStatus {

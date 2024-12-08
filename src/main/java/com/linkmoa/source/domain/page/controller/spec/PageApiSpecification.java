@@ -3,9 +3,9 @@ package com.linkmoa.source.domain.page.controller.spec;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.page.dto.request.PageCreateRequest;
 import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
-import com.linkmoa.source.domain.page.dto.request.SharePageInvitationRequestCreate;
+import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
-import com.linkmoa.source.domain.page.dto.response.SharePageInvitationRequestCreateResponse;
+import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationRequestCreateResponse;
 import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
 import com.linkmoa.source.global.dto.request.BaseRequest;
@@ -43,15 +43,6 @@ public interface PageApiSpecification {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
-    @Tag(name = "Post", description = "페이지 관련 API")
-    @Operation(summary = "공유 페이지 사용자 초대", description = "공유 페이지에 사용자 초대 요청을 보냅니다.")
-    @ApiErrorCodeExamples(PageErrorCode.class)
-    @PostMapping("/invite")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiPageResponseSpec<SharePageInvitationRequestCreateResponse>> inviteSharePage(
-            @RequestBody @Validated SharePageInvitationRequestCreate sharePageInvitationRequestCreate,
-            @AuthenticationPrincipal PrincipalDetails principalDetails
-    );
 
     @Tag(name = "Post", description = "페이지 관련 API")
     @Operation(summary = "공유 페이지 탈퇴", description = "사용자가 공유 페이지를 탈퇴합니다.")

@@ -1,4 +1,4 @@
-package com.linkmoa.source.domain.directory.dto.response;
+package com.linkmoa.source.domain.dispatch.dto.response;
 
 
 import lombok.Builder;

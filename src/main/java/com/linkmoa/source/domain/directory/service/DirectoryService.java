@@ -4,17 +4,11 @@ package com.linkmoa.source.domain.directory.service;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.directory.dto.response.DirectorySendResponse;
 import com.linkmoa.source.domain.directory.entity.Directory;
-import com.linkmoa.source.domain.directory.entity.DirectoryTransmissionRequest;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
-import com.linkmoa.source.domain.directory.repository.DirectorySendRequestRepository;
-import com.linkmoa.source.domain.member.error.MemberErrorCode;
-import com.linkmoa.source.domain.member.exception.MemberException;
 import com.linkmoa.source.domain.member.service.MemberService;
-import com.linkmoa.source.domain.notify.aop.annotation.NotifyApplied;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,44 +23,7 @@ public class DirectoryService {
 
     private final MemberService memberService;
     private final DirectoryRepository directoryRepository;
-    private final DirectorySendRequestRepository directorySendRequestRepository;
 
-
-    @Transactional
-    @ValidationApplied
-    @NotifyApplied
-    public DirectoryTransmissionRequest createDirectoryTransmissionRequest(DirectoryTransmissionSendRequest directoryTransmissionSendRequest, PrincipalDetails principalDetails) {
-
-        if (!memberService.isMemberExist(directoryTransmissionSendRequest.receiverEmail())) {
-            throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL);
-        }
-
-        Directory directory = directoryRepository.findById(directoryTransmissionSendRequest.directoryId())
-                .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
-
-        DirectoryTransmissionRequest directoryTransmissionRequest = DirectoryTransmissionRequest.builder()
-                .senderEmail(principalDetails.getEmail())
-                .receiverEmail(directoryTransmissionSendRequest.receiverEmail())
-                .directory(directory)
-                .build();
-
-        return directorySendRequestRepository.save(directoryTransmissionRequest);
-    }
-
-    public ApiDirectoryResponseSpec<DirectorySendResponse> mapToDirectorySendResponse(DirectoryTransmissionRequest directoryTransmissionRequest)
-    {
-        DirectorySendResponse directorySendResponse = DirectorySendResponse.builder()
-                .directoryName(directoryTransmissionRequest.getDirectory().getDirectoryName())
-                .receiverEmail(directoryTransmissionRequest.getReceiverEmail())
-                .senderEmail(directoryTransmissionRequest.getSenderEmail())
-                .build();
-
-        return ApiDirectoryResponseSpec.<DirectorySendResponse>builder()
-                .httpStatusCode(HttpStatus.OK)
-                .successMessage("Directory 전송 요청을 보냈습니다.")
-                .data(directorySendResponse)
-                .build();
-    }
 
 
 

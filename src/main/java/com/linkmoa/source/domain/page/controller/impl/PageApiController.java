@@ -5,9 +5,9 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.page.controller.spec.PageApiSpecification;
 import com.linkmoa.source.domain.page.dto.request.PageCreateRequest;
 import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
-import com.linkmoa.source.domain.page.dto.request.SharePageInvitationRequestCreate;
+import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
-import com.linkmoa.source.domain.page.dto.response.SharePageInvitationRequestCreateResponse;
+import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationRequestCreateResponse;
 import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.service.PageService;
 import com.linkmoa.source.global.dto.request.BaseRequest;
@@ -39,14 +39,7 @@ public class PageApiController implements PageApiSpecification {
 
         return ResponseEntity.ok().body(deletePageResponse);
     }
-    public ResponseEntity<ApiPageResponseSpec<SharePageInvitationRequestCreateResponse>> inviteSharePage(
-            SharePageInvitationRequestCreate pageInvitationRequest,
-            PrincipalDetails principalDetails) {
-        ApiPageResponseSpec<SharePageInvitationRequestCreateResponse> pageInviteRequestResponse =
-                pageService.mapToPageInviteRequestResponse(pageService.createSharePageInviteRequest(pageInvitationRequest, principalDetails));
 
-        return ResponseEntity.ok().body(pageInviteRequestResponse);
-    }
 
     public ResponseEntity<ApiPageResponseSpec<SharePageLeaveResponse>> leaveSharePage(
             BaseRequest baseRequest,
