@@ -47,7 +47,7 @@ public interface PageApiSpecification {
     @Tag(name = "Post", description = "페이지 관련 API")
     @Operation(summary = "공유 페이지 탈퇴", description = "사용자가 공유 페이지를 탈퇴합니다.")
     @ApiErrorCodeExamples(PageErrorCode.class)
-    @PostMapping("/leave")
+    @DeleteMapping("/leave")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiPageResponseSpec<SharePageLeaveResponse>> leaveSharePage(
             @RequestBody @Validated BaseRequest baseRequest,

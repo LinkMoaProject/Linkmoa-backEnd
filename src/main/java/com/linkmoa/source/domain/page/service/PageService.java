@@ -101,15 +101,14 @@ public class PageService {
 
 
     @Transactional
-    @ValidationApplied
     public ApiPageResponseSpec<SharePageLeaveResponse> leaveSharePage(BaseRequest baseRequest, PrincipalDetails principalDetails){
 
-        Page page = pageRepository.findById(baseRequest.pageId()).orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
+        Page page = pageRepository.findById(baseRequest.pageId()).
+                orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
+
         Member member = memberService.findMemberByEmail(principalDetails.getEmail());
 
-        if(page.getPageType()==PageType.PERSONAL){
-            throw new PageException(PageErrorCode.CANNOT_LEAVE_PERSONAL_PAGE);
-        }
+        validateCanLeaveSharePage(page,member);
 
         memberPageLinkRepository.deleteByMemberIdAndPageId(member.getId(),page.getId());
 
@@ -123,6 +122,21 @@ public class PageService {
                 .successMessage("공유 페이지 탈퇴에 성공했습니다.")
                 .data(sharePageLeaveResponse)
                 .build();
+    }
+
+    private void validateCanLeaveSharePage(Page page,Member member){
+
+        if(page.getPageType()==PageType.PERSONAL){
+            throw new PageException(PageErrorCode.CANNOT_LEAVE_PERSONAL_PAGE);
+        }
+
+        if(memberPageLinkRepository.countMembersInSharedPage(page.getId())==1){
+            throw new PageException(PageErrorCode.CANNOT_LEAVE_SHARED_PAGE_SINGLE_MEMBER);
+        }
+
+        if(memberPageLinkRepository.countHostMembersInSharedPage(page.getId(),member)==1){
+            throw new PageException(PageErrorCode.CANNOT_LEAVE_SHARED_PAGE_SINGLE_HOST);
+        }
 
     }
 
