@@ -8,6 +8,7 @@ import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
 import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationRequestCreateResponse;
+import com.linkmoa.source.domain.page.dto.response.PagesResponse;
 import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.service.PageService;
 import com.linkmoa.source.global.dto.request.BaseRequest;
@@ -15,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,6 +41,16 @@ public class PageApiController implements PageApiSpecification {
         ApiPageResponseSpec<Long> deletePageResponse = pageService.deletePage(pageDeleteRequest, principalDetails);
 
         return ResponseEntity.ok().body(deletePageResponse);
+    }
+
+
+    public ResponseEntity<ApiPageResponseSpec<List<PagesResponse>>> getAllPages(
+            PrincipalDetails principalDetails) {
+
+        ApiPageResponseSpec<List<PagesResponse>> allPages = pageService.findAllPages(principalDetails);
+
+        return ResponseEntity.ok().body(allPages);
+
     }
 
 

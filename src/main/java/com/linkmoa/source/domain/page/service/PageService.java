@@ -13,6 +13,7 @@ import com.linkmoa.source.domain.page.contant.PageType;
 import com.linkmoa.source.domain.page.dto.request.PageCreateRequest;
 import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
+import com.linkmoa.source.domain.page.dto.response.PagesResponse;
 import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
@@ -25,6 +26,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -95,6 +98,17 @@ public class PageService {
                 .successMessage("페이지 삭제에 성공했습니다.")
                 .data(pageDeleteRequest.baseRequest().pageId())
                 .build();
+    }
+
+    public ApiPageResponseSpec<List<PagesResponse>> findAllPages(PrincipalDetails principalDetails){
+        List<PagesResponse> allPagesByMemberId = pageRepository.findAllPagesByMemberId(principalDetails.getId());
+
+        return ApiPageResponseSpec.<List<PagesResponse>>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("현재 회원이 참여 중인 모든 페이지를 조회했습니다.")
+                .data(allPagesByMemberId)
+                .build();
+
     }
 
 
