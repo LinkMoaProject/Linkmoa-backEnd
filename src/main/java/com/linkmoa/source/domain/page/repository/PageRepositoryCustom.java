@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface PageRepositoryCustom {
 
-    List<ApiPageResponseSpec<PagesResponse>> findAllPagesByMemberId(Long memberId);
+    List<PagesResponse> findAllPagesByMemberId(Long memberId);
 
 }
