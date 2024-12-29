@@ -4,17 +4,25 @@ package com.linkmoa.source.domain.directory.service;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
+import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
+import com.linkmoa.source.domain.directory.dto.response.DirectoryMainResponse;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.member.service.MemberService;
+import com.linkmoa.source.domain.site.dto.response.SiteMainResponse;
+import com.linkmoa.source.domain.site.repository.SiteRepository;
+import com.linkmoa.source.domain.site.repository.SiteRepositoryCustom;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +31,7 @@ public class DirectoryService {
 
     private final MemberService memberService;
     private final DirectoryRepository directoryRepository;
+    private final SiteRepository siteRepository;
 
     @Transactional
     @ValidationApplied
@@ -109,4 +118,27 @@ public class DirectoryService {
                 .build();
     }
 
+    public ApiDirectoryResponseSpec<DirectoryDetailResponse> findDirectoryDetails(PrincipalDetails principalDetails,
+                                                                                  Long directoryId){
+
+        Directory targetDirectory = directoryRepository.findById(directoryId)
+                .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+
+        List<DirectoryMainResponse> directoryDetails = directoryRepository.findDirectoryDetails(targetDirectory.getId());
+        List<SiteMainResponse> sitesDetails = siteRepository.findSitesDetails(targetDirectory.getId());
+
+        DirectoryDetailResponse directoryDetailResponse = DirectoryDetailResponse.builder()
+                .targetDirectoryDescription(targetDirectory.getDirectoryDescription())
+                .targetDirectoryName(targetDirectory.getDirectoryName())
+                .directories(directoryDetails)
+                .sites(sitesDetails)
+                .build();
+
+        return ApiDirectoryResponseSpec.<DirectoryDetailResponse>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("Directory 클릭 시, 해당 디렉토리 내에 사이트 및 디렉토리를 조회했습니다.")
+                .data(directoryDetailResponse)
+                .build();
+
+    }
 }
