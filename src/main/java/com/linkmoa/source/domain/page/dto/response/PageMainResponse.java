@@ -1,7 +1,7 @@
 package com.linkmoa.source.domain.page.dto.response;
 
 import com.linkmoa.source.domain.directory.dto.response.DirectoryMainResponse;
-import com.linkmoa.source.domain.site.dto.response.SiteResponse;
+import com.linkmoa.source.domain.site.dto.response.SiteMainResponse;
 import lombok.Builder;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public record PageMainResponse(
     String pageTitle,
     String pageDescription,
     List<DirectoryMainResponse> directoryMainResponses,
-    List<SiteResponse> siteResponses
+    List<SiteMainResponse> siteMainRespons
 
     ){
 

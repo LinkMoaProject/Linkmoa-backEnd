@@ -26,7 +26,6 @@ import java.util.List;
 
 public interface PageApiSpecification {
 
-
     @Tag(name = "Post", description = "페이지 관련 API")
     @Operation(summary = "페이지 생성", description = "페이지를 생성합니다.(개인,공유)")
     @ApiErrorCodeExamples(PageErrorCode.class)

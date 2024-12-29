@@ -24,10 +24,6 @@ public class DirectoryService {
     private final MemberService memberService;
     private final DirectoryRepository directoryRepository;
 
-
-
-
-
     @Transactional
     @ValidationApplied
     public ApiDirectoryResponseSpec<Long> createDirectory(DirectoryCreateReques requestDto, PrincipalDetails principalDetails){
