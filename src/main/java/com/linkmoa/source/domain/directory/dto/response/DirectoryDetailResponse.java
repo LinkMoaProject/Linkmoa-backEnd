@@ -10,7 +10,7 @@ import java.util.List;
 public record DirectoryDetailResponse(
         List<DirectoryMainResponse> directories,
         List<SiteMainResponse> sites,
-        String directoryName,
-        String directoryDescription
+        String parentDirectoryName,
+        String parentDirectoryDescription
 ) {
 }
