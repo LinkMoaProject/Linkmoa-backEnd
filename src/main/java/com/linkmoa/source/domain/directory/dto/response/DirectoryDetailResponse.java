@@ -9,6 +9,8 @@ import java.util.List;
 @Builder
 public record DirectoryDetailResponse(
         List<DirectoryMainResponse> directories,
-        List<SiteMainResponse> sites
+        List<SiteMainResponse> sites,
+        String directoryName,
+        String directoryDescription
 ) {
 }
