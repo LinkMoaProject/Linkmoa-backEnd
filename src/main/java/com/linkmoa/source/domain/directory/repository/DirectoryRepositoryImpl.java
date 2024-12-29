@@ -23,8 +23,6 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
 
         QDirectory directory = QDirectory.directory;
 
-
-
         List<DirectoryMainResponse> directories = jpaQueryFactory
                 .selectFrom(directory)
                 .where(directory.parentDirectory.id.eq(directoryId))
@@ -35,20 +33,6 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
                         .directoryName(d.getDirectoryName())
                         .build())
                 .collect(Collectors.toList());
-/*
-        QSite site = QSite.site;
-        List<SiteMainResponse> sites =jpaQueryFactory
-                .select(site)
-                .where(site.directory.id.eq(directoryId))
-                .fetch()
-                .stream()
-                .map(s -> SiteMainResponse.builder()
-                        .siteId(s.getId())
-                        .siteUrl(s.getSiteUrl())
-                        .siteName(s.getSiteName())
-                        .build())
-                .collect(Collectors.toList());
-*/
 
         return directories;
 
