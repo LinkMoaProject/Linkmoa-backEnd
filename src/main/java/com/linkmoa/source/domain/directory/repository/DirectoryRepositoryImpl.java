@@ -19,16 +19,10 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public DirectoryDetailResponse findDirectoryDetails(Long directoryId) {
+    public List<DirectoryMainResponse> findDirectoryDetails(Long directoryId) {
 
         QDirectory directory = QDirectory.directory;
-        QSite site = QSite.site;
 
-
-        Directory parentDirectory =jpaQueryFactory
-                .selectFrom(directory)
-                .where(directory.id.eq(directoryId))
-                .fetchOne();
 
 
         List<DirectoryMainResponse> directories = jpaQueryFactory
@@ -41,7 +35,8 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
                         .directoryName(d.getDirectoryName())
                         .build())
                 .collect(Collectors.toList());
-
+/*
+        QSite site = QSite.site;
         List<SiteMainResponse> sites =jpaQueryFactory
                 .select(site)
                 .where(site.directory.id.eq(directoryId))
@@ -53,12 +48,9 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
                         .siteName(s.getSiteName())
                         .build())
                 .collect(Collectors.toList());
+*/
 
-        return DirectoryDetailResponse.builder()
-                .directories(directories)
-                .sites(sites)
-                .parentDirectoryName(parentDirectory.getDirectoryName())
-                .parentDirectoryDescription(parentDirectory.getDirectoryDescription())
-                .build();
+        return directories;
+
     }
 }
