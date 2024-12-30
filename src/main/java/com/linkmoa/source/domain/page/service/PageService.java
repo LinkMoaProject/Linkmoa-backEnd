@@ -2,6 +2,7 @@ package com.linkmoa.source.domain.page.service;
 
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import com.linkmoa.source.domain.directory.dto.response.DirectoryMainResponse;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.member.entity.Member;
@@ -13,6 +14,7 @@ import com.linkmoa.source.domain.page.contant.PageType;
 import com.linkmoa.source.domain.page.dto.request.PageCreateRequest;
 import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
+import com.linkmoa.source.domain.page.dto.response.PageMainResponse;
 import com.linkmoa.source.domain.page.dto.response.PagesResponse;
 import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.entity.Page;
@@ -20,6 +22,8 @@ import com.linkmoa.source.domain.page.error.PageErrorCode;
 import com.linkmoa.source.domain.page.exception.PageException;
 import com.linkmoa.source.domain.dispatch.repository.SharePageInvitationRequestRepository;
 import com.linkmoa.source.domain.page.repository.PageRepository;
+import com.linkmoa.source.domain.site.dto.response.SiteMainResponse;
+import com.linkmoa.source.domain.site.repository.SiteRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import com.linkmoa.source.global.dto.request.BaseRequest;
 import lombok.AllArgsConstructor;
@@ -28,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -37,6 +42,7 @@ public class PageService {
     private final MemberService memberService;
     private final DirectoryRepository directoryRepository;
     private final MemberPageLinkRepository memberPageLinkRepository;
+    private final SiteRepository siteRepository;
     private final SharePageInvitationRequestRepository sharePageInvitationRequestRepository;
 
 
@@ -111,9 +117,6 @@ public class PageService {
 
     }
 
-
-
-
     @Transactional
     public ApiPageResponseSpec<SharePageLeaveResponse> leaveSharePage(BaseRequest baseRequest, PrincipalDetails principalDetails){
 
@@ -153,14 +156,31 @@ public class PageService {
         }
 
     }
+    public ApiPageResponseSpec<PageMainResponse> findPageMain(BaseRequest baseRequest,PrincipalDetails principalDetails){
+        Page page = pageRepository.findById(baseRequest.pageId())
+                .orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
+
+        Long directoryId = page.getRootDirectory().getId();
+
+        List<DirectoryMainResponse> directoryDetails = directoryRepository.findDirectoryDetails(directoryId);
+
+        List<SiteMainResponse> sitesDetails = siteRepository.findSitesDetails(directoryId);
 
 
+        PageMainResponse pageMainResponse = PageMainResponse.builder()
+                .pageId(page.getId())
+                .pageTitle(page.getPageTitle())
+                .pageDescription(page.getPageDescription())
+                .directoryMainResponses(directoryDetails)
+                .siteMainRespons(sitesDetails)
+                .build();
 
-
-
-
-
-
+        return ApiPageResponseSpec.<PageMainResponse>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("페이지 접속 시, 해당 페이지 메인화면을 조회합니다")
+                .data(pageMainResponse)
+                .build();
+    }
 
 
 }
