@@ -6,6 +6,7 @@ import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
 import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationRequestCreateResponse;
+import com.linkmoa.source.domain.page.dto.response.PageMainResponse;
 import com.linkmoa.source.domain.page.dto.response.PagesResponse;
 import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
@@ -47,7 +48,7 @@ public interface PageApiSpecification {
     );
 
     @Tag(name = "Get", description = "페이지 관련 API")
-    @Operation(summary = "모든 페이지 목록 조회", description = "사용자가 참여 중인 모든 페이지 목록 조회")
+    @Operation(summary = "모든 페이지 목록 조회", description = "사용자가 참여 중인 모든 페이지 목록을 조회합니다.")
     @ApiErrorCodeExamples(PageErrorCode.class)
     @GetMapping()
     @PreAuthorize("isAuthenticated()")
@@ -66,8 +67,13 @@ public interface PageApiSpecification {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
-
-
-
-
+    @Tag(name = "Get", description = "페이지 관련 API")
+    @Operation(summary = "페이지 상세 조회 ", description = "페이지 접속 시, 해당 페이지 메인화면을 조회합니다.")
+    @ApiErrorCodeExamples(PageErrorCode.class)
+    @GetMapping("")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiPageResponseSpec<PageMainResponse>> getPageMain(
+            @RequestBody @Validated BaseRequest baseRequest,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
 }
