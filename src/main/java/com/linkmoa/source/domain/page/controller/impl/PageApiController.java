@@ -8,6 +8,7 @@ import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
 import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationRequestCreateResponse;
+import com.linkmoa.source.domain.page.dto.response.PageMainResponse;
 import com.linkmoa.source.domain.page.dto.response.PagesResponse;
 import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.service.PageService;
@@ -60,5 +61,12 @@ public class PageApiController implements PageApiSpecification {
         ApiPageResponseSpec<SharePageLeaveResponse> sharePageLeaveResponse= pageService.leaveSharePage(baseRequest, principalDetails);
 
         return ResponseEntity.ok().body(sharePageLeaveResponse);
+    }
+
+    public ResponseEntity<ApiPageResponseSpec<PageMainResponse>> getPageMain(
+            BaseRequest baseRequest,
+            PrincipalDetails principalDetails) {
+        ApiPageResponseSpec<PageMainResponse> pageMain = pageService.findPageMain(baseRequest, principalDetails);
+        return ResponseEntity.ok().body(pageMain);
     }
 }
