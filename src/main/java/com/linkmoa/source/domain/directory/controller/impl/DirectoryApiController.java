@@ -5,6 +5,7 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.controller.spec.DirectoryApiSpecification;
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
+import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
 import com.linkmoa.source.domain.directory.service.DirectoryService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,10 +37,10 @@ public class DirectoryApiController implements DirectoryApiSpecification {
     }
 
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> deleteDirectory(
-            DirectoryDeleteRequest directoryDeleteRequestDto,
+            DirectoryIdRequest directoryIdRequestDto,
             PrincipalDetails principalDetails
     ) {
-        ApiDirectoryResponseSpec<Long> deleteDirectoryResponse = directoryService.deleteDirectory(directoryDeleteRequestDto, principalDetails);
+        ApiDirectoryResponseSpec<Long> deleteDirectoryResponse = directoryService.deleteDirectory(directoryIdRequestDto, principalDetails);
         return ResponseEntity.ok().body(deleteDirectoryResponse);
     }
 
@@ -52,5 +53,11 @@ public class DirectoryApiController implements DirectoryApiSpecification {
     }
 
 
+    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryDetailResponse>> getDirectory
+            (DirectoryIdRequest directoryIdRequest,
+             PrincipalDetails principalDetails) {
+        ApiDirectoryResponseSpec<DirectoryDetailResponse> directoryDetails = directoryService.findDirectoryDetails(directoryIdRequest, principalDetails);
+        return ResponseEntity.ok().body(directoryDetails);
+    }
 
 }

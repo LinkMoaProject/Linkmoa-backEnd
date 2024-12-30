@@ -13,7 +13,6 @@ import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.site.dto.response.SiteMainResponse;
 import com.linkmoa.source.domain.site.repository.SiteRepository;
-import com.linkmoa.source.domain.site.repository.SiteRepositoryCustom;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -82,7 +80,7 @@ public class DirectoryService {
     }
     @Transactional
     @ValidationApplied
-    public ApiDirectoryResponseSpec<Long> deleteDirectory(DirectoryDeleteRequest requestDto,
+    public ApiDirectoryResponseSpec<Long> deleteDirectory(DirectoryIdRequest requestDto,
                                                           PrincipalDetails principalDetails){
 
         Directory deleteDirectory = directoryRepository.findById(requestDto.directoryId())
@@ -118,10 +116,11 @@ public class DirectoryService {
                 .build();
     }
 
-    public ApiDirectoryResponseSpec<DirectoryDetailResponse> findDirectoryDetails(PrincipalDetails principalDetails,
-                                                                                  Long directoryId){
+    @ValidationApplied
+    public ApiDirectoryResponseSpec<DirectoryDetailResponse> findDirectoryDetails(DirectoryIdRequest directoryIdRequest
+                                                                                  ,PrincipalDetails principalDetails){
 
-        Directory targetDirectory = directoryRepository.findById(directoryId)
+        Directory targetDirectory = directoryRepository.findById(directoryIdRequest.directoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
         List<DirectoryMainResponse> directoryDetails = directoryRepository.findDirectoryDetails(targetDirectory.getId());
