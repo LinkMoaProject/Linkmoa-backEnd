@@ -19,7 +19,7 @@ public class SiteRepositoryImpl implements SiteRepositoryCustom {
 
         QSite site = QSite.site;
         List<SiteMainResponse> sites =jpaQueryFactory
-                .select(site)
+                .selectFrom(site)
                 .where(site.directory.id.eq(directoryId))
                 .fetch()
                 .stream()
