@@ -8,7 +8,6 @@ import java.util.List;
 
 @Builder
 public record PageMainResponse(
-
     Long pageId,
     String pageTitle,
     String pageDescription,
