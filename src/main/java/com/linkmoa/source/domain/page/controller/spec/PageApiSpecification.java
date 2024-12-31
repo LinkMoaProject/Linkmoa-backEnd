@@ -3,11 +3,9 @@ package com.linkmoa.source.domain.page.controller.spec;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.page.dto.request.PageCreateRequest;
 import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
-import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
-import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationRequestCreateResponse;
-import com.linkmoa.source.domain.page.dto.response.PageMainResponse;
-import com.linkmoa.source.domain.page.dto.response.PagesResponse;
+import com.linkmoa.source.domain.page.dto.response.PageDetailsResponse;
+import com.linkmoa.source.domain.page.dto.response.PageResponse;
 import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
 import com.linkmoa.source.global.dto.request.BaseRequest;
@@ -52,7 +50,7 @@ public interface PageApiSpecification {
     @ApiErrorCodeExamples(PageErrorCode.class)
     @GetMapping()
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiPageResponseSpec<List<PagesResponse>>> getAllPages(
+    public ResponseEntity<ApiPageResponseSpec<List<PageResponse>>> getAllPages(
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
@@ -70,9 +68,9 @@ public interface PageApiSpecification {
     @Tag(name = "Get", description = "페이지 관련 API")
     @Operation(summary = "페이지 상세 조회 ", description = "페이지 접속 시, 해당 페이지 메인화면을 조회합니다.")
     @ApiErrorCodeExamples(PageErrorCode.class)
-    @GetMapping("")
+    @GetMapping("/details")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiPageResponseSpec<PageMainResponse>> getPageMain(
+    public ResponseEntity<ApiPageResponseSpec<PageDetailsResponse>> getPageDetails(
             @RequestBody @Validated BaseRequest baseRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );

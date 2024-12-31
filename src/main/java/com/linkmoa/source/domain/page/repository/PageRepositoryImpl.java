@@ -1,10 +1,8 @@
 package com.linkmoa.source.domain.page.repository;
 
-import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
-import com.linkmoa.source.domain.page.dto.response.PagesResponse;
+import com.linkmoa.source.domain.page.dto.response.PageResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -20,11 +18,11 @@ public class PageRepositoryImpl implements PageRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<PagesResponse> findAllPagesByMemberId(Long memberId) {
+    public List<PageResponse> findAllPagesByMemberId(Long memberId) {
 
-        List<PagesResponse> result = jpaQueryFactory.
+        List<PageResponse> result = jpaQueryFactory.
                 select(Projections.constructor(
-                        PagesResponse.class,
+                        PageResponse.class,
                         page.id,
                         page.pageTitle,
                         page.pageType
