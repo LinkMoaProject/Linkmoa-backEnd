@@ -1,6 +1,7 @@
 package com.linkmoa.source.domain.member.service;
 
 
+import com.linkmoa.source.auth.jwt.refresh.service.RefreshTokenService;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.member.dto.request.MemberSignUpRequest;
 import com.linkmoa.source.domain.member.entity.Member;
@@ -25,7 +26,7 @@ public class MemberService {
 
 
     private final MemberRepository memberRepository;
-
+    private final RefreshTokenService refreshTokenService;
     public Member saveOrUpdate(Member member){
         Optional<Member> optionalMember = memberRepository.findByEmail(member.getEmail());
 
@@ -61,14 +62,20 @@ public class MemberService {
     }
 
     public void memberSignUp(MemberSignUpRequest memberSignUpRequest, PrincipalDetails principalDetails){
-        log.info("email 입니당 : ", principalDetails.getEmail());
+        log.info("memberSignUp - email : {}", principalDetails.getEmail());
         Member member = memberRepository.findByEmail(principalDetails.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다"));
+                .orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
 
         member.updateSignUpMember(memberSignUpRequest.age(), memberSignUpRequest.gender(), memberSignUpRequest.job());
 
         memberRepository.save(member);
     }
 
+    public void memberLogout(PrincipalDetails principalDetails){
+        log.info("memberLogout - email : {}", principalDetails.getEmail());
+        Member member = memberRepository.findByEmail(principalDetails.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
+        refreshTokenService.deleteRefreshToken(member.getEmail());
+    }
 
 }

@@ -26,12 +26,23 @@ public class MemberApiController implements MemberApiSpecification{
             MemberSignUpRequest memberSignUpRequest,
             PrincipalDetails principalDetails
     ) {
-        log.info("여긴 들어오나 : ", principalDetails.getEmail());
+        log.info("여긴 들어오나 : {}", principalDetails.getEmail());
 
         memberService.memberSignUp(memberSignUpRequest,principalDetails);
 
         log.info("여긴 들어오나2");
         ApiResponseSpec apiResponseSpec =new ApiResponseSpec(HttpStatus.OK,"회원가입 성공");
+        return ResponseEntity.ok()
+                .body(apiResponseSpec);
+    }
+
+
+    @PostMapping("/log-out")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResponseSpec> memberLogout(PrincipalDetails principalDetails) {
+
+        memberService.memberLogout(principalDetails);
+        ApiResponseSpec apiResponseSpec =new ApiResponseSpec(HttpStatus.OK,"로그아웃 성공");
         return ResponseEntity.ok()
                 .body(apiResponseSpec);
     }
