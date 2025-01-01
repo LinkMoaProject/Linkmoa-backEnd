@@ -24,6 +24,14 @@ public class RefreshTokenService {
                 .build()
         );
 
+        String oldToken = (String) redisTemplate.opsForValue().get(email);
+        if (oldToken != null) {
+            // 기존 토큰 키 삭제
+            redisTemplate.delete(email);
+            redisTemplate.delete("RefreshToken:" + oldToken);
+            redisTemplate.delete("RefreshToken:" + oldToken + ":phantom");
+        }
+
         // memberEmail을 key로, refreshToken 을 value 저장
         redisTemplate.opsForValue().set(email, refreshToken, 86400, TimeUnit.SECONDS);
 
@@ -42,11 +50,14 @@ public class RefreshTokenService {
     }
 
 
-    public void deleteRefreshToken(String refreshToken) {
-        String email = getEmailByRefreshToken(refreshToken);
-        if (email != null) {
-            refreshTokenRepository.deleteById(email);
-            redisTemplate.delete(refreshToken);
+    public void deleteRefreshToken(String email) {
+
+        String oldToken = (String) redisTemplate.opsForValue().get(email);
+        if (oldToken != null) {
+            redisTemplate.delete(email);
+            redisTemplate.delete("RefreshToken:" + oldToken);
+            redisTemplate.delete("RefreshToken:" + oldToken + ":phantom");
         }
+        refreshTokenRepository.deleteById(email);
     }
 }
