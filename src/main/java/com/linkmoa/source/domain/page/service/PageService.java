@@ -27,14 +27,16 @@ import com.linkmoa.source.domain.site.repository.SiteRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import com.linkmoa.source.global.dto.request.BaseRequest;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PageService {
 
     private final PageRepository pageRepository;
@@ -42,7 +44,7 @@ public class PageService {
     private final DirectoryRepository directoryRepository;
     private final MemberPageLinkRepository memberPageLinkRepository;
     private final SiteRepository siteRepository;
-    private final SharePageInvitationRequestRepository sharePageInvitationRequestRepository;
+    private final PageAsyncService pageAsyncService;
 
 
     @Transactional
@@ -155,6 +157,45 @@ public class PageService {
         }
 
     }
+
+
+    /**
+     * findPageMain 비동기 방식
+     * @param baseRequest
+     * @param principalDetails
+     * @return
+     */
+    public ApiPageResponseSpec<PageDetailsResponse> findPageMain(BaseRequest baseRequest, PrincipalDetails principalDetails) {
+        Page page = pageRepository.findById(baseRequest.pageId())
+                .orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
+
+        Long directoryId = page.getRootDirectory().getId();
+
+
+        CompletableFuture<List<DirectoryDetailResponse>> directoryDetailsFuture = pageAsyncService.findDirectoryDetailsAsync(directoryId);
+        CompletableFuture<List<SiteDetailResponse>> sitesDetailsFuture = pageAsyncService.findSitesDetailsAsync(directoryId);
+
+        CompletableFuture<PageDetailsResponse> pageDetailsResponseCompletableFuture =
+                pageAsyncService.combinePageDetails(pageAsyncService.findDirectoryDetailsAsync(directoryId), pageAsyncService.findSitesDetailsAsync(directoryId), page);
+
+        // 비동기 작업이 완료되면 결과를 가져와 ApiPageResponseSpec으로 포장하여 반환
+        PageDetailsResponse pageDetailsResponse = pageDetailsResponseCompletableFuture.join();
+
+        return ApiPageResponseSpec.<PageDetailsResponse>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("페이지 접속 시, 해당 페이지 메인화면을 조회합니다")
+                .data(pageDetailsResponse)
+                .build();
+    }
+
+
+   /*
+    /**
+     * findPageMain 동기 방식
+     * @param baseRequest
+     * @param principalDetails
+     * @return
+     *//*
     public ApiPageResponseSpec<PageDetailsResponse> findPageMain(BaseRequest baseRequest, PrincipalDetails principalDetails){
         Page page = pageRepository.findById(baseRequest.pageId())
                 .orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
@@ -171,7 +212,7 @@ public class PageService {
                 .pageTitle(page.getPageTitle())
                 .pageDescription(page.getPageDescription())
                 .directoryDetailRespons(directoryDetailResponses)
-                .siteMainRespons(sitesDetails)
+                .siteDetailResponses(sitesDetails)
                 .build();
 
         return ApiPageResponseSpec.<PageDetailsResponse>builder()
@@ -179,7 +220,6 @@ public class PageService {
                 .successMessage("페이지 접속 시, 해당 페이지 메인화면을 조회합니다")
                 .data(pageDetailsResponse)
                 .build();
-    }
-
+    }*/
 
 }
