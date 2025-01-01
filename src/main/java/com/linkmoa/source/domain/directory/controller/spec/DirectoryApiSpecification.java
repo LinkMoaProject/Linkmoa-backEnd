@@ -3,7 +3,7 @@ package com.linkmoa.source.domain.directory.controller.spec;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
+import com.linkmoa.source.domain.directory.dto.response.DirectoryResponse;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,8 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.lang.annotation.Target;
 
 public interface DirectoryApiSpecification {
 
@@ -63,9 +61,9 @@ public interface DirectoryApiSpecification {
     @Tag(name = "Get", description = "디렉토리 관련 API")
     @Operation(summary = "디렉토리 상세 조회", description = "디렉토리 클릭 시, 디렉토리의 상세 정보(이름 및 소개글)와 해당 디렉토리 내 포함된 하위 디렉토리 및 사이트 조회")
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
-    @GetMapping()
+    @GetMapping("/details")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryDetailResponse>> getDirectory(
+    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryResponse>> getDirectory(
             @RequestBody @Validated DirectoryIdRequest directoryIdRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );

@@ -7,12 +7,13 @@ import com.linkmoa.source.domain.dispatch.dto.response.ApiDispatchResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationActionResponse;
 import com.linkmoa.source.domain.dispatch.service.processor.SharePageInvitationRequestProcessor;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class DispatchProcessingService {
 
     private final SharePageInvitationRequestProcessor sharePageInvitationRequestProcessor;

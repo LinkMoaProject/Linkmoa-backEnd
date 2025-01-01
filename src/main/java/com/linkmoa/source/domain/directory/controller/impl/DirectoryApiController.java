@@ -5,7 +5,7 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.controller.spec.DirectoryApiSpecification;
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
+import com.linkmoa.source.domain.directory.dto.response.DirectoryResponse;
 import com.linkmoa.source.domain.directory.service.DirectoryService;
 
 import lombok.RequiredArgsConstructor;
@@ -53,11 +53,11 @@ public class DirectoryApiController implements DirectoryApiSpecification {
     }
 
 
-    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryDetailResponse>> getDirectory
+    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryResponse>> getDirectory
             (DirectoryIdRequest directoryIdRequest,
              PrincipalDetails principalDetails) {
-        ApiDirectoryResponseSpec<DirectoryDetailResponse> directoryDetails = directoryService.findDirectoryDetails(directoryIdRequest, principalDetails);
-        return ResponseEntity.ok().body(directoryDetails);
+        ApiDirectoryResponseSpec<DirectoryResponse> directoryResponse = directoryService.findDirectoryDetails(directoryIdRequest, principalDetails);
+        return ResponseEntity.ok().body(directoryResponse);
     }
 
 }
