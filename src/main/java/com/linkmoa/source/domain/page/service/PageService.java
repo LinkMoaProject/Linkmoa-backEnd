@@ -171,10 +171,6 @@ public class PageService {
 
         Long directoryId = page.getRootDirectory().getId();
 
-
-        CompletableFuture<List<DirectoryDetailResponse>> directoryDetailsFuture = pageAsyncService.findDirectoryDetailsAsync(directoryId);
-        CompletableFuture<List<SiteDetailResponse>> sitesDetailsFuture = pageAsyncService.findSitesDetailsAsync(directoryId);
-
         CompletableFuture<PageDetailsResponse> pageDetailsResponseCompletableFuture =
                 pageAsyncService.combinePageDetails(pageAsyncService.findDirectoryDetailsAsync(directoryId), pageAsyncService.findSitesDetailsAsync(directoryId), page);
 
