@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface SiteApiSpecification {
 
 
-    @Tag(name="Post",description = "사이트 관련 API")
+    @Tag(name="Site",description = "사이트 관련 API")
     @Operation(summary = "사이트 저장",description = "사이트를 특정 디렉토리에 생성합니다.")
     @ApiErrorCodeExamples(SiteErrorCode.class)
     @PostMapping
@@ -32,7 +32,7 @@ public interface SiteApiSpecification {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
-    @Tag(name="Put",description = "사이트 관련 API")
+    @Tag(name="Site",description = "사이트 관련 API")
     @Operation(summary = "사이트 정보 수정",description = "사이트를 정보(이름,url)을 수정합니다.")
     @ApiErrorCodeExamples(SiteErrorCode.class)
     @PutMapping
@@ -42,7 +42,7 @@ public interface SiteApiSpecification {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
-    @Tag(name="Delete",description = "사이트 관련 API")
+    @Tag(name="Site",description = "사이트 관련 API")
     @Operation(summary = "사이트 삭제",description = "사이트를 삭제합니다.")
     @ApiErrorCodeExamples(SiteErrorCode.class)
     @DeleteMapping()
@@ -51,7 +51,7 @@ public interface SiteApiSpecification {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
-    @Tag(name = "Put", description = "사이트 관련 API")
+    @Tag(name = "Site", description = "사이트 관련 API")
     @Operation(summary = "사이트 위치 이동", description = "사이트의 위치를 다른 디렉토리로 이동 (드래그 앤 스탑)")
     @ApiErrorCodeExamples(SiteErrorCode.class)
     @PutMapping("/move")
