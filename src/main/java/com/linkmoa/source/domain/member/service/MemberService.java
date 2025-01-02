@@ -10,6 +10,7 @@ import com.linkmoa.source.domain.member.exception.MemberException;
 import com.linkmoa.source.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,6 +77,17 @@ public class MemberService {
         Member member = memberRepository.findByEmail(principalDetails.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
         refreshTokenService.deleteRefreshToken(member.getEmail());
+    }
+
+    public void memberDelete(PrincipalDetails principalDetails){
+        log.info("memberDelete - email : {}", principalDetails.getEmail());
+        Member member = memberRepository.findByEmail(principalDetails.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
+
+        memberRepository.deleteById(member.getId());
+        refreshTokenService.deleteRefreshToken(member.getEmail());
+        SecurityContextHolder.clearContext();
+
     }
 
 }

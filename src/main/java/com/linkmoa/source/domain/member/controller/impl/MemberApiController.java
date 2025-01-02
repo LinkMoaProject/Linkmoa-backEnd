@@ -1,5 +1,6 @@
 package com.linkmoa.source.domain.member.controller.impl;
 
+import com.google.protobuf.Api;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.member.controller.spec.MemberApiSpecification;
 import com.linkmoa.source.domain.member.dto.request.MemberSignUpRequest;
@@ -43,6 +44,15 @@ public class MemberApiController implements MemberApiSpecification{
 
         memberService.memberLogout(principalDetails);
         ApiResponseSpec apiResponseSpec =new ApiResponseSpec(HttpStatus.OK,"로그아웃 성공");
+        return ResponseEntity.ok()
+                .body(apiResponseSpec);
+    }
+
+    @DeleteMapping("/delete")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResponseSpec> memberDelete(PrincipalDetails principalDetails){
+        memberService.memberDelete(principalDetails);
+        ApiResponseSpec apiResponseSpec = new ApiResponseSpec(HttpStatus.OK, "회원 탈퇴 성공");
         return ResponseEntity.ok()
                 .body(apiResponseSpec);
     }

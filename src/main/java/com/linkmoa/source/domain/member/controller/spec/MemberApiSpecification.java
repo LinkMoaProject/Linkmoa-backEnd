@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -34,5 +35,14 @@ public interface MemberApiSpecification {
     @PreAuthorize("isAuthenticated()")
     ResponseEntity<ApiResponseSpec> memberLogout(
       @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
+
+    @Tag(name= "Delete", description = "회원 관련 API")
+    @Operation(summary = "회원 탈퇴", description = "회원탈퇴를 통해 회원과 관련된 모든 정보를 삭제합니다.")
+    @ApiErrorCodeExamples(MemberErrorCode.class)
+    @DeleteMapping
+    @PreAuthorize("isAuthenticated()")
+    ResponseEntity<ApiResponseSpec> memberDelete(
+            @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 }
