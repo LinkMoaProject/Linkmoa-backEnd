@@ -53,9 +53,22 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        //헤더에서 access 키에 담긴 토큰을 꺼냄
-        String accessToken = request.getHeader("Authorization").substring(7);
+        String authorizationHeader = request.getHeader("Authorization");
 
+        // Authorization 헤더가 없으면 다음 필터로 진행
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // JWT 토큰 추출
+        String accessToken = authorizationHeader.substring(7);
+
+        log.info("jwt doFilterInternal access token : {}", accessToken);
+
+        /*//헤더에서 access 키에 담긴 토큰을 꺼냄
+        String accessToken = request.getHeader("Authorization").substring(7);
+*/
         log.info("jwt doFilterInternal access token : {} ",accessToken);
         Member member = null;
         if (jwtTokenProvider.validateToken(accessToken)) {
