@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface DispatchApiSpecification {
 
-    @Tag(name = "Post", description = "디렉토리 전송 요청 API")
+    @Tag(name = "Dispatch", description = "디렉토리 전송 요청 API")
     @Operation(summary = "디렉토리 전송 요청", description = "다른 유저에게 디렉토리 전송 요청을 보냅니다.")
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PostMapping("/directory-transmissions")
@@ -37,7 +37,7 @@ public interface DispatchApiSpecification {
     );
 
 
-    @Tag(name = "Post", description = "공유 페이지 요청 API")
+    @Tag(name = "Dispatch", description = "공유 페이지 요청 API")
     @Operation(summary = "공유 페이지 사용자 초대", description = "공유 페이지에 사용자 초대 요청을 보냅니다.")
     @ApiErrorCodeExamples(PageErrorCode.class)
     @PostMapping("/share-page-invitations")
@@ -47,7 +47,7 @@ public interface DispatchApiSpecification {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
-    @Tag(name="Patch",description = "공유 페이지 초대 요청 처리 API")
+    @Tag(name="Dispatch",description = "공유 페이지 초대 요청 처리 API")
     @Operation(summary = "공유 페이지 초대 요청 처리( 수락 , 거절 )", description = "공유 페이지 초대 요청 수락 또는 거절을 수행합니다.")
     @ApiErrorCodeExamples(DispatchErrorCode.class)
     @PatchMapping("/share-page-invitations/status")
