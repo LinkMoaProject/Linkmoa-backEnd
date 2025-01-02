@@ -8,6 +8,7 @@ import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.member.error.MemberErrorCode;
 import com.linkmoa.source.domain.member.exception.MemberException;
 import com.linkmoa.source.domain.member.repository.MemberRepository;
+import com.linkmoa.source.domain.notify.service.NotifyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +29,8 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final RefreshTokenService refreshTokenService;
+    private final NotifyService notifyService;
+
     public Member saveOrUpdate(Member member){
         Optional<Member> optionalMember = memberRepository.findByEmail(member.getEmail());
 
@@ -84,10 +87,13 @@ public class MemberService {
         Member member = memberRepository.findByEmail(principalDetails.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
 
+        String memberEmail = member.getEmail();
+
         memberRepository.deleteById(member.getId());
-        refreshTokenService.deleteRefreshToken(member.getEmail());
+        refreshTokenService.deleteRefreshToken(memberEmail);
         SecurityContextHolder.clearContext();
 
+        notifyService.deleteAllNotificationByMemberEmail(memberEmail);
     }
 
 }

@@ -6,6 +6,7 @@ import com.linkmoa.source.domain.notify.constant.NotificationType;
 import com.linkmoa.source.domain.notify.entity.Notify;
 import com.linkmoa.source.domain.notify.repository.NotifyRepository;
 import com.linkmoa.source.domain.notify.repository.SseEmitterRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -107,5 +108,9 @@ public class NotifyService {
                 .build();
     }
 
+    @Transactional
+    public void deleteAllNotificationByMemberEmail(String email) {
+        notifyRepository.deleteAllBySenderEmailOrReceiverEmail(email);
+    }
 
 }
