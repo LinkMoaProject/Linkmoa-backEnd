@@ -17,7 +17,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access=AccessLevel.PROTECTED)
 public class MemberPageLink extends BaseEntity {
 
-    @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="member_page_link_id")
     private Long id;
 
@@ -29,10 +30,12 @@ public class MemberPageLink extends BaseEntity {
     private Member member;
 
     @ManyToOne(
-            fetch = FetchType.LAZY
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST
     )
-    @JoinColumn(name="page_id")
+    @JoinColumn(name = "page_id")
     private Page page;
+
 
     @Enumerated(EnumType.STRING)
     @Column(name="permission_type",nullable = false)

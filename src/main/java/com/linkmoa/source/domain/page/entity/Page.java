@@ -35,12 +35,14 @@ public class Page extends BaseEntity {
 
     @OneToMany(
             mappedBy = "page",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+            cascade = CascadeType.PERSIST
     )
     private List<MemberPageLink> memberPageLinks = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     @JoinColumn(name = "root_directory_id", unique = true) // rootDirectory와 1:1 매핑
     private Directory rootDirectory;
 

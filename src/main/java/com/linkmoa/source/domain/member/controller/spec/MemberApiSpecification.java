@@ -3,6 +3,8 @@ package com.linkmoa.source.domain.member.controller.spec;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.member.dto.request.MemberSignUpRequest;
 import com.linkmoa.source.domain.member.error.MemberErrorCode;
+import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
+import com.linkmoa.source.domain.page.dto.response.PageResponse;
 import com.linkmoa.source.global.spec.ApiResponseSpec;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +16,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 public interface MemberApiSpecification {
 
@@ -37,12 +41,22 @@ public interface MemberApiSpecification {
       @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
+
+    @Tag(name= "Get", description = "회원 관련 API")
+    @Operation(summary = "회원 탈퇴 과정", description = "회원 탈퇴 진행 전, 해당 회원이 유일한 호스트인 페이지들 리스트 반환합니다.")
+    @ApiErrorCodeExamples(MemberErrorCode.class)
+    @DeleteMapping
+    @PreAuthorize("isAuthenticated()")
+    ResponseEntity<ApiPageResponseSpec<List<PageResponse>>> memberDeletionProcess(
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
+
     @Tag(name= "Delete", description = "회원 관련 API")
     @Operation(summary = "회원 탈퇴", description = "회원탈퇴를 통해 회원과 관련된 모든 정보를 삭제합니다.")
     @ApiErrorCodeExamples(MemberErrorCode.class)
     @DeleteMapping
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<ApiResponseSpec> memberDelete(
+    ResponseEntity<ApiResponseSpec> memberDeletion(
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 }
