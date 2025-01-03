@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberPageLinkRepository extends JpaRepository<MemberPageLink,Long> {
@@ -35,5 +36,13 @@ public interface MemberPageLinkRepository extends JpaRepository<MemberPageLink,L
     @Query("SELECT COUNT(mpl) FROM member_page_link mpl WHERE mpl.page.id = :pageId AND mpl.permissionType = com.linkmoa.source.domain.memberPageLink.constant.PermissionType.HOST AND mpl.member = :member")
     long countHostMembersInSharedPage(@Param("pageId") Long pageId, @Param("member") Member member);
 
+    void deleteByMemberId(Long memberId);
+    @Query("SELECT m FROM member_page_link m " +
+            "WHERE m.member.id = :memberId " +
+            "AND m.permissionType = com.linkmoa.source.domain.memberPageLink.constant.PermissionType.HOST " +
+            "AND (SELECT COUNT(mp) FROM member_page_link mp " +
+            "      WHERE mp.page.id = m.page.id " +
+            "      AND mp.permissionType = com.linkmoa.source.domain.memberPageLink.constant.PermissionType.HOST) = 1")
+    List<MemberPageLink> findUniqueHostByMemberId(@Param("memberId") Long memberId);
 
 }

@@ -40,7 +40,8 @@ public class Directory extends BaseEntity {
     @OneToMany(
             mappedBy = "parentDirectory",
             fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
     private List<Directory> childDirectories = new ArrayList<>();
 

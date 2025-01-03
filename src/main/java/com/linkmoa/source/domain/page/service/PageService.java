@@ -28,6 +28,7 @@ import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import com.linkmoa.source.global.dto.request.BaseRequest;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PageService {
 
@@ -46,6 +48,30 @@ public class PageService {
     private final SiteRepository siteRepository;
     private final PageAsyncService pageAsyncService;
 
+
+    @Transactional
+    public ApiPageResponseSpec<Long> createPersonalPage(PrincipalDetails principalDetails) {
+
+        Member hostMember = memberService.findMemberByEmail(principalDetails.getEmail());
+
+        PageCreateRequest requestDto = PageCreateRequest.builder()
+                .pageTitle(hostMember.getEmail()+ " 개인")
+                .pageDescription(hostMember.getEmail()+" 의 개인 페이지 입니다.")
+                .pageType(PageType.PERSONAL)
+                .build();
+
+
+        Directory rootDirectory = createRootDirectory(hostMember);
+        Page newPage = createNewPage(requestDto,rootDirectory);
+        MemberPageLink memberPageLink = createMemberPageLink(hostMember, newPage);
+        saveEntities(newPage, memberPageLink, rootDirectory);
+
+        return ApiPageResponseSpec.<Long>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage(newPage.getPageType().toString()+"페이지 생성에 성공했습니다.")
+                .data(newPage.getId())
+                .build();
+    }
 
     @Transactional
     public ApiPageResponseSpec<Long> createPage(PageCreateRequest requestDto, PrincipalDetails principalDetails) {
@@ -65,6 +91,7 @@ public class PageService {
     }
 
     private Page createNewPage(PageCreateRequest requestDto, Directory rootDirectory) {
+        log.info("PageTitle {} :", requestDto.pageTitle());
         return Page.builder()
                 .pageType(requestDto.pageType())
                 .pageTitle(requestDto.pageTitle())

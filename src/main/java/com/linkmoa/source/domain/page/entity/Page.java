@@ -24,7 +24,7 @@ public class Page extends BaseEntity {
     @Column(name="page_id")
     private Long id;
 
-    @Column(name="page_title",length = 20)
+    @Column(name="page_title",length = 50)
     private String pageTitle;
 
     @Column(name="page_description",length = 100)
@@ -35,12 +35,15 @@ public class Page extends BaseEntity {
 
     @OneToMany(
             mappedBy = "page",
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.ALL,  // Page 삭제 시 관련된 MemberPageLink도 삭제
             orphanRemoval = true
     )
     private List<MemberPageLink> memberPageLinks = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     @JoinColumn(name = "root_directory_id", unique = true) // rootDirectory와 1:1 매핑
     private Directory rootDirectory;
 
