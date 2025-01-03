@@ -24,7 +24,7 @@ public class Page extends BaseEntity {
     @Column(name="page_id")
     private Long id;
 
-    @Column(name="page_title",length = 20)
+    @Column(name="page_title",length = 50)
     private String pageTitle;
 
     @Column(name="page_description",length = 100)

@@ -26,7 +26,7 @@ import java.util.List;
 public interface PageApiSpecification {
 
     @Tag(name = "Page", description = "페이지 관련 API")
-    @Operation(summary = "페이지 생성", description = "페이지를 생성합니다.(개인,공유)")
+    @Operation(summary = "페이지 생성", description = "페이지를 생성합니다.(공유)")
     @ApiErrorCodeExamples(PageErrorCode.class)
     @PostMapping
     @PreAuthorize("isAuthenticated()")
@@ -36,7 +36,7 @@ public interface PageApiSpecification {
     );
 
     @Tag(name = "Page", description = "페이지 관련 API")
-    @Operation(summary = "페이지 삭제", description = "페이지를 삭제합니다.(개인,공유)")
+    @Operation(summary = "페이지 삭제", description = "페이지를 삭제합니다.(공유)")
     @ApiErrorCodeExamples(PageErrorCode.class)
     @DeleteMapping
     @PreAuthorize("isAuthenticated()")

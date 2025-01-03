@@ -16,6 +16,7 @@ import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
 import com.linkmoa.source.domain.page.exception.PageException;
+import com.linkmoa.source.domain.page.service.PageService;
 import com.linkmoa.source.global.dto.request.BaseRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,7 @@ public class MemberService {
     private final RefreshTokenService refreshTokenService;
     private final NotifyService notifyService;
     private final MemberPageLinkService memberPageLinkService;
+
 
     public Member saveOrUpdate(Member member){
         Optional<Member> optionalMember = memberRepository.findByEmail(member.getEmail());
@@ -83,8 +85,8 @@ public class MemberService {
                 .orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
 
         member.updateSignUpMember(memberSignUpRequest.age(), memberSignUpRequest.gender(), memberSignUpRequest.job());
-
         memberRepository.save(member);
+
     }
 
     public void memberLogout(PrincipalDetails principalDetails){
