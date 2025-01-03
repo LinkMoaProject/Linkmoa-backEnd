@@ -35,7 +35,8 @@ public class Page extends BaseEntity {
 
     @OneToMany(
             mappedBy = "page",
-            cascade = CascadeType.PERSIST
+            cascade = CascadeType.ALL,  // Page 삭제 시 관련된 MemberPageLink도 삭제
+            orphanRemoval = true
     )
     private List<MemberPageLink> memberPageLinks = new ArrayList<>();
 
