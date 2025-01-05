@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberPageLinkRepository extends JpaRepository<MemberPageLink,Long> {
+public interface MemberPageLinkRepository extends JpaRepository<MemberPageLink,Long>,MemberPageLinkRepositoryCustom {
 
 
     @Query("SELECT m.permissionType FROM member_page_link m where m.member.id =:memberId AND m.page.id =:pageId")

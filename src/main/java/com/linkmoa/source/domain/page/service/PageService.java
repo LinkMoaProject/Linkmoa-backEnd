@@ -2,9 +2,8 @@ package com.linkmoa.source.domain.page.service;
 
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
-import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
+import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
@@ -20,13 +19,10 @@ import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
 import com.linkmoa.source.domain.page.exception.PageException;
-import com.linkmoa.source.domain.dispatch.repository.SharePageInvitationRequestRepository;
 import com.linkmoa.source.domain.page.repository.PageRepository;
-import com.linkmoa.source.domain.site.dto.response.SiteDetailResponse;
 import com.linkmoa.source.domain.site.repository.SiteRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import com.linkmoa.source.global.dto.request.BaseRequest;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -192,10 +188,20 @@ public class PageService {
      * @param principalDetails
      * @return
      */
-    public ApiPageResponseSpec<PageDetailsResponse> findPageMain(BaseRequest baseRequest, PrincipalDetails principalDetails) {
+        public ApiPageResponseSpec<PageDetailsResponse> getPageMain(BaseRequest baseRequest, PrincipalDetails principalDetails) {
         Page page = pageRepository.findById(baseRequest.pageId())
                 .orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
 
+        PageDetailsResponse pageDetailsResponse = getPageDetailsResponse(page);
+
+        return ApiPageResponseSpec.<PageDetailsResponse>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("페이지 접속 시, 해당 페이지 메인화면을 조회합니다")
+                .data(pageDetailsResponse)
+                .build();
+    }
+
+    private PageDetailsResponse getPageDetailsResponse(Page page) {
         Long directoryId = page.getRootDirectory().getId();
 
         CompletableFuture<PageDetailsResponse> pageDetailsResponseCompletableFuture =
@@ -203,12 +209,7 @@ public class PageService {
 
         // 비동기 작업이 완료되면 결과를 가져와 ApiPageResponseSpec으로 포장하여 반환
         PageDetailsResponse pageDetailsResponse = pageDetailsResponseCompletableFuture.join();
-
-        return ApiPageResponseSpec.<PageDetailsResponse>builder()
-                .httpStatusCode(HttpStatus.OK)
-                .successMessage("페이지 접속 시, 해당 페이지 메인화면을 조회합니다")
-                .data(pageDetailsResponse)
-                .build();
+        return pageDetailsResponse;
     }
 
 
@@ -244,5 +245,50 @@ public class PageService {
                 .data(pageDetailsResponse)
                 .build();
     }*/
+
+    /**
+     * 1.로그인 성공
+     * 2.리다이렉트로 개인 페이지 메인 화면으로 이동
+     * 로그인 성공 후, 개인 메인 페이지로 이동 후 데이터 조회
+     *
+     *  request Dto
+     *  1.PrincipalDetails
+     *
+     *  response Dto
+     *  1.PageDetailsResponse
+     *    1.pageId
+     *    2.pageTitle
+     *    3.pageDescription
+     *    4.List<DirectoryDetailResponse> directoryDetailRespons
+     *    5.List<SiteDetailResponse> siteDetailResponses
+     *
+     *
+     * 로직 순서
+     * 1.PrincipalDetails로 member 조회 -> member 테이블 접근 ( 쿼리 1번 )
+     * 2.memberId로 memberPageLink + Personal 페이지 조회 => memberPageLink 테이블 접근 ( 쿼리 1번 )
+     * 3.pageId로 page 조회 => page 테이블 접근 ( 쿼리 1번 )
+     * 4.page의 rootDirectoryId 조회
+     * 5.rootDirecotryId로  => directory , page 테이블 각각 접근 ( 쿼리 2번 )
+     *
+
+     */
+
+
+    public ApiPageResponseSpec<PageDetailsResponse> loadPersonalPageMain(PrincipalDetails principalDetails){
+        Member member = memberService.findMemberByEmail(principalDetails.getEmail());
+
+        Page personalPage = memberPageLinkRepository.findPersonalPageByMemberId(member.getId());
+
+        PageDetailsResponse pageDetailsResponse = getPageDetailsResponse(personalPage);
+
+        return ApiPageResponseSpec.<PageDetailsResponse>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("로그인 성공 시, 유저의 개인 페이지 메인 화면 데이터를 조회합니다.")
+                .data(pageDetailsResponse)
+                .build();
+
+    }
+
+
 
 }

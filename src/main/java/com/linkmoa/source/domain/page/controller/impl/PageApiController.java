@@ -64,7 +64,14 @@ public class PageApiController implements PageApiSpecification {
     public ResponseEntity<ApiPageResponseSpec<PageDetailsResponse>> getPageDetails(
             BaseRequest baseRequest,
             PrincipalDetails principalDetails) {
-        ApiPageResponseSpec<PageDetailsResponse> pageDetailsResponse = pageService.findPageMain(baseRequest, principalDetails);
+        ApiPageResponseSpec<PageDetailsResponse> pageDetailsResponse = pageService.getPageMain(baseRequest, principalDetails);
+        return ResponseEntity.ok().body(pageDetailsResponse);
+    }
+
+
+    public ResponseEntity<ApiPageResponseSpec<PageDetailsResponse>> loadPersonalPageMain(
+            PrincipalDetails principalDetails) {
+        ApiPageResponseSpec<PageDetailsResponse> pageDetailsResponse = pageService.loadPersonalPageMain(principalDetails);
         return ResponseEntity.ok().body(pageDetailsResponse);
     }
 

@@ -74,4 +74,16 @@ public interface PageApiSpecification {
             @RequestBody @Validated BaseRequest baseRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
+
+
+    @Tag(name = "Page", description = "페이지 관련 API")
+    @Operation(summary = "개인 페이지 상세 조회 ", description = "로그인 성공 시, 유저의 개인 페이지 메인 화면 데이터를 조회합니다.")
+    @ApiErrorCodeExamples(PageErrorCode.class)
+    @GetMapping("/login")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiPageResponseSpec<PageDetailsResponse>> loadPersonalPageMain(
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
+
+
 }
