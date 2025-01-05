@@ -1,6 +1,6 @@
 package com.linkmoa.source.domain.memberPageLink.repository;
 
-import org.springframework.data.domain.Page;
+import com.linkmoa.source.domain.page.entity.Page;
 
 public interface MemberPageLinkRepositoryCustom {
 
