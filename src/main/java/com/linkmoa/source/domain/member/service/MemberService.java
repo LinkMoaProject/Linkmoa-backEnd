@@ -9,15 +9,10 @@ import com.linkmoa.source.domain.member.error.MemberErrorCode;
 import com.linkmoa.source.domain.member.exception.MemberException;
 import com.linkmoa.source.domain.member.repository.MemberRepository;
 import com.linkmoa.source.domain.memberPageLink.service.MemberPageLinkService;
-import com.linkmoa.source.domain.notify.service.NotifyService;
+import com.linkmoa.source.domain.notify.service.NotificationService;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.dto.response.PageResponse;
-import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.entity.Page;
-import com.linkmoa.source.domain.page.error.PageErrorCode;
-import com.linkmoa.source.domain.page.exception.PageException;
-import com.linkmoa.source.domain.page.service.PageService;
-import com.linkmoa.source.global.dto.request.BaseRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -30,8 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.linkmoa.source.domain.member.error.MemberErrorCode.MEMBER_NOT_FOUND_EMAIL;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -41,7 +34,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final RefreshTokenService refreshTokenService;
-    private final NotifyService notifyService;
+    private final NotificationService notifyService;
     private final MemberPageLinkService memberPageLinkService;
 
 

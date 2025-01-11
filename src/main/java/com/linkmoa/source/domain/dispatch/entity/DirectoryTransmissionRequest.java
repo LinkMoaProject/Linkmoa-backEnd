@@ -4,7 +4,7 @@ package com.linkmoa.source.domain.dispatch.entity;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
-import com.linkmoa.source.domain.notify.aop.proxy.NotifyInfo;
+import com.linkmoa.source.domain.notify.aop.proxy.NotificationInfo;
 
 import com.linkmoa.source.domain.notify.constant.NotificationType;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
@@ -15,7 +15,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Entity
-public class DirectoryTransmissionRequest extends BaseEntity implements NotifyInfo {
+public class DirectoryTransmissionRequest extends BaseEntity implements NotificationInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

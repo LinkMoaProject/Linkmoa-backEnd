@@ -2,7 +2,7 @@ package com.linkmoa.source.domain.dispatch.entity;
 
 
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
-import com.linkmoa.source.domain.notify.aop.proxy.NotifyInfo;
+import com.linkmoa.source.domain.notify.aop.proxy.NotificationInfo;
 import com.linkmoa.source.domain.notify.constant.NotificationType;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class SharePageInvitationRequest extends BaseEntity implements NotifyInfo {
+public class SharePageInvitationRequest extends BaseEntity implements NotificationInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

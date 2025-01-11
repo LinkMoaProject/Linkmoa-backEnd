@@ -1,10 +1,10 @@
 package com.linkmoa.source.domain.notify.service;
 
 
-import com.linkmoa.source.domain.notify.dto.response.NotifyResponse;
+import com.linkmoa.source.domain.notify.dto.response.NotificationResponse;
 import com.linkmoa.source.domain.notify.constant.NotificationType;
 import com.linkmoa.source.domain.notify.entity.Notify;
-import com.linkmoa.source.domain.notify.repository.NotifyRepository;
+import com.linkmoa.source.domain.notify.repository.NotificationRepository;
 import com.linkmoa.source.domain.notify.repository.SseEmitterRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +16,11 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class NotifyService {
+public class NotificationService {
     private static final Long DEFAULT_TIMEOUT=(60L*1000*60)*6; // 6시간
 
     private final SseEmitterRepository sseEmitterRepository;
-    private final NotifyRepository notifyRepository;
+    private final NotificationRepository notifyRepository;
 
     public SseEmitter subscribe(final String email,String lastEventId){
         String emitterId = makeTimeIncludeId(email);
@@ -92,7 +92,7 @@ public class NotifyService {
                     sseEmitterRepository.saveEventCache(key,notification);
 
                     // 4-2. SSE 연결로 알림 전송
-                    sendNotification(emitter,eventId,key, NotifyResponse.of(notification));
+                    sendNotification(emitter,eventId,key, NotificationResponse.of(notification));
                 }
         );
 

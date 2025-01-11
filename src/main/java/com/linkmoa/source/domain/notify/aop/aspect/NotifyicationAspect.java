@@ -1,9 +1,8 @@
 package com.linkmoa.source.domain.notify.aop.aspect;
 
-import com.linkmoa.source.domain.notify.aop.proxy.NotifyInfo;
-import com.linkmoa.source.domain.notify.constant.NotificationType;
-import com.linkmoa.source.domain.notify.constant.NotifyMessage;
-import com.linkmoa.source.domain.notify.service.NotifyService;
+import com.linkmoa.source.domain.notify.aop.proxy.NotificationInfo;
+import com.linkmoa.source.domain.notify.constant.NotificationMessage;
+import com.linkmoa.source.domain.notify.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -17,17 +16,17 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 @RequiredArgsConstructor
-public class NotifyAspect {
+public class NotifyicationAspect {
 
-    private final NotifyService notifyService;
+    private final NotificationService notifyService;
 
-    @Pointcut("@annotation(com.linkmoa.source.domain.notify.aop.annotation.NotifyApplied)")
+    @Pointcut("@annotation(com.linkmoa.source.domain.notify.aop.annotation.NotificationApplied)")
     public void notifyPointcut(){}
     @Async
     @AfterReturning(pointcut = "notifyPointcut()",returning = "result")
     public void createAndSendNotification(JoinPoint joinPoint,Object result) throws Throwable{
-        NotifyInfo notifyInfo = (NotifyInfo) result;
-        String message = NotifyMessage.getMessageByType(notifyInfo.getNotificationType());
+        NotificationInfo notifyInfo = (NotificationInfo) result;
+        String message = NotificationMessage.getMessageByType(notifyInfo.getNotificationType());
         notifyService.send(
                 notifyInfo.getReceiverEmail(),
                 notifyInfo.getSenderEmail(),
