@@ -4,15 +4,12 @@ package com.linkmoa.source.domain.dispatch.service;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
-import com.linkmoa.source.domain.dispatch.dto.response.DirectorySendResponse;
+import com.linkmoa.source.domain.dispatch.dto.response.*;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionSendRequest;
-import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
-import com.linkmoa.source.domain.dispatch.dto.response.NotificationsDetailsResponse;
-import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationRequestCreateResponse;
 import com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest;
 import com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest;
 import com.linkmoa.source.domain.dispatch.repository.DirectoryTransmissionRequestRepository;
@@ -123,7 +120,6 @@ public class DispatchRequestService {
                 .build();
     }
 
-
     public List<DispatchDetailResponse> findSharePageInvitationsForReceiver(String receiverEmail){
         List<DispatchDetailResponse> allSharePageInvitationsByReceiverEmail =
                 sharePageInvitationRequestRepository.findAllSharePageInvitationsByReceiverEmail(receiverEmail);
@@ -138,13 +134,13 @@ public class DispatchRequestService {
         return allDirectoryTransmissionRequestByReceiverEmail;
     }
 
-    public ApiPageResponseSpec<NotificationsDetailsResponse> findAllNotificationsForReceiver(String receiverEmail){
+    public ApiDispatchResponseSpec<NotificationsDetailsResponse> findAllNotificationsForReceiver(String receiverEmail){
         NotificationsDetailsResponse notificationDetails = NotificationsDetailsResponse.builder()
                 .DirectoryTransmissionRequests(findDirectoryDirectoryTransmissionsForReceiver(receiverEmail))
                 .SharePageInvitationRequests(findSharePageInvitationsForReceiver(receiverEmail))
                 .build();
 
-        return ApiPageResponseSpec.<NotificationsDetailsResponse>builder()
+        return ApiDispatchResponseSpec.<NotificationsDetailsResponse>builder()
                 .httpStatusCode(HttpStatus.OK)
                 .successMessage("알람 목록을 조회했습니다.")
                 .data(notificationDetails)
