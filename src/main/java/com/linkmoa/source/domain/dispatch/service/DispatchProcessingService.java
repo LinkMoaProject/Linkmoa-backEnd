@@ -1,3 +1,4 @@
+/*
 package com.linkmoa.source.domain.dispatch.service;
 
 
@@ -27,3 +28,4 @@ public class DispatchProcessingService {
     }
 
 }
+*/

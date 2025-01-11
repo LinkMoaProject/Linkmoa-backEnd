@@ -11,6 +11,7 @@ import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionSendRequest;
 import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
+import com.linkmoa.source.domain.dispatch.dto.response.NotificationsDetailsResponse;
 import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationRequestCreateResponse;
 import com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest;
 import com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest;
@@ -122,11 +123,6 @@ public class DispatchRequestService {
                 .build();
     }
 
-    /**
-     * 1.공유 페이지 알람 수신 목록 조회 로직 구현
-     * 2.디렉토리 전송 알람 수신 목록 조회 로직 구현
-     * 3.알람 수신 목록 목록 조회 구현
-     */
 
     public List<DispatchDetailResponse> findSharePageInvitationsForReceiver(String receiverEmail){
         List<DispatchDetailResponse> allSharePageInvitationsByReceiverEmail =
@@ -140,6 +136,20 @@ public class DispatchRequestService {
                 directoryTransmissionRequestRepository.findAllDirectoryTransmissionRequestByReceiverEmail(receiverEmail);
 
         return allDirectoryTransmissionRequestByReceiverEmail;
+    }
+
+    public ApiPageResponseSpec<NotificationsDetailsResponse> findAllNotificationsForReceiver(String receiverEmail){
+        NotificationsDetailsResponse notificationDetails = NotificationsDetailsResponse.builder()
+                .DirectoryTransmissionRequests(findDirectoryDirectoryTransmissionsForReceiver(receiverEmail))
+                .SharePageInvitationRequests(findSharePageInvitationsForReceiver(receiverEmail))
+                .build();
+
+        return ApiPageResponseSpec.<NotificationsDetailsResponse>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("알람 목록을 조회했습니다.")
+                .data(notificationDetails)
+                .build();
+
     }
 
 
