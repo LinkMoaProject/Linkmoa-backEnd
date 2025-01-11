@@ -135,6 +135,14 @@ public class DispatchRequestService {
         return allSharePageInvitationsByReceiverEmail;
     }
 
+    public List<DispatchDetailResponse> findDirectoryDirectoryTransmissionsForReceiver(String receiverEmail){
+        List<DispatchDetailResponse> allDirectoryTransmissionRequestByReceiverEmail =
+                directoryTransmissionRequestRepository.findAllDirectoryTransmissionRequestByReceiverEmail(receiverEmail);
+
+        return allDirectoryTransmissionRequestByReceiverEmail;
+    }
+
+
 
 
 
