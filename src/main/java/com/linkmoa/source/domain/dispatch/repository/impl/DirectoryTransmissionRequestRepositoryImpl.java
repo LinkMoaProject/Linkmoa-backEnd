@@ -23,10 +23,6 @@ public class DirectoryTransmissionRequestRepositoryImpl implements DirectoryTran
                                 DispatchDetailResponse.class,
                                 directoryTransmissionRequest.id,
                                 directoryTransmissionRequest.senderEmail,
-                                Expressions.stringTemplate(
-                                        "{0}님이 디렉토리를 전송했습니다.",
-                                        directoryTransmissionRequest.senderEmail
-                                ),
                                 directoryTransmissionRequest.requestStatus,
                                 directoryTransmissionRequest.notificationType
                         ))

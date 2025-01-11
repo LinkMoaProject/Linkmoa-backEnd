@@ -24,11 +24,7 @@ public class SharePageInvitationRequestRepositoryImpl implements SharePageInvita
                         (Projections.constructor(
                                 DispatchDetailResponse.class,
                                 sharePageInvitationRequest.id,
-                                sharePageInvitationRequest.senderEmail.stringValue(),
-                                Expressions.stringTemplate(
-                                        "{0}님이 페이지 초대를 보냈습니다.",
-                                        sharePageInvitationRequest.senderEmail
-                                ), // 리터럴 값,
+                                sharePageInvitationRequest.senderEmail,
                                 sharePageInvitationRequest.requestStatus,
                                 sharePageInvitationRequest.notificationType
                         ))
