@@ -10,6 +10,7 @@ import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionSendRequest;
+import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
 import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationRequestCreateResponse;
 import com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest;
 import com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest;
@@ -31,6 +32,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -118,5 +121,22 @@ public class DispatchRequestService {
                 .data(sharePageInvitationRequestCreateResponse)
                 .build();
     }
+
+    /**
+     * 1.공유 페이지 알람 수신 목록 조회 로직 구현
+     * 2.디렉토리 전송 알람 수신 목록 조회 로직 구현
+     * 3.알람 수신 목록 목록 조회 구현
+     */
+
+    public List<DispatchDetailResponse> findSharePageInvitationsForReceiver(String receiverEmail){
+        List<DispatchDetailResponse> allSharePageInvitationsByReceiverEmail =
+                sharePageInvitationRequestRepository.findAllSharePageInvitationsByReceiverEmail(receiverEmail);
+
+        return allSharePageInvitationsByReceiverEmail;
+    }
+
+
+
+
 
 }
