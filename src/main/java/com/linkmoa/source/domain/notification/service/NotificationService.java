@@ -1,11 +1,11 @@
-package com.linkmoa.source.domain.notify.service;
+package com.linkmoa.source.domain.notification.service;
 
 
-import com.linkmoa.source.domain.notify.dto.response.NotificationResponse;
-import com.linkmoa.source.domain.notify.constant.NotificationType;
-import com.linkmoa.source.domain.notify.entity.Notify;
-import com.linkmoa.source.domain.notify.repository.NotificationRepository;
-import com.linkmoa.source.domain.notify.repository.SseEmitterRepository;
+import com.linkmoa.source.domain.notification.entity.Notification;
+import com.linkmoa.source.domain.notification.repository.NotificationRepository;
+import com.linkmoa.source.domain.notification.repository.SseEmitterRepository;
+import com.linkmoa.source.domain.notification.dto.response.NotificationResponse;
+import com.linkmoa.source.domain.notification.constant.NotificationType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class NotificationService {
     private static final Long DEFAULT_TIMEOUT=(60L*1000*60)*6; // 6시간
 
     private final SseEmitterRepository sseEmitterRepository;
-    private final NotificationRepository notifyRepository;
+    private final NotificationRepository notificationRepository;
 
     public SseEmitter subscribe(final String email,String lastEventId){
         String emitterId = makeTimeIncludeId(email);
@@ -77,7 +77,7 @@ public class NotificationService {
     public void send(String receiverEmail,String senderEmail, NotificationType notificationType, String content, String url){
 
         // 1. Notify 엔티티 생성 및 저장
-        Notify notification = notifyRepository.save(createNotification(receiverEmail,senderEmail,notificationType,content));
+        Notification notification = notificationRepository.save(createNotification(receiverEmail,senderEmail,notificationType,content));
 
         // 2. 이벤트 ID 생성
         String eventId = receiverEmail + "_" +System.currentTimeMillis();
@@ -98,8 +98,8 @@ public class NotificationService {
 
     }
 
-    private Notify createNotification(String receiverEmail,String senderEmail, NotificationType notificationType,String content){
-        return Notify.builder()
+    private Notification createNotification(String receiverEmail,String senderEmail, NotificationType notificationType,String content){
+        return Notification.builder()
                 .receiverEmail(receiverEmail)
                 .senderEmail(senderEmail)
                 .notificationType(notificationType)
@@ -110,7 +110,7 @@ public class NotificationService {
 
     @Transactional
     public void deleteAllNotificationByMemberEmail(String email) {
-        notifyRepository.deleteAllBySenderEmailOrReceiverEmail(email);
+        notificationRepository.deleteAllBySenderEmailOrReceiverEmail(email);
     }
 
 }

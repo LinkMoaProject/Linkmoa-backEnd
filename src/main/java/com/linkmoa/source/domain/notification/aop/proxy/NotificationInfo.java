@@ -1,6 +1,6 @@
-package com.linkmoa.source.domain.notify.aop.proxy;
+package com.linkmoa.source.domain.notification.aop.proxy;
 
-import com.linkmoa.source.domain.notify.constant.NotificationType;
+import com.linkmoa.source.domain.notification.constant.NotificationType;
 
 public interface NotificationInfo {
 

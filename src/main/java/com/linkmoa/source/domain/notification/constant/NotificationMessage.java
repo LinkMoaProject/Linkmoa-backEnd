@@ -1,4 +1,4 @@
-package com.linkmoa.source.domain.notify.constant;
+package com.linkmoa.source.domain.notification.constant;
 
 
 import lombok.Getter;

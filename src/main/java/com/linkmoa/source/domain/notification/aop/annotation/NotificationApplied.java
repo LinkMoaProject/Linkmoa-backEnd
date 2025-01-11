@@ -1,4 +1,4 @@
-package com.linkmoa.source.domain.notify.aop.annotation;
+package com.linkmoa.source.domain.notification.aop.annotation;
 
 
 import java.lang.annotation.ElementType;

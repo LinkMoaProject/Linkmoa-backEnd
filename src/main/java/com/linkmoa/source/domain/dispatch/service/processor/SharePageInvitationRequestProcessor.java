@@ -15,16 +15,13 @@ import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.domain.memberPageLink.entity.MemberPageLink;
 import com.linkmoa.source.domain.memberPageLink.repository.MemberPageLinkRepository;
-import com.linkmoa.source.domain.notify.constant.NotificationType;
+import com.linkmoa.source.domain.notification.constant.NotificationType;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.page.repository.PageRepository;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor

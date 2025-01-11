@@ -18,7 +18,7 @@ import com.linkmoa.source.domain.dispatch.repository.SharePageInvitationRequestR
 import com.linkmoa.source.domain.member.error.MemberErrorCode;
 import com.linkmoa.source.domain.member.exception.MemberException;
 import com.linkmoa.source.domain.member.service.MemberService;
-import com.linkmoa.source.domain.notify.aop.annotation.NotificationApplied;
+import com.linkmoa.source.domain.notification.aop.annotation.NotificationApplied;
 import com.linkmoa.source.domain.page.contant.PageType;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.entity.Page;

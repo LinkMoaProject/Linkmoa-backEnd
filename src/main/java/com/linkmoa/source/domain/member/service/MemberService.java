@@ -9,7 +9,7 @@ import com.linkmoa.source.domain.member.error.MemberErrorCode;
 import com.linkmoa.source.domain.member.exception.MemberException;
 import com.linkmoa.source.domain.member.repository.MemberRepository;
 import com.linkmoa.source.domain.memberPageLink.service.MemberPageLinkService;
-import com.linkmoa.source.domain.notify.service.NotificationService;
+import com.linkmoa.source.domain.notification.service.NotificationService;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.dto.response.PageResponse;
 import com.linkmoa.source.domain.page.entity.Page;

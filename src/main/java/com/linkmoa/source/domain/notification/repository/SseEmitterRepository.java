@@ -1,4 +1,4 @@
-package com.linkmoa.source.domain.notify.repository;
+package com.linkmoa.source.domain.notification.repository;
 
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 

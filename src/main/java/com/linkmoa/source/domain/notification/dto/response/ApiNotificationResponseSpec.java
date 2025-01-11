@@ -1,4 +1,4 @@
-package com.linkmoa.source.domain.notify.dto.response;
+package com.linkmoa.source.domain.notification.dto.response;
 
 
 import com.linkmoa.source.global.spec.ApiResponseSpec;
