@@ -41,5 +41,3 @@ public class DirectoryTransmissionRequestRepositoryImpl implements DirectoryTran
     }
 }
 
-//git commit -m "LP-119 feat: 알람 수신 목록 조회 시 사용되는 쿼리 dsl 구현 "
-//디렉토리 전송 알람 수신 목록 조회 로직 구현
