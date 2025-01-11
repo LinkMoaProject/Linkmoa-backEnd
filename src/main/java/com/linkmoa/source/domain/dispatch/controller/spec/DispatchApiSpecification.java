@@ -4,12 +4,9 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
 import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
-import com.linkmoa.source.domain.dispatch.dto.response.ApiDispatchResponseSpec;
-import com.linkmoa.source.domain.dispatch.dto.response.DirectorySendResponse;
+import com.linkmoa.source.domain.dispatch.dto.response.*;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionSendRequest;
-import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationActionResponse;
-import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationRequestCreateResponse;
 import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
@@ -20,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,6 +55,14 @@ public interface DispatchApiSpecification {
             @AuthenticationPrincipal PrincipalDetails principalDetails
             );
 
+    @Tag(name="Dispatch",description = "알람 목록 조회 수신 API")
+    @Operation(summary = "알람 목록 조회 수신 ",description = "수신된 알람 목록을 조회합니다.")
+    @ApiErrorCodeExamples(DispatchErrorCode.class)
+    @GetMapping("/notifications")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiDispatchResponseSpec<NotificationsDetailsResponse>> getAllNotification(
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
 
 
 }

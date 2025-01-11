@@ -4,12 +4,9 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
 import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
-import com.linkmoa.source.domain.dispatch.dto.response.ApiDispatchResponseSpec;
-import com.linkmoa.source.domain.dispatch.dto.response.DirectorySendResponse;
+import com.linkmoa.source.domain.dispatch.dto.response.*;
 import com.linkmoa.source.domain.dispatch.controller.spec.DispatchApiSpecification;
 import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionSendRequest;
-import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationActionResponse;
-import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationRequestCreateResponse;
 import com.linkmoa.source.domain.dispatch.service.DispatchRequestService;
 import com.linkmoa.source.domain.dispatch.service.processor.SharePageInvitationRequestProcessor;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
@@ -22,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/dispatch")
 public class DispatchApiContorller implements DispatchApiSpecification {
+
+    //[BE] [공유 페이지 초대 수락 또는 거절] 공유 페이지 초대 수락 또는 거절 구현
 
     private final DispatchRequestService dispatchRequestService;
     private final SharePageInvitationRequestProcessor sharePageInvitationRequestProcessor;
@@ -54,6 +53,15 @@ public class DispatchApiContorller implements DispatchApiSpecification {
                 dispatchProcessingRequest, principalDetails);
 
         return ResponseEntity.ok().body(sharePageInvitationResponse);
+    }
+
+    public ResponseEntity<ApiDispatchResponseSpec<NotificationsDetailsResponse>> getAllNotification(
+            PrincipalDetails principalDetails) {
+
+        ApiDispatchResponseSpec<NotificationsDetailsResponse> allNotificationsForReceiver =
+                dispatchRequestService.findAllNotificationsForReceiver(principalDetails.getEmail());
+
+        return ResponseEntity.ok().body(allNotificationsForReceiver);
     }
 
 
