@@ -1,8 +1,8 @@
-package com.linkmoa.source.domain.notify.controller;
+package com.linkmoa.source.domain.notification.controller;
 
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.notify.service.NotifyService;
+import com.linkmoa.source.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
-@RequestMapping("/api/notify")
+@RequestMapping("/api/notification")
 @RequiredArgsConstructor
-public class NotifyController {
+public class NotificationController {
 
-    private final NotifyService notifyService;
+    private final NotificationService notificationService;
 
 //@RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId)
     @GetMapping(value="/subscribe",produces = "text/event-stream")
@@ -26,7 +26,7 @@ public class NotifyController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestHeader(value="Last-Event-ID",required = false,defaultValue = "") String lastEventId){
 
-        return notifyService.subscribe(principalDetails.getEmail(), lastEventId);
+        return notificationService.subscribe(principalDetails.getEmail(), lastEventId);
     }
 
 }

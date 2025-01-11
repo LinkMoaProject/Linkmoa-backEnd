@@ -1,16 +1,16 @@
-package com.linkmoa.source.domain.notify.constant;
+package com.linkmoa.source.domain.notification.constant;
 
 
 import lombok.Getter;
 
 @Getter
-public enum NotifyMessage {
+public enum NotificationMessage {
 
     SEND_DIRECTORY_REQUEST("디렉토리 전송 요청이 있습니다."),
     INVITE_PAGE_REQUEST("공유 페이지 초대 요청이 있습니다.");
     private String message;
 
-    NotifyMessage(String message) {
+    NotificationMessage(String message) {
         this.message = message;
     }
 

@@ -1,4 +1,4 @@
-package com.linkmoa.source.domain.notify.aop.annotation;
+package com.linkmoa.source.domain.notification.aop.annotation;
 
 
 import java.lang.annotation.ElementType;
@@ -8,5 +8,5 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface NotifyApplied {
+public @interface NotificationApplied {
 }

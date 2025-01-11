@@ -6,7 +6,7 @@ import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
 import com.linkmoa.source.domain.dispatch.dto.response.ApiDispatchResponseSpec;
 import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
 import com.linkmoa.source.domain.dispatch.exception.DispatchException;
-import com.linkmoa.source.domain.notify.constant.NotificationType;
+import com.linkmoa.source.domain.notification.constant.NotificationType;
 
 public interface DispatchProcessor {
     ApiDispatchResponseSpec<?> processRequest(DispatchProcessingRequest dispatchProcessingRequest,PrincipalDetails principalDetails);

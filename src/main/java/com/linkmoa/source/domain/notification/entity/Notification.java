@@ -1,21 +1,18 @@
-package com.linkmoa.source.domain.notify.entity;
+package com.linkmoa.source.domain.notification.entity;
 
 
-import com.linkmoa.source.domain.member.entity.Member;
-import com.linkmoa.source.domain.notify.constant.NotificationType;
+import com.linkmoa.source.domain.notification.constant.NotificationType;
 import com.linkmoa.source.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Entity
-public class Notify extends BaseEntity {
+public class Notification extends BaseEntity {
 
     @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="notice_id")
@@ -39,7 +36,7 @@ public class Notify extends BaseEntity {
 
 
     @Builder
-    public Notify(String receiverEmail,String senderEmail, NotificationType notificationType,String content,boolean isRead){
+    public Notification(String receiverEmail,String senderEmail, NotificationType notificationType,String content,boolean isRead){
         this.isRead=isRead;
         this.content=content;
         this.notificationType=notificationType;
