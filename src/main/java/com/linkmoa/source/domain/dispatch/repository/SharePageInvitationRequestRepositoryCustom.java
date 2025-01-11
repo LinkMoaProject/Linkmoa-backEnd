@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface SharePageInvitationRequestRepositoryCustom {
 
-    List<DispatchDetailResponse> findAllSharePageInvitationRequestByMemberId(Long memberId);
+    List<DispatchDetailResponse> findAllSharePageInvitationsByReceiverEmail(String receiverEmail);
 
 }
