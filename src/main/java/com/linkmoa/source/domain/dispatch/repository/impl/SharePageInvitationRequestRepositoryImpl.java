@@ -1,6 +1,7 @@
-package com.linkmoa.source.domain.dispatch.repository;
+package com.linkmoa.source.domain.dispatch.repository.impl;
 
 import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
+import com.linkmoa.source.domain.dispatch.repository.custom.SharePageInvitationRequestRepositoryCustom;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;

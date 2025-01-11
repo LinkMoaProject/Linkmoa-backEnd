@@ -1,4 +1,4 @@
-package com.linkmoa.source.domain.dispatch.repository;
+package com.linkmoa.source.domain.dispatch.repository.custom;
 
 import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
 
