@@ -20,7 +20,7 @@ public class DirectoryTransmissionRequest extends BaseEntity implements NotifyIn
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="directory_send_request_id")
-    private Long DirectorySendRequestId;
+    private Long id;
 
     @Column(name="receiver_email")
     private String receiverEmail;
