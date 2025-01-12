@@ -4,13 +4,12 @@ package com.linkmoa.source.domain.dispatch.service;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
-import com.linkmoa.source.domain.dispatch.dto.response.DirectorySendResponse;
+import com.linkmoa.source.domain.dispatch.dto.response.*;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionSendRequest;
-import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationRequestCreateResponse;
 import com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest;
 import com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest;
 import com.linkmoa.source.domain.dispatch.repository.DirectoryTransmissionRequestRepository;
@@ -31,6 +30,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -118,5 +119,38 @@ public class DispatchRequestService {
                 .data(sharePageInvitationRequestCreateResponse)
                 .build();
     }
+
+    public List<DispatchDetailResponse> findSharePageInvitationsForReceiver(String receiverEmail){
+        List<DispatchDetailResponse> allSharePageInvitationsByReceiverEmail =
+                sharePageInvitationRequestRepository.findAllSharePageInvitationsByReceiverEmail(receiverEmail);
+
+        return allSharePageInvitationsByReceiverEmail;
+    }
+
+    public List<DispatchDetailResponse> findDirectoryDirectoryTransmissionsForReceiver(String receiverEmail){
+        List<DispatchDetailResponse> allDirectoryTransmissionRequestByReceiverEmail =
+                directoryTransmissionRequestRepository.findAllDirectoryTransmissionRequestByReceiverEmail(receiverEmail);
+
+        return allDirectoryTransmissionRequestByReceiverEmail;
+    }
+
+    public ApiDispatchResponseSpec<NotificationsDetailsResponse> findAllNotificationsForReceiver(String receiverEmail){
+        NotificationsDetailsResponse notificationDetails = NotificationsDetailsResponse.builder()
+                .DirectoryTransmissionRequests(findDirectoryDirectoryTransmissionsForReceiver(receiverEmail))
+                .SharePageInvitationRequests(findSharePageInvitationsForReceiver(receiverEmail))
+                .build();
+
+        return ApiDispatchResponseSpec.<NotificationsDetailsResponse>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("알람 목록을 조회했습니다.")
+                .data(notificationDetails)
+                .build();
+
+    }
+
+
+
+
+
 
 }
