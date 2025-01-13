@@ -79,5 +79,10 @@ public class SharePageInvitationRequest extends BaseEntity implements Notificati
         return notificationType;
     }
 
+    @Override
+    public Long getRequestId() {
+        return id;
+    }
+
 
 }

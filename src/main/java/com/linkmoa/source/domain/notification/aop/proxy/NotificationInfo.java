@@ -7,4 +7,5 @@ public interface NotificationInfo {
     String getSenderEmail();
     String getReceiverEmail();
     NotificationType getNotificationType();
+    Long getRequestId();
 }

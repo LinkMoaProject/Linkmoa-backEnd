@@ -72,6 +72,12 @@ public class DirectoryTransmissionRequest extends BaseEntity implements Notifica
         return notificationType;
     }
 
+    @Override
+    public Long getRequestId() {
+        return id;
+    }
+
+
     public void changeDirectorySendRequestStatus(RequestStatus newStatus) {
         if (this.requestStatus == RequestStatus.ACCEPTED) {
             throw new DirectoryException(DirectoryErrorCode.REQUEST_ALREADY_ACCEPTED);
