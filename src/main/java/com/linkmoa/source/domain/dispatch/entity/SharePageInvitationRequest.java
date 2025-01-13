@@ -4,6 +4,7 @@ package com.linkmoa.source.domain.dispatch.entity;
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.domain.notification.aop.proxy.NotificationInfo;
 import com.linkmoa.source.domain.notification.constant.NotificationType;
+import com.linkmoa.source.domain.notification.entity.Notification;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import com.linkmoa.source.global.entity.BaseEntity;
@@ -44,6 +45,13 @@ public class SharePageInvitationRequest extends BaseEntity implements Notificati
     @Enumerated(EnumType.STRING)
     @Column(name="permission_type")
     private PermissionType permissionType;
+
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JoinColumn(name="notification_id",nullable = false)
+    private Notification notification;
 
 
     @Builder

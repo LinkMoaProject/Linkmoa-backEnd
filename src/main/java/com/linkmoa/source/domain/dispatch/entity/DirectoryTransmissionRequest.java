@@ -8,6 +8,7 @@ import com.linkmoa.source.domain.notification.aop.proxy.NotificationInfo;
 
 import com.linkmoa.source.domain.notification.constant.NotificationType;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
+import com.linkmoa.source.domain.notification.entity.Notification;
 import com.linkmoa.source.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,6 +40,14 @@ public class DirectoryTransmissionRequest extends BaseEntity implements Notifica
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "directory_id", nullable = false)
     private Directory directory;
+
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JoinColumn(name="notification_id",nullable = false)
+    private Notification notification;
+
 
 
     @Builder
