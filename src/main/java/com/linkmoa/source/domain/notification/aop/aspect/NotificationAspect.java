@@ -19,21 +19,36 @@ import org.springframework.stereotype.Component;
 public class NotificationAspect {
 
     private final NotificationService notificationService;
-
     @Pointcut("@annotation(com.linkmoa.source.domain.notification.aop.annotation.NotificationApplied)")
     public void notificationPointcut(){}
     @Async
     @AfterReturning(pointcut = "notificationPointcut()",returning = "result")
-    public void createAndSendNotification(JoinPoint joinPoint,Object result) throws Throwable{
+    public void createAndSenRequestdNotification(JoinPoint joinPoint,Object result) throws Throwable{
+
         NotificationInfo notificationInfo = (NotificationInfo) result;
-        String message = NotificationMessage.getMessageByType(notificationInfo.getNotificationType());
-        notificationService.send(
+
+        String message = String.format("%s 님이 %s",
+                notificationInfo.getSenderEmail(),
+                NotificationMessage.getMessageByType(notificationInfo.getNotificationType()));
+
+
+        notificationService.send(notificationService
+                .createRequestNotification(
+                        notificationInfo.getReceiverEmail(),
+                        notificationInfo.getSenderEmail(),
+                        notificationInfo.getNotificationType(),
+                        message,
+                        notificationInfo.getRequestId()
+                )
+        );
+    /*    notificationService.send(
                 notificationInfo.getReceiverEmail(),
                 notificationInfo.getSenderEmail(),
                 notificationInfo.getNotificationType(),
                 message,
-                "url 테스트중"
-        );
+                "url 테스트중",
+                notificationInfo.getRequestId()
+        );*/
 
         log.info("result = {}",result);
 

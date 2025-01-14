@@ -74,10 +74,25 @@ public class NotificationService {
     }
 
 
-    public void send(String receiverEmail,String senderEmail, NotificationType notificationType, String content, String url){
+    public Notification createRequestNotification(String receiverEmail,String senderEmail, NotificationType notificationType,String content,Long requestId){
+
+
+        return notificationRepository.save(
+                Notification.builder()
+                .receiverEmail(receiverEmail)
+                .senderEmail(senderEmail)
+                .notificationType(notificationType)
+                .content(content)
+                .isRead(false)
+                .requestId(requestId)
+                .build());
+    }
+    public void send(Notification notification){
 
         // 1. Notify 엔티티 생성 및 저장
-        Notification notification = notificationRepository.save(createNotification(receiverEmail,senderEmail,notificationType,content));
+       // Notification notification = notificationRepository.save(notification);
+
+        String receiverEmail =notification.getReceiverEmail();
 
         // 2. 이벤트 ID 생성
         String eventId = receiverEmail + "_" +System.currentTimeMillis();
@@ -98,15 +113,7 @@ public class NotificationService {
 
     }
 
-    private Notification createNotification(String receiverEmail,String senderEmail, NotificationType notificationType,String content){
-        return Notification.builder()
-                .receiverEmail(receiverEmail)
-                .senderEmail(senderEmail)
-                .notificationType(notificationType)
-                .content(content)
-                .isRead(false)
-                .build();
-    }
+
 
     @Transactional
     public void deleteAllNotificationByMemberEmail(String email) {
