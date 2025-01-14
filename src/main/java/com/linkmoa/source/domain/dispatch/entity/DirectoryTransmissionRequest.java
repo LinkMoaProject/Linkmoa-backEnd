@@ -41,12 +41,6 @@ public class DirectoryTransmissionRequest extends BaseEntity implements Notifica
     @JoinColumn(name = "directory_id", nullable = false)
     private Directory directory;
 
-    @OneToOne(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @JoinColumn(name="notification_id",nullable = false)
-    private Notification notification;
 
 
 

@@ -46,12 +46,6 @@ public class SharePageInvitationRequest extends BaseEntity implements Notificati
     @Column(name="permission_type")
     private PermissionType permissionType;
 
-    @OneToOne(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @JoinColumn(name="notification_id",nullable = false)
-    private Notification notification;
 
 
     @Builder
