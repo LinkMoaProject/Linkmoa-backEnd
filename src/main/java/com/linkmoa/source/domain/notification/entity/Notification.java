@@ -37,7 +37,6 @@ public class Notification extends BaseEntity {
     @Column(name="request_id")
     private Long requestId;
 
-
     @Builder
     public Notification(String receiverEmail,String senderEmail, NotificationType notificationType,String content,boolean isRead,Long requestId){
         this.isRead=isRead;
@@ -46,6 +45,10 @@ public class Notification extends BaseEntity {
         this.receiverEmail=receiverEmail;
         this.senderEmail=senderEmail;
         this.requestId = requestId;
+    }
+
+    public void markToRead(){
+        this.isRead=true;
     }
 
 

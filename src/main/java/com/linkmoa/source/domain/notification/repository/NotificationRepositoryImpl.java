@@ -12,15 +12,17 @@ import static com.linkmoa.source.domain.notification.entity.QNotification.notifi
 public class NotificationRepositoryImpl implements NotificationRepositoryCustom{
 
     private final JPAQueryFactory jpaQueryFactory;
-    @Override
-    public List<Notification> findUnreadNotificationsByReceiverEmail(String receiverEmail) {
 
+    @Override
+    public Long updateUnreadNotificationsToReadByReceiverEmail(String receiverEmail) {
         return jpaQueryFactory
-                .selectFrom(notification)
+                .update(notification)
+                .set(notification.isRead, true)
                 .where(
-                        notification.isRead.eq(false).and
-                        (notification.receiverEmail.eq(receiverEmail))
-                ).fetch();
+                        notification.receiverEmail.eq(receiverEmail)
+                        .and(notification.isRead.eq(false))
+                )
+                .execute();
     }
 
 }

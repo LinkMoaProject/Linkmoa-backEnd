@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface NotificationRepositoryCustom {
 
-    List<Notification> findUnreadNotificationsByReceiverEmail(String receiverEmail);
+    Long updateUnreadNotificationsToReadByReceiverEmail(String receiverEmail);
 
 }

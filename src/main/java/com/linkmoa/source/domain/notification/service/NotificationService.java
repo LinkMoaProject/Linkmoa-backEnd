@@ -2,6 +2,8 @@ package com.linkmoa.source.domain.notification.service;
 
 
 import com.linkmoa.source.domain.notification.entity.Notification;
+import com.linkmoa.source.domain.notification.error.NotificationErrorCode;
+import com.linkmoa.source.domain.notification.exception.NotificationException;
 import com.linkmoa.source.domain.notification.repository.NotificationRepository;
 import com.linkmoa.source.domain.notification.repository.SseEmitterRepository;
 import com.linkmoa.source.domain.notification.dto.response.NotificationResponse;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -113,11 +116,10 @@ public class NotificationService {
 
     }
 
-
-
     @Transactional
     public void deleteAllNotificationByMemberEmail(String email) {
         notificationRepository.deleteAllBySenderEmailOrReceiverEmail(email);
     }
+
 
 }
