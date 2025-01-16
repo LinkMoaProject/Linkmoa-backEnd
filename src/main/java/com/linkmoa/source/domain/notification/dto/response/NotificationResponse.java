@@ -9,15 +9,17 @@ public record NotificationResponse(
         String content,
         String notificationType,
         String receiverEmail,
-        String sendrEmail
+        String sendrEmail,
+        Long countUnreadNotifications
 ) {
 
-    public static NotificationResponse of(Notification notification){
+    public static NotificationResponse of(Notification notification,Long countUnreadNotifications){
         return NotificationResponse.builder()
                 .content(notification.getContent())
                 .notificationType(String.valueOf(notification.getNotificationType()))
                 .receiverEmail(notification.getReceiverEmail())
                 .sendrEmail(notification.getSenderEmail())
+                .countUnreadNotifications(countUnreadNotifications)
                 .build();
     }
 
