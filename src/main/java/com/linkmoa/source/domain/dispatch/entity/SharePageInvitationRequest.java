@@ -4,6 +4,7 @@ package com.linkmoa.source.domain.dispatch.entity;
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.domain.notification.aop.proxy.NotificationInfo;
 import com.linkmoa.source.domain.notification.constant.NotificationType;
+import com.linkmoa.source.domain.notification.entity.Notification;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import com.linkmoa.source.global.entity.BaseEntity;
@@ -46,6 +47,7 @@ public class SharePageInvitationRequest extends BaseEntity implements Notificati
     private PermissionType permissionType;
 
 
+
     @Builder
     public SharePageInvitationRequest(String receiverEmail, String senderEmail, Page page, PermissionType permissionType){
         this.senderEmail=senderEmail;
@@ -69,6 +71,11 @@ public class SharePageInvitationRequest extends BaseEntity implements Notificati
     @Override
     public NotificationType getNotificationType() {
         return notificationType;
+    }
+
+    @Override
+    public Long getRequestId() {
+        return id;
     }
 
 

@@ -8,6 +8,7 @@ import com.linkmoa.source.domain.notification.aop.proxy.NotificationInfo;
 
 import com.linkmoa.source.domain.notification.constant.NotificationType;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
+import com.linkmoa.source.domain.notification.entity.Notification;
 import com.linkmoa.source.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -41,6 +42,8 @@ public class DirectoryTransmissionRequest extends BaseEntity implements Notifica
     private Directory directory;
 
 
+
+
     @Builder
     public DirectoryTransmissionRequest(String receiverEmail, String senderEmail, Directory directory) {
         this.senderEmail = senderEmail;
@@ -62,6 +65,12 @@ public class DirectoryTransmissionRequest extends BaseEntity implements Notifica
     public NotificationType getNotificationType() {
         return notificationType;
     }
+
+    @Override
+    public Long getRequestId() {
+        return id;
+    }
+
 
     public void changeDirectorySendRequestStatus(RequestStatus newStatus) {
         if (this.requestStatus == RequestStatus.ACCEPTED) {

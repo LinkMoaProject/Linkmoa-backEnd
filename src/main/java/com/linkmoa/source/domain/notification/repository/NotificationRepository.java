@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface NotificationRepository extends JpaRepository<Notification,Long> {
+public interface NotificationRepository extends JpaRepository<Notification,Long>,NotificationRepositoryCustom {
 
     @Modifying
     @Query("DELETE FROM Notification n WHERE n.senderEmail = :email OR n.receiverEmail = :email")
