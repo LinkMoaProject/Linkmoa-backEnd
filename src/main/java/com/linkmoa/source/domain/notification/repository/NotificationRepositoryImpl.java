@@ -25,4 +25,16 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom{
                 .execute();
     }
 
+    @Override
+    public Long countUnreadNotificationsByReceiverEmail(String receiverEmail) {
+        return jpaQueryFactory
+                .select(notification.count().coalesce(0L))
+                .from(notification)
+                .where(
+                        notification.receiverEmail.eq(receiverEmail)
+                                .and(notification.isRead.eq(false))
+                )
+                .fetchOne();
+    }
+
 }
