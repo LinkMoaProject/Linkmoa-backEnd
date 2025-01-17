@@ -50,8 +50,6 @@ public class NotificationAspect {
                 notificationInfo.getRequestId()
         );*/
 
-        log.info("result = {}",result);
-
     }
 
 
