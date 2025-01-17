@@ -98,7 +98,7 @@ public class NotificationService {
                 .requestId(requestId)
                 .build());
     }
-    public void send(Notification notification){
+    public void sendNotificationDetails(Notification notification){
 
         // 1. Notify 엔티티 생성 및 저장
        // Notification notification = notificationRepository.save(notification);

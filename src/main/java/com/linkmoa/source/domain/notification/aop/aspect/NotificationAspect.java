@@ -32,7 +32,7 @@ public class NotificationAspect {
                 NotificationMessage.getMessageByType(notificationInfo.getNotificationType()));
 
 
-        notificationService.send(notificationService
+        notificationService.sendNotificationDetails(notificationService
                 .createRequestNotification(
                         notificationInfo.getReceiverEmail(),
                         notificationInfo.getSenderEmail(),
