@@ -1,8 +1,9 @@
 package com.linkmoa.source.domain.notification.service;
 
 
-import com.linkmoa.source.domain.notification.dto.response.UnreadNotificationCountResponse;
 import com.linkmoa.source.domain.notification.entity.Notification;
+import com.linkmoa.source.domain.notification.error.NotificationErrorCode;
+import com.linkmoa.source.domain.notification.exception.NotificationException;
 import com.linkmoa.source.domain.notification.repository.NotificationRepository;
 import com.linkmoa.source.domain.notification.repository.SseEmitterRepository;
 import com.linkmoa.source.domain.notification.dto.response.NotificationResponse;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -33,11 +35,7 @@ public class NotificationService {
         newEmitter.onTimeout(() -> sseEmitterRepository.deleteById(emitterId));
 
         String eventId = makeTimeIncludeId(email);
-
-        UnreadNotificationCountResponse unreadNotificationCountResponse = NotificationResponse.toUnreadNotificationCountResponse
-                (email, notificationRepository.countUnreadNotificationsByReceiverEmail(email));
-
-        sendNotificationWithUnreadCount(newEmitter,eventId,emitterId, unreadNotificationCountResponse);
+        sendNotification(newEmitter,eventId,emitterId,"연결 완료됐습니다. [user Email = "+email+"]");
 
         if(hasLostData(lastEventId)){
             sendLostData(lastEventId,email,emitterId,newEmitter);
@@ -47,6 +45,20 @@ public class NotificationService {
 
     }
 
+    private void sendNotification(SseEmitter emitter,String eventId, String emitterId,Object data){
+        try{
+            // 1. SSE 이벤트 전송
+           emitter.send(
+                    SseEmitter.event()
+                            .id(eventId) // 이벤트 ID
+                            .name("SSE") // 이벤트 이름
+                            .data(data) // 전송할 데이터 (text/event-stream)
+            );
+        }catch (IOException e){
+
+            sseEmitterRepository.deleteById(emitterId);
+        }
+    }
 
 
     private String makeTimeIncludeId(final String email){
@@ -61,7 +73,7 @@ public class NotificationService {
         Map<String,Object> eventCaches = sseEmitterRepository.findAllEventCacheStartWithByMemberId(String.valueOf(email));
         eventCaches.entrySet().stream()
                 .filter(entry-> lastEventId.compareTo(entry.getKey()) <0)
-                .forEach(entry-> sendNotificationWithUnreadCount(emitter,entry.getKey(),emitterId,entry.getValue()));
+                .forEach(entry-> sendNotification(emitter,entry.getKey(),emitterId,entry.getValue()));
     }
 
 
@@ -78,60 +90,27 @@ public class NotificationService {
                 .requestId(requestId)
                 .build());
     }
+    public void send(Notification notification){
 
-    private void sendNotificationWithUnreadCount(SseEmitter emitter,String eventId, String emitterId,Object notificationSubscribeResponse){
-        try{
-            // 1. SSE 이벤트 전송
-            emitter.send(
-                    SseEmitter.event()
-                            .id(eventId) // 이벤트 ID
-                            .name("로그인 시, SSE 연결 완료") // 이벤트 이름
-                            .data(notificationSubscribeResponse) // 전송할 데이터 (text/event-stream)
-            );
-        }catch (IOException e){
-
-            sseEmitterRepository.deleteById(emitterId);
-        }
-    }
-
-    public void sendUnreadNotificationCount(String receiverEmail){
-        String eventId =makeTimeIncludeId(receiverEmail);
-        Map<String, SseEmitter> emitters = sseEmitterRepository.findAllEmitterStartWithByMemberId(receiverEmail);
-        Long countUnreadNotifications = notificationRepository.countUnreadNotificationsByReceiverEmail(receiverEmail);
-
-        UnreadNotificationCountResponse unreadNotificationCountResponse = NotificationResponse
-                .toUnreadNotificationCountResponse(receiverEmail, countUnreadNotifications);
-
-        emitters.forEach(
-                (key,emitter)->{
-                    sendNotificationWithUnreadCount(emitter,eventId,key, unreadNotificationCountResponse);
-                }
-        );
-    }
-
-    public void sendNotificationDetails(Notification notification){
+        // 1. Notify 엔티티 생성 및 저장
+       // Notification notification = notificationRepository.save(notification);
 
         String receiverEmail =notification.getReceiverEmail();
 
-        // 1. 이벤트 ID 생성
-        String eventId =makeTimeIncludeId(receiverEmail);
+        // 2. 이벤트 ID 생성
+        String eventId = receiverEmail + "_" +System.currentTimeMillis();
 
-        // 2. 수신자와 관련된 모든 SSE (emitters) 가져오기
+        // 3. 수신자와 관련된 모든 SSE (emitters) 가져오기
         Map<String, SseEmitter> emitters = sseEmitterRepository.findAllEmitterStartWithByMemberId(receiverEmail);
 
-        Long countUnreadNotifications = notificationRepository.countUnreadNotificationsByReceiverEmail(receiverEmail);
-
-        NotificationResponse notificationResponse = NotificationResponse.of(notification, countUnreadNotifications);
-
-
-        // 3. 각 emitter에 알림 전송
+        // 4. 각 emitter에 알림 전송
         emitters.forEach(
                 (key,emitter)->{
-                    // 3-1. 이벤트 캐시 저장
+                    // 4-1. 이벤트 캐시 저장
                     sseEmitterRepository.saveEventCache(key,notification);
 
-                    // 3-2. SSE 연결로 알림 전송
-                    sendNotificationWithUnreadCount(emitter,eventId,key, notificationResponse);
+                    // 4-2. SSE 연결로 알림 전송
+                    sendNotification(emitter,eventId,key, NotificationResponse.of(notification));
                 }
         );
 
