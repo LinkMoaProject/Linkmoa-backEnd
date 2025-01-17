@@ -147,7 +147,9 @@ public class DispatchRequestService {
                 .build();
 
         notificationRepository.updateUnreadNotificationsToReadByReceiverEmail(receiverEmail);
+
         notificationService.sendUnreadNotificationCount(receiverEmail);
+
         return ApiDispatchResponseSpec.<NotificationsDetailsResponse>builder()
                 .httpStatusCode(HttpStatus.OK)
                 .successMessage("알람 목록을 조회했습니다.")
