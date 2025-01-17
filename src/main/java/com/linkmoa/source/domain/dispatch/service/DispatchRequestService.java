@@ -19,7 +19,6 @@ import com.linkmoa.source.domain.member.exception.MemberException;
 import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.notification.aop.annotation.NotificationApplied;
 import com.linkmoa.source.domain.notification.repository.NotificationRepository;
-import com.linkmoa.source.domain.notification.service.NotificationService;
 import com.linkmoa.source.domain.page.contant.PageType;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.entity.Page;
@@ -45,8 +44,6 @@ public class DispatchRequestService {
     private final PageRepository pageRepository;
     private final SharePageInvitationRequestRepository sharePageInvitationRequestRepository;
     private final NotificationRepository notificationRepository;
-    private final NotificationService notificationService;
-
 
     @Transactional
     @ValidationApplied
@@ -139,7 +136,7 @@ public class DispatchRequestService {
         return allDirectoryTransmissionRequestByReceiverEmail;
     }
 
-    @Transactional
+    @Transactional // 이 메서드가 트랜잭션 내에서 실행되도록 보장
     public ApiDispatchResponseSpec<NotificationsDetailsResponse> findAllNotificationsForReceiver(String receiverEmail){
         NotificationsDetailsResponse notificationDetails = NotificationsDetailsResponse.builder()
                 .DirectoryTransmissionRequests(findDirectoryDirectoryTransmissionsForReceiver(receiverEmail))
