@@ -23,4 +23,12 @@ public record NotificationResponse(
                 .build();
     }
 
+    // NotificationSubscribeResponse 생성
+    public static UnreadNotificationCountResponse toUnreadNotificationCountResponse(String userEmail, Long countUnreadNotifications) {
+        return UnreadNotificationCountResponse.builder()
+                .userEmail(userEmail)
+                .countUnreadNotifications(countUnreadNotifications)
+                .build();
+    }
+
 }
