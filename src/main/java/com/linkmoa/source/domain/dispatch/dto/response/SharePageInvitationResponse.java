@@ -7,6 +7,6 @@ public record SharePageInvitationResponse(
         String receiverEmail,
         String senderEmail,
         String pageTitle,
-        Long PageInvitationRequestId
+        Long pageInvitationRequestId
 ) {
 }

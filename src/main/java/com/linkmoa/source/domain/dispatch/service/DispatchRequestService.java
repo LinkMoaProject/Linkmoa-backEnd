@@ -113,7 +113,7 @@ public class DispatchRequestService {
                 .pageTitle(sharePageInvitationRequest.getPage().getPageTitle())
                 .receiverEmail(sharePageInvitationRequest.getReceiverEmail())
                 .senderEmail(sharePageInvitationRequest.getSenderEmail())
-                .PageInvitationRequestId(sharePageInvitationRequest.getId())
+                .pageInvitationRequestId(sharePageInvitationRequest.getId())
                 .build();
 
         return ApiPageResponseSpec.<SharePageInvitationResponse>builder()
