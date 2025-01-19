@@ -142,10 +142,6 @@ public class NotificationService {
         notificationRepository.deleteAllBySenderEmailOrReceiverEmail(email);
     }
 
-    public void temp() {
-        System.out.println("test");
-    }
-
 
 
 }
