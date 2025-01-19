@@ -3,10 +3,10 @@ package com.linkmoa.source.domain.dispatch.controller.impl;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
-import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
+import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequest;
 import com.linkmoa.source.domain.dispatch.dto.response.*;
 import com.linkmoa.source.domain.dispatch.controller.spec.DispatchApiSpecification;
-import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionSendRequest;
+import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequest;
 import com.linkmoa.source.domain.dispatch.service.DispatchRequestService;
 import com.linkmoa.source.domain.dispatch.service.processor.SharePageInvitationRequestProcessor;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
@@ -26,18 +26,18 @@ public class DispatchApiContorller implements DispatchApiSpecification {
     private final SharePageInvitationRequestProcessor sharePageInvitationRequestProcessor;
 
     public ResponseEntity<ApiDirectoryResponseSpec<DirectorySendResponse>> sendDirectory(
-            DirectoryTransmissionSendRequest directoryTransmissionSendRequest,
+            DirectoryTransmissionRequest directoryTransmissionRequest,
             PrincipalDetails principalDetails) {
         ApiDirectoryResponseSpec<DirectorySendResponse> direcotrySendResponse = dispatchRequestService.mapToDirectorySendResponse(
                 dispatchRequestService.createDirectoryTransmissionRequest(
-                        directoryTransmissionSendRequest,
+                        directoryTransmissionRequest,
                         principalDetails)
         );
         return ResponseEntity.ok().body(direcotrySendResponse);
     }
 
     public ResponseEntity<ApiPageResponseSpec<SharePageInvitationRequestCreateResponse>> inviteSharePage(
-            SharePageInvitationRequestCreate pageInvitationRequest,
+            SharePageInvitationRequest pageInvitationRequest,
             PrincipalDetails principalDetails) {
         ApiPageResponseSpec<SharePageInvitationRequestCreateResponse> pageInviteRequestResponse =
                 dispatchRequestService.mapToPageInviteRequestResponse(dispatchRequestService.createSharePageInviteRequest(pageInvitationRequest, principalDetails));

@@ -3,15 +3,13 @@ package com.linkmoa.source.domain.dispatch.service;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
+import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequest;
 import com.linkmoa.source.domain.dispatch.dto.response.*;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
-import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionSendRequest;
-import com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest;
-import com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest;
+import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequest;
 import com.linkmoa.source.domain.dispatch.repository.DirectoryTransmissionRequestRepository;
 import com.linkmoa.source.domain.dispatch.repository.SharePageInvitationRequestRepository;
 import com.linkmoa.source.domain.member.error.MemberErrorCode;
@@ -51,7 +49,7 @@ public class DispatchRequestService {
     @Transactional
     @ValidationApplied
     @NotificationApplied
-    public DirectoryTransmissionRequest createDirectoryTransmissionRequest(DirectoryTransmissionSendRequest directoryTransmissionSendRequest, PrincipalDetails principalDetails) {
+    public com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest createDirectoryTransmissionRequest(DirectoryTransmissionRequest directoryTransmissionSendRequest, PrincipalDetails principalDetails) {
 
         if (!memberService.isMemberExist(directoryTransmissionSendRequest.receiverEmail())) {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL);
@@ -60,7 +58,7 @@ public class DispatchRequestService {
         Directory directory = directoryRepository.findById(directoryTransmissionSendRequest.directoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-        DirectoryTransmissionRequest directoryTransmissionRequest = DirectoryTransmissionRequest.builder()
+        com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest directoryTransmissionRequest = com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest.builder()
                 .senderEmail(principalDetails.getEmail())
                 .receiverEmail(directoryTransmissionSendRequest.receiverEmail())
                 .directory(directory)
@@ -69,7 +67,7 @@ public class DispatchRequestService {
         return directoryTransmissionRequestRepository.save(directoryTransmissionRequest);
     }
 
-    public ApiDirectoryResponseSpec<DirectorySendResponse> mapToDirectorySendResponse(DirectoryTransmissionRequest directoryTransmissionRequest)
+    public ApiDirectoryResponseSpec<DirectorySendResponse> mapToDirectorySendResponse(com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest directoryTransmissionRequest)
     {
         DirectorySendResponse directorySendResponse = DirectorySendResponse.builder()
                 .directoryName(directoryTransmissionRequest.getDirectory().getDirectoryName())
@@ -88,7 +86,7 @@ public class DispatchRequestService {
     @Transactional
     @ValidationApplied
     @NotificationApplied
-    public SharePageInvitationRequest createSharePageInviteRequest(SharePageInvitationRequestCreate sharePageInvitationRequestCreate, PrincipalDetails principalDetails){
+    public com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest createSharePageInviteRequest(SharePageInvitationRequest sharePageInvitationRequestCreate, PrincipalDetails principalDetails){
 
         if (!memberService.isMemberExist(sharePageInvitationRequestCreate.receiverEmail())) {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL); // 유저가 없으면 예외 발생
@@ -101,7 +99,7 @@ public class DispatchRequestService {
             throw new PageException(PageErrorCode.CANNOT_INVITE_TO_PERSONAL_PAGE);
         }
 
-        SharePageInvitationRequest sharePageInvitationRequest = SharePageInvitationRequest.builder()
+        com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest sharePageInvitationRequest = com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest.builder()
                 .senderEmail(principalDetails.getEmail())
                 .receiverEmail(sharePageInvitationRequestCreate.receiverEmail())
                 .page(page)
@@ -109,7 +107,7 @@ public class DispatchRequestService {
                 .build();
         return sharePageInvitationRequestRepository.save(sharePageInvitationRequest);
     }
-    public ApiPageResponseSpec<SharePageInvitationRequestCreateResponse> mapToPageInviteRequestResponse(SharePageInvitationRequest sharePageInvitationRequest){
+    public ApiPageResponseSpec<SharePageInvitationRequestCreateResponse> mapToPageInviteRequestResponse(com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest sharePageInvitationRequest){
 
         SharePageInvitationRequestCreateResponse sharePageInvitationRequestCreateResponse = SharePageInvitationRequestCreateResponse.builder()
                 .pageTitle(sharePageInvitationRequest.getPage().getPageTitle())
