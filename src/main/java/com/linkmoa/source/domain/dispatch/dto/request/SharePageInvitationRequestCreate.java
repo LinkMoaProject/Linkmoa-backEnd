@@ -6,7 +6,7 @@ import lombok.Builder;
 
 
 @Builder
-public record SharePageInvitationRequest(
+public record SharePageInvitationRequestCreate(
         BaseRequest baseRequest,
         String receiverEmail,
         PermissionType permissionType

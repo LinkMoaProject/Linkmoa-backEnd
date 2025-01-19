@@ -31,7 +31,7 @@ public class DirectoryTransmissionRequest extends BaseEntity implements Notifica
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private NotificationType notificationType = NotificationType.SEND_DIRECTORY;
+    private NotificationType notificationType = NotificationType.TRANSMIT_DIRECTORY;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -72,7 +72,7 @@ public class DirectoryTransmissionRequest extends BaseEntity implements Notifica
     }
 
 
-    public void changeDirectorySendRequestStatus(RequestStatus newStatus) {
+    public void changeDirectoryTransmissionRequestStatus(RequestStatus newStatus) {
         if (this.requestStatus == RequestStatus.ACCEPTED) {
             throw new DirectoryException(DirectoryErrorCode.REQUEST_ALREADY_ACCEPTED);
         }

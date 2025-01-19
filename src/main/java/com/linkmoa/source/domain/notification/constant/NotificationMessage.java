@@ -28,7 +28,7 @@ public enum NotificationMessage {
     */
     public static String getMessageByType(NotificationType notificationType){
         switch (notificationType){
-            case SEND_DIRECTORY :
+            case TRANSMIT_DIRECTORY:
                 return SEND_DIRECTORY_REQUEST.getMessage();
             case INVITE_PAGE:
                 return INVITE_PAGE_REQUEST.getMessage();

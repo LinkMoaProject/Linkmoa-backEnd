@@ -3,10 +3,10 @@ package com.linkmoa.source.domain.dispatch.controller.impl;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
-import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequest;
+import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
 import com.linkmoa.source.domain.dispatch.dto.response.*;
 import com.linkmoa.source.domain.dispatch.controller.spec.DispatchApiSpecification;
-import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequest;
+import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequestCreate;
 import com.linkmoa.source.domain.dispatch.service.DispatchRequestService;
 import com.linkmoa.source.domain.dispatch.service.processor.SharePageInvitationRequestProcessor;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
@@ -25,19 +25,20 @@ public class DispatchApiContorller implements DispatchApiSpecification {
     private final DispatchRequestService dispatchRequestService;
     private final SharePageInvitationRequestProcessor sharePageInvitationRequestProcessor;
 
-    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryTransmissionResponse>> sendDirectory(
-            DirectoryTransmissionRequest directoryTransmissionRequest,
+    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryTransmissionResponse>> transmitDirectory(
+            DirectoryTransmissionRequestCreate directoryTransmissionRequestCreate,
             PrincipalDetails principalDetails) {
-        ApiDirectoryResponseSpec<DirectoryTransmissionResponse> direcotrySendResponse = dispatchRequestService.mapToDirectorySendResponse(
+        ApiDirectoryResponseSpec<DirectoryTransmissionResponse> directoryTransmissionResponse = dispatchRequestService.mapToDirectorySendResponse(
                 dispatchRequestService.createDirectoryTransmissionRequest(
-                        directoryTransmissionRequest,
+                        directoryTransmissionRequestCreate,
                         principalDetails)
         );
-        return ResponseEntity.ok().body(direcotrySendResponse);
+        return ResponseEntity.ok().body(directoryTransmissionResponse);
     }
 
+
     public ResponseEntity<ApiPageResponseSpec<SharePageInvitationResponse>> inviteSharePage(
-            SharePageInvitationRequest pageInvitationRequest,
+            SharePageInvitationRequestCreate pageInvitationRequest,
             PrincipalDetails principalDetails) {
         ApiPageResponseSpec<SharePageInvitationResponse> pageInviteRequestResponse =
                 dispatchRequestService.mapToPageInviteRequestResponse(dispatchRequestService.createSharePageInviteRequest(pageInvitationRequest, principalDetails));

@@ -3,10 +3,10 @@ package com.linkmoa.source.domain.dispatch.controller.spec;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
-import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequest;
+import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
 import com.linkmoa.source.domain.dispatch.dto.response.*;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
-import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequest;
+import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequestCreate;
 import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
@@ -29,8 +29,8 @@ public interface DispatchApiSpecification {
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PostMapping("/directory-transmissions")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryTransmissionResponse>> sendDirectory(
-            @RequestBody @Validated DirectoryTransmissionRequest directoryTransmissionRequest,
+    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryTransmissionResponse>> transmitDirectory(
+            @RequestBody @Validated DirectoryTransmissionRequestCreate directoryTransmissionRequestCreate,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
@@ -41,7 +41,7 @@ public interface DispatchApiSpecification {
     @PostMapping("/share-page-invitations")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiPageResponseSpec<SharePageInvitationResponse>> inviteSharePage(
-            @RequestBody @Validated SharePageInvitationRequest sharePageInvitationRequest,
+            @RequestBody @Validated SharePageInvitationRequestCreate sharePageInvitationRequestCreate,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
