@@ -34,6 +34,15 @@ public interface DispatchApiSpecification {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
+    @Tag(name="Dispatch",description = "디렉토리 전송 요청 처리 API")
+    @Operation(summary = "디렉토리 전송 요청 처리( 수락 , 거절 )", description = "디렉토리 전송 요청 수락 또는 거절을 수행합니다.")
+    @ApiErrorCodeExamples(DispatchErrorCode.class)
+    @PatchMapping("/directory-transmissions/status")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiDispatchResponseSpec<DispatchDetailResponse>> processDirectoryTransmission(
+            @RequestBody @Validated DispatchProcessingRequest dispatchProcessingRequest,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
 
     @Tag(name = "Dispatch", description = "공유 페이지 요청 API")
     @Operation(summary = "공유 페이지 사용자 초대", description = "공유 페이지에 사용자 초대 요청을 보냅니다.")

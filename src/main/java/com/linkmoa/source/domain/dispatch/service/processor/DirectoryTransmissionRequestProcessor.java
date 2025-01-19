@@ -1,7 +1,6 @@
 package com.linkmoa.source.domain.dispatch.service.processor;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.service.DirectoryService;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
@@ -15,7 +14,6 @@ import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.notification.constant.NotificationType;
 import com.linkmoa.source.domain.page.entity.Page;
-import com.linkmoa.source.domain.page.repository.PageRepository;
 import com.linkmoa.source.domain.page.service.PageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-public class DirectoryTransmissionProcessor implements DispatchProcessor{
+public class DirectoryTransmissionRequestProcessor implements DispatchProcessor{
 
     private final DirectoryTransmissionRequestRepository directoryTransmissionRequestRepository;
     private final MemberService memberService;

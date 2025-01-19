@@ -7,7 +7,9 @@ import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequest
 import com.linkmoa.source.domain.dispatch.dto.response.*;
 import com.linkmoa.source.domain.dispatch.controller.spec.DispatchApiSpecification;
 import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequestCreate;
+import com.linkmoa.source.domain.dispatch.repository.DirectoryTransmissionRequestRepository;
 import com.linkmoa.source.domain.dispatch.service.DispatchRequestService;
+import com.linkmoa.source.domain.dispatch.service.processor.DirectoryTransmissionRequestProcessor;
 import com.linkmoa.source.domain.dispatch.service.processor.SharePageInvitationRequestProcessor;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class DispatchApiController implements DispatchApiSpecification {
     //[BE] [공유 페이지 초대 수락 또는 거절] 공유 페이지 초대 수락 또는 거절 구현
 
     private final DispatchRequestService dispatchRequestService;
+    private final DirectoryTransmissionRequestProcessor directoryTransmissionRequestProcessor;
     private final SharePageInvitationRequestProcessor sharePageInvitationRequestProcessor;
 
     public ResponseEntity<ApiDirectoryResponseSpec<DirectoryTransmissionResponse>> transmitDirectory(
@@ -33,6 +36,16 @@ public class DispatchApiController implements DispatchApiSpecification {
                         directoryTransmissionRequestCreate,
                         principalDetails)
         );
+        return ResponseEntity.ok().body(directoryTransmissionResponse);
+    }
+
+    public ResponseEntity<ApiDispatchResponseSpec<DispatchDetailResponse>> processDirectoryTransmission(
+            DispatchProcessingRequest dispatchProcessingRequest,
+            PrincipalDetails principalDetails) {
+
+        ApiDispatchResponseSpec<DispatchDetailResponse> directoryTransmissionResponse = directoryTransmissionRequestProcessor.processRequest(
+                dispatchProcessingRequest, principalDetails);
+
         return ResponseEntity.ok().body(directoryTransmissionResponse);
     }
 
