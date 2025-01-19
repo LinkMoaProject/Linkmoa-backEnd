@@ -25,10 +25,10 @@ public class DispatchApiContorller implements DispatchApiSpecification {
     private final DispatchRequestService dispatchRequestService;
     private final SharePageInvitationRequestProcessor sharePageInvitationRequestProcessor;
 
-    public ResponseEntity<ApiDirectoryResponseSpec<DirectorySendResponse>> sendDirectory(
+    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryTransmissionResponse>> sendDirectory(
             DirectoryTransmissionRequest directoryTransmissionRequest,
             PrincipalDetails principalDetails) {
-        ApiDirectoryResponseSpec<DirectorySendResponse> direcotrySendResponse = dispatchRequestService.mapToDirectorySendResponse(
+        ApiDirectoryResponseSpec<DirectoryTransmissionResponse> direcotrySendResponse = dispatchRequestService.mapToDirectorySendResponse(
                 dispatchRequestService.createDirectoryTransmissionRequest(
                         directoryTransmissionRequest,
                         principalDetails)

@@ -67,18 +67,18 @@ public class DispatchRequestService {
         return directoryTransmissionRequestRepository.save(directoryTransmissionRequest);
     }
 
-    public ApiDirectoryResponseSpec<DirectorySendResponse> mapToDirectorySendResponse(com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest directoryTransmissionRequest)
+    public ApiDirectoryResponseSpec<DirectoryTransmissionResponse> mapToDirectorySendResponse(com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest directoryTransmissionRequest)
     {
-        DirectorySendResponse directorySendResponse = DirectorySendResponse.builder()
+        DirectoryTransmissionResponse directoryTransmissionResponse = DirectoryTransmissionResponse.builder()
                 .directoryName(directoryTransmissionRequest.getDirectory().getDirectoryName())
                 .receiverEmail(directoryTransmissionRequest.getReceiverEmail())
                 .senderEmail(directoryTransmissionRequest.getSenderEmail())
                 .build();
 
-        return ApiDirectoryResponseSpec.<DirectorySendResponse>builder()
+        return ApiDirectoryResponseSpec.<DirectoryTransmissionResponse>builder()
                 .httpStatusCode(HttpStatus.OK)
                 .successMessage("디렉토리 전송 요청을 보냈습니다.")
-                .data(directorySendResponse)
+                .data(directoryTransmissionResponse)
                 .build();
     }
 

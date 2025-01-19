@@ -29,7 +29,7 @@ public interface DispatchApiSpecification {
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PostMapping("/directory-transmissions")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<DirectorySendResponse>> sendDirectory(
+    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryTransmissionResponse>> sendDirectory(
             @RequestBody @Validated DirectoryTransmissionRequest directoryTransmissionRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
