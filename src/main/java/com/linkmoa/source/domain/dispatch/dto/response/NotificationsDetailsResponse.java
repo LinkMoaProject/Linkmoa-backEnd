@@ -7,8 +7,7 @@ import java.util.List;
 
 @Builder
 public record NotificationsDetailsResponse(
-
-        List<DispatchDetailResponse>SharePageInvitationRequests ,
-        List<DispatchDetailResponse>DirectoryTransmissionRequests
+        List<DispatchDetailResponse> SharePageInvitationRequests ,
+        List<DispatchDetailResponse> DirectoryTransmissionRequests
 ) {
 }

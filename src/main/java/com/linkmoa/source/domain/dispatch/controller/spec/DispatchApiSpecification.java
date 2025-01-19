@@ -40,7 +40,7 @@ public interface DispatchApiSpecification {
     @ApiErrorCodeExamples(PageErrorCode.class)
     @PostMapping("/share-page-invitations")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiPageResponseSpec<SharePageInvitationRequestCreateResponse>> inviteSharePage(
+    public ResponseEntity<ApiPageResponseSpec<SharePageInvitationResponse>> inviteSharePage(
             @RequestBody @Validated SharePageInvitationRequest sharePageInvitationRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
@@ -50,7 +50,7 @@ public interface DispatchApiSpecification {
     @ApiErrorCodeExamples(DispatchErrorCode.class)
     @PatchMapping("/share-page-invitations/status")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDispatchResponseSpec<SharePageInvitationActionResponse>> processSharePageInvitation(
+    public ResponseEntity<ApiDispatchResponseSpec<DispatchDetailResponse>> processSharePageInvitation(
             @RequestBody @Validated DispatchProcessingRequest dispatchProcessingRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
             );

@@ -107,19 +107,19 @@ public class DispatchRequestService {
                 .build();
         return sharePageInvitationRequestRepository.save(sharePageInvitationRequest);
     }
-    public ApiPageResponseSpec<SharePageInvitationRequestCreateResponse> mapToPageInviteRequestResponse(com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest sharePageInvitationRequest){
+    public ApiPageResponseSpec<SharePageInvitationResponse> mapToPageInviteRequestResponse(com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest sharePageInvitationRequest){
 
-        SharePageInvitationRequestCreateResponse sharePageInvitationRequestCreateResponse = SharePageInvitationRequestCreateResponse.builder()
+        SharePageInvitationResponse sharePageInvitationResponse = SharePageInvitationResponse.builder()
                 .pageTitle(sharePageInvitationRequest.getPage().getPageTitle())
                 .receiverEmail(sharePageInvitationRequest.getReceiverEmail())
                 .senderEmail(sharePageInvitationRequest.getSenderEmail())
                 .PageInvitationRequestId(sharePageInvitationRequest.getId())
                 .build();
 
-        return ApiPageResponseSpec.<SharePageInvitationRequestCreateResponse>builder()
+        return ApiPageResponseSpec.<SharePageInvitationResponse>builder()
                 .httpStatusCode(HttpStatus.OK)
                 .successMessage("공유 페이지 초대를 보냈습니다.")
-                .data(sharePageInvitationRequestCreateResponse)
+                .data(sharePageInvitationResponse)
                 .build();
     }
 

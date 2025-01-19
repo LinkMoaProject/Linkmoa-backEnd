@@ -7,6 +7,7 @@ import lombok.Builder;
 public record DirectoryTransmissionResponse(
         String receiverEmail,
         String senderEmail,
-        String directoryName
+        String directoryName,
+        Long directoryTransmissionId
 ) {
 }

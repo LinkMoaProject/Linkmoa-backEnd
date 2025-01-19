@@ -36,20 +36,20 @@ public class DispatchApiContorller implements DispatchApiSpecification {
         return ResponseEntity.ok().body(direcotrySendResponse);
     }
 
-    public ResponseEntity<ApiPageResponseSpec<SharePageInvitationRequestCreateResponse>> inviteSharePage(
+    public ResponseEntity<ApiPageResponseSpec<SharePageInvitationResponse>> inviteSharePage(
             SharePageInvitationRequest pageInvitationRequest,
             PrincipalDetails principalDetails) {
-        ApiPageResponseSpec<SharePageInvitationRequestCreateResponse> pageInviteRequestResponse =
+        ApiPageResponseSpec<SharePageInvitationResponse> pageInviteRequestResponse =
                 dispatchRequestService.mapToPageInviteRequestResponse(dispatchRequestService.createSharePageInviteRequest(pageInvitationRequest, principalDetails));
 
         return ResponseEntity.ok().body(pageInviteRequestResponse);
     }
 
-    public ResponseEntity<ApiDispatchResponseSpec<SharePageInvitationActionResponse>> processSharePageInvitation(
+    public ResponseEntity<ApiDispatchResponseSpec<DispatchDetailResponse>> processSharePageInvitation(
             DispatchProcessingRequest dispatchProcessingRequest,
             PrincipalDetails principalDetails) {
 
-        ApiDispatchResponseSpec<SharePageInvitationActionResponse> sharePageInvitationResponse = sharePageInvitationRequestProcessor.processRequest(
+        ApiDispatchResponseSpec<DispatchDetailResponse> sharePageInvitationResponse = sharePageInvitationRequestProcessor.processRequest(
                 dispatchProcessingRequest, principalDetails);
 
         return ResponseEntity.ok().body(sharePageInvitationResponse);

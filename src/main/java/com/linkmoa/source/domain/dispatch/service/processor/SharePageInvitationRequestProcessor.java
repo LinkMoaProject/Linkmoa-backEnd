@@ -5,7 +5,7 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
 import com.linkmoa.source.domain.dispatch.dto.response.ApiDispatchResponseSpec;
-import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationActionResponse;
+import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
 import com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest;
 import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
 import com.linkmoa.source.domain.dispatch.exception.DispatchException;
@@ -33,7 +33,7 @@ public class SharePageInvitationRequestProcessor implements DispatchProcessor {
     private final MemberService memberService;
     @Override
     @Transactional
-    public ApiDispatchResponseSpec<SharePageInvitationActionResponse> processRequest(DispatchProcessingRequest dispatchProcessingRequest, PrincipalDetails principalDetails) {
+    public ApiDispatchResponseSpec<DispatchDetailResponse> processRequest(DispatchProcessingRequest dispatchProcessingRequest, PrincipalDetails principalDetails) {
 
         Long requestId = dispatchProcessingRequest.requestId();
         RequestStatus requestStatus = dispatchProcessingRequest.requestStatus();
@@ -60,20 +60,21 @@ public class SharePageInvitationRequestProcessor implements DispatchProcessor {
         sharePageInvitationRequest.changeRequestStatus(requestStatus);
 
         if (requestStatus == RequestStatus.ACCEPTED) {
-            acceptSharePageInvitaion(page, member, permissionType);
+            acceptSharePageInvitation(page, member, permissionType);
         }
 
         String successMessage = requestStatus == RequestStatus.ACCEPTED
                 ? "공유 페이지 초대를 수락했습니다."
                 : "공유 페이지 초대를 거절했습니다.";
 
-        SharePageInvitationActionResponse response = SharePageInvitationActionResponse.builder()
-                .sharePageInvitationRequestId(sharePageInvitationRequest.getId())
+        DispatchDetailResponse response = DispatchDetailResponse.builder()
+                .id(sharePageInvitationRequest.getId())
                 .requestStatus(sharePageInvitationRequest.getRequestStatus())
                 .senderEmail(sharePageInvitationRequest.getSenderEmail())
+                .notificationType(NotificationType.INVITE_PAGE)
                 .build();
 
-        return ApiDispatchResponseSpec.<SharePageInvitationActionResponse>builder()
+        return ApiDispatchResponseSpec.<DispatchDetailResponse>builder()
                 .httpStatusCode(HttpStatus.OK)
                 .successMessage(successMessage)
                 .data(response)
@@ -81,7 +82,7 @@ public class SharePageInvitationRequestProcessor implements DispatchProcessor {
 
     }
 
-    public void acceptSharePageInvitaion(Page page, Member member, PermissionType permissionType) {
+    public void acceptSharePageInvitation(Page page, Member member, PermissionType permissionType) {
         boolean existingLink = memberPageLinkRepository.existsByMemberAndPage(member.getId(), page.getId());
 
         if (!existingLink) {
