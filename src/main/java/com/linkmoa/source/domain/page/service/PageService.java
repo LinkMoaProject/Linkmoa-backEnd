@@ -286,7 +286,10 @@ public class PageService {
                 .successMessage("로그인 성공 시, 유저의 개인 페이지 메인 화면 데이터를 조회합니다.")
                 .data(pageDetailsResponse)
                 .build();
+    }
 
+    public Page getPersonalPage(Long memberId){
+        return memberPageLinkRepository.findPersonalPageByMemberId(memberId);
     }
 
 

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/dispatch")
-public class DispatchApiContorller implements DispatchApiSpecification {
+public class DispatchApiController implements DispatchApiSpecification {
 
     //[BE] [공유 페이지 초대 수락 또는 거절] 공유 페이지 초대 수락 또는 거절 구현
 

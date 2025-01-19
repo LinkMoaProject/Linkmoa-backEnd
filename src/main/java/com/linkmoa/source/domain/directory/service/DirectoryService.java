@@ -141,4 +141,17 @@ public class DirectoryService {
                 .build();
 
     }
+
+    public void cloneDirectory(Long newRootDirectoryId, Long originalDirectoryId){
+
+        Directory originalDirectory = directoryRepository.findById(originalDirectoryId)
+                .orElseThrow(() -> new RuntimeException("Original directory not found"));
+
+        Directory newParentDirectory = directoryRepository.findById(newRootDirectoryId).orElse(null);
+
+        Directory clonedDirectory = originalDirectory.cloneDirectory(newParentDirectory);
+
+        // 복제된 디렉토리 저장
+        directoryRepository.save(clonedDirectory);
+    }
 }
