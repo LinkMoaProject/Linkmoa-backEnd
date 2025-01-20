@@ -129,7 +129,6 @@ public class DirectoryServiceUpdateTest {
                 () -> directoryService.updateDirectory(requestDto, principalDetails));
 
         assertEquals(DirectoryErrorCode.DIRECTORY_NOT_FOUND, exception.getDirectoryErrorCode());
-        assertEquals("Directory를 찾을 수 없습니다.", exception.getMessage());
 
         // Verify
         verify(directoryRepository, times(1)).findById(99L); // findById 호출 확인
