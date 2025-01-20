@@ -137,6 +137,40 @@ public class DirectoryServiceUpdateTest {
     }
 
 
+    //유효하지 않은 사용자 ---> member
+/*
+    @Test
+    @DisplayName("유효하지 않은 사용자가 요청한 경우")
+    void testDirectoryUpdate_UnauthorizedUser() {
+        // given
+        DirectoryUpdateRequest requestDto = new DirectoryUpdateRequest(
+                new BaseRequest(2L, CommandType.EDIT), // 다른 사용자 ID
+                "디렉토리 이름 수정 후",
+                "디렉토리 설명 수정 후",
+                1L
+        );
+
+        Directory directory = Directory.builder()
+                .directoryName("Test Directory")
+                .directoryDescription("Test Description")
+                .build();
+
+        // Mock 설정
+        when(directoryRepository.findById(1L)).thenReturn(Optional.of(directory));
+
+        // when & then
+        Authorization exception = assertThrows(UnauthorizedAccessException.class,
+                () -> directoryService.updateDirectory(requestDto, principalDetails));
+
+        assertEquals("Unauthorized access to the directory", exception.getMessage());
+
+        // Verify
+        verify(directoryRepository, times(1)).findById(1L);
+        verifyNoMoreInteractions(directoryRepository);
+    }
+
+
+*/
 
 
 }
