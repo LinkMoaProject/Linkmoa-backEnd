@@ -110,6 +110,35 @@ public class DirectoryServiceUpdateTest {
         verify(directoryRepository, times(1)).findById(1L);
     }
 
+    @Test
+    @DisplayName("존재하지 않는 디렉토리 수정 시 예외 발생")
+    void testDirectoryUpdate_NotFound() {
+        // given
+        DirectoryUpdateRequest requestDto = new DirectoryUpdateRequest(
+                new BaseRequest(1L, CommandType.EDIT),
+                "디렉토리 이름 수정 후",
+                "디렉토리 설명 수정 후",
+                99L // 존재하지 않는 ID
+        );
+
+        // Mock 설정
+        when(directoryRepository.findById(99L)).thenReturn(Optional.empty());
+
+        // when & then
+        DirectoryException exception = assertThrows(DirectoryException.class,
+                () -> directoryService.updateDirectory(requestDto, principalDetails));
+
+        assertEquals(DirectoryErrorCode.DIRECTORY_NOT_FOUND, exception.getDirectoryErrorCode());
+        assertEquals("Directory를 찾을 수 없습니다.", exception.getMessage());
+
+        // Verify
+        verify(directoryRepository, times(1)).findById(99L); // findById 호출 확인
+        verifyNoMoreInteractions(directoryRepository); // 추가 상호작용 없음 확인
+    }
+
+
+
+
 }
 
 
