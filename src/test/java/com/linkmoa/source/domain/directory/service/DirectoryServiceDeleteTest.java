@@ -1,21 +1,46 @@
 package com.linkmoa.source.domain.directory.service;
 
+import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryIdRequest;
+import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
+import com.linkmoa.source.domain.directory.entity.Directory;
+import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
+import com.linkmoa.source.domain.directory.exception.DirectoryException;
+import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
+import com.linkmoa.source.domain.member.constant.Role;
+import com.linkmoa.source.domain.member.entity.Member;
+import com.linkmoa.source.domain.member.service.MemberService;
+import com.linkmoa.source.global.command.constant.CommandType;
+import com.linkmoa.source.global.dto.request.BaseRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+
+import java.lang.reflect.Field;
+import java.util.Optional;
+
+import static com.linkmoa.source.global.command.constant.CommandType.EDIT;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @Slf4j
 class DirectoryServiceDeleteTest {
 
-  /*  @Mock
-    private MemberService memberService;
-
-    @Mock
-    private DirectoryRepository directoryRepository;
-
     @InjectMocks
     private DirectoryService directoryService;
+    @Mock
+    private DirectoryRepository directoryRepository;
+    @Mock
+    private MemberService memberService;
 
     private PrincipalDetails principalDetails;
 
@@ -39,58 +64,79 @@ class DirectoryServiceDeleteTest {
         // PrincipalDetails 생성
         principalDetails = new PrincipalDetails(member);
 
-
         // lenient를 사용하여 memberService의 동작 설정을 무시 가능하도록 설정
         lenient().when(memberService.findMemberByEmail("test@example.com")).thenReturn(member);
     }
 
     @Test
-    @DisplayName("directory 삭제")
-    void testDirectoryDelete_Success() throws NoSuchFieldException, IllegalAccessException{
+    @DisplayName("존재하는 디렉토리 삭제 테스트")
+    void directoryDelete_Success() throws NoSuchFieldException, IllegalAccessException {
 
-        DirectoryDeleteRequestDto requestDto= new DirectoryDeleteRequestDto(
-                new BaseRequestDto(1L, CommandType.EDIT),
-                1L);
+        // Given
+        DirectoryIdRequest requestDto = new DirectoryIdRequest(
+                new BaseRequest(1L, CommandType.EDIT), 1L);
 
-        Page page = Page.builder()
-                .pageTitle("Sample Page")
-                .pageDescription("Sample Description")
-                .pageType(PageType.PERSONAL)
+        Directory directory = Directory.builder()
+                .directoryName("Test Directory")
+                .directoryDescription("Test Description")
                 .build();
 
-        Directory directory = createDirectory(1L, page);
+        // Reflection으로 ID 설정
+        Field idField = Directory.class.getDeclaredField("id");
+        idField.setAccessible(true);
+        idField.set(directory, 1L);
 
         // Mock 설정
         when(directoryRepository.findById(1L)).thenReturn(Optional.of(directory));
+        // Mock delete 동작 설정
+        doAnswer(invocation -> {
+            Directory deletedDirectory = invocation.getArgument(0);
 
-        // when
+            // 리플렉션으로 Directory의 id 필드에 값 설정 (테스트 시 동작 확인용)
+            Field idFieldInner = Directory.class.getDeclaredField("id");
+            idFieldInner.setAccessible(true);
+            idFieldInner.set(deletedDirectory, 1L); // ID를 강제로 설정
+
+            log.info("Deleted Directory ID: {}", deletedDirectory.getId());
+            return null; // void 메서드이므로 null 반환
+        }).when(directoryRepository).delete(any(Directory.class));
+
+        // When
         ApiDirectoryResponseSpec<Long> response = directoryService.deleteDirectory(requestDto, principalDetails);
 
         // Then
-        assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getHttpStatusCode());
-        assertEquals(1L, response.getData());
         assertEquals("Directory 삭제에 성공했습니다.", response.getSuccessMessage());
+        assertEquals(1L, response.getData()); // 반환된 ID 확인
+        log.info(response.getSuccessMessage());
 
         // Verify
-        verify(directoryRepository, times(1)).findById(1L);
-        verify(directoryRepository, times(1)).delete(directory);
-
+        verify(directoryRepository, times(1)).delete(any(Directory.class)); // delete 호출 검증
     }
 
-    private Directory createDirectory(Long id){
+    @Test
+    @DisplayName("존재하지 않는 디렉토리 삭제 시 예외 발생 테스트")
+    void directoryDelete_NotFound() {
+        // Given
+        DirectoryIdRequest requestDto = new DirectoryIdRequest(
+                new BaseRequest(1L, CommandType.EDIT), 99L); // 존재하지 않는 ID 설정
 
-        Directory directory = Directory.builder()
-                .directoryName("디렉토리 이름 수정 전")
-                .directoryDescription("디렉토리 설명 수정 전")
-                .parentDirectory(null)
-                .build();
+        // Mock 설정
+        when(directoryRepository.findById(99L)).thenReturn(Optional.empty());
 
-        ReflectionTestUtils.setField(directory,"id",id);
+        // When & Then
+        DirectoryException exception = assertThrows(
+                DirectoryException.class,
+                () -> directoryService.deleteDirectory(requestDto, principalDetails)
+        );
 
-        return directory;
+        // 예외 검증
+        assertEquals(DirectoryErrorCode.DIRECTORY_NOT_FOUND, exception.getDirectoryErrorCode());
+
+        // Verify
+        verify(directoryRepository, times(1)).findById(99L); // findById가 한 번 호출되었는지 검증
+        verify(directoryRepository, never()).delete(any());  // delete가 호출되지 않았는지 검증
     }
-*/
 
 
 }
