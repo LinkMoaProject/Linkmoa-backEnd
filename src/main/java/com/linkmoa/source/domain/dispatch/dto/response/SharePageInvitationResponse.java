@@ -3,10 +3,10 @@ package com.linkmoa.source.domain.dispatch.dto.response;
 import lombok.Builder;
 
 @Builder
-public record SharePageInvitationRequestCreateResponse(
+public record SharePageInvitationResponse(
         String receiverEmail,
         String senderEmail,
         String pageTitle,
-        Long PageInvitationRequestId
+        Long pageInvitationRequestId
 ) {
 }

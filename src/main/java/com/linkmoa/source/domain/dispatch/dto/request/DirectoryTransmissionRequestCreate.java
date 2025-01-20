@@ -5,7 +5,7 @@ import com.linkmoa.source.global.dto.request.BaseRequest;
 import lombok.Builder;
 
 @Builder
-public record DirectoryTransmissionSendRequest(
+public record DirectoryTransmissionRequestCreate(
         BaseRequest baseRequest,
         String receiverEmail,
         Long directoryId

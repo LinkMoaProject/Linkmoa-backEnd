@@ -76,6 +76,37 @@ public class Directory extends BaseEntity {
         this.directoryDescription=directoryDescription;
     }
 
+    public Directory cloneDirectory(Directory newParentDirectory) {
+        // 현재 디렉토리 복제
+        Directory clonedDirectory = Directory.builder()
+                .directoryName(this.directoryName)
+                .directoryDescription(this.directoryDescription)
+                .build();
+
+        // 새로운 부모 디렉토리를 설정
+        if (newParentDirectory != null) {
+            newParentDirectory.addChildDirectory(clonedDirectory);
+        }
+
+        // 현재 디렉토리의 Site 복제
+        for (Site site : this.sites) {
+            Site clonedSite = Site.builder()
+                    .siteName(site.getSiteName())
+                    .siteUrl(site.getSiteUrl())
+                    .directory(clonedDirectory) // 복제된 디렉토리와 연관
+                    .build();
+            clonedDirectory.getSites().add(clonedSite);
+        }
+
+        // 하위 디렉토리 재귀적으로 복제
+        for (Directory childDirectory : this.childDirectories) {
+            Directory clonedChildDirectory = childDirectory.cloneDirectory(clonedDirectory);
+            clonedDirectory.getChildDirectories().add(clonedChildDirectory);
+        }
+
+        return clonedDirectory;
+    }
+
 
 
 

@@ -6,7 +6,7 @@ import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
 import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
 import com.linkmoa.source.domain.dispatch.dto.response.*;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
-import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionSendRequest;
+import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequestCreate;
 import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
@@ -29,18 +29,27 @@ public interface DispatchApiSpecification {
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PostMapping("/directory-transmissions")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<DirectorySendResponse>> sendDirectory(
-            @RequestBody @Validated DirectoryTransmissionSendRequest directoryTransmissionSendRequest,
+    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryTransmissionResponse>> transmitDirectory(
+            @RequestBody @Validated DirectoryTransmissionRequestCreate directoryTransmissionRequestCreate,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
+    @Tag(name="Dispatch",description = "디렉토리 전송 요청 처리 API")
+    @Operation(summary = "디렉토리 전송 요청 처리( 수락 , 거절 )", description = "디렉토리 전송 요청 수락 또는 거절을 수행합니다.")
+    @ApiErrorCodeExamples(DispatchErrorCode.class)
+    @PatchMapping("/directory-transmissions/status")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiDispatchResponseSpec<DispatchDetailResponse>> processDirectoryTransmission(
+            @RequestBody @Validated DispatchProcessingRequest dispatchProcessingRequest,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
 
     @Tag(name = "Dispatch", description = "공유 페이지 요청 API")
     @Operation(summary = "공유 페이지 사용자 초대", description = "공유 페이지에 사용자 초대 요청을 보냅니다.")
     @ApiErrorCodeExamples(PageErrorCode.class)
     @PostMapping("/share-page-invitations")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiPageResponseSpec<SharePageInvitationRequestCreateResponse>> inviteSharePage(
+    public ResponseEntity<ApiPageResponseSpec<SharePageInvitationResponse>> inviteSharePage(
             @RequestBody @Validated SharePageInvitationRequestCreate sharePageInvitationRequestCreate,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
@@ -50,7 +59,7 @@ public interface DispatchApiSpecification {
     @ApiErrorCodeExamples(DispatchErrorCode.class)
     @PatchMapping("/share-page-invitations/status")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDispatchResponseSpec<SharePageInvitationActionResponse>> processSharePageInvitation(
+    public ResponseEntity<ApiDispatchResponseSpec<DispatchDetailResponse>> processSharePageInvitation(
             @RequestBody @Validated DispatchProcessingRequest dispatchProcessingRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
             );
