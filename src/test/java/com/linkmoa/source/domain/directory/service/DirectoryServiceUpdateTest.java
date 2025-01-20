@@ -1,22 +1,48 @@
 package com.linkmoa.source.domain.directory.service;
 
+import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequest;
+import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
+import com.linkmoa.source.domain.directory.entity.Directory;
+import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
+import com.linkmoa.source.domain.directory.exception.DirectoryException;
+import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
+import com.linkmoa.source.domain.member.constant.Role;
+import com.linkmoa.source.domain.member.entity.Member;
+import com.linkmoa.source.domain.member.service.MemberService;
+import com.linkmoa.source.global.command.constant.CommandType;
+import com.linkmoa.source.global.dto.request.BaseRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.junit.jupiter.api.Test;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+
+import java.lang.reflect.Field;
+import java.util.Optional;
+
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
 @Slf4j
 public class DirectoryServiceUpdateTest {
 
-    /*@Mock
-    private MemberService memberService;
+    @InjectMocks
+    private DirectoryService directoryService;
 
     @Mock
     private DirectoryRepository directoryRepository;
 
-    @InjectMocks
-    private DirectoryService directoryService;
+    @Mock
+    private MemberService memberService;
 
     private PrincipalDetails principalDetails;
 
@@ -40,56 +66,49 @@ public class DirectoryServiceUpdateTest {
         // PrincipalDetails 생성
         principalDetails = new PrincipalDetails(member);
 
-
         // lenient를 사용하여 memberService의 동작 설정을 무시 가능하도록 설정
         lenient().when(memberService.findMemberByEmail("test@example.com")).thenReturn(member);
     }
 
     @Test
-    @DisplayName("directory name 및 description 수정")
+    @DisplayName("directory 수정")
     void testDirectoryUpdate_Success() throws NoSuchFieldException, IllegalAccessException {
         // given
-        DirectoryUpdateRequestDto requestDto = new DirectoryUpdateRequestDto(
-                new BaseRequestDto(1L, CommandType.EDIT),
+        DirectoryUpdateRequest requestDto = new DirectoryUpdateRequest(
+                new BaseRequest(1L, CommandType.EDIT),
                 "디렉토리 이름 수정 후",
                 "디렉토리 설명 수정 후",
                 1L
         );
 
-        Page page = Page.builder()
-                .pageTitle("Sample Page")
-                .pageDescription("Sample Description")
-                .pageType(PageType.PERSONAL)
+        Directory directory = Directory.builder()
+                .directoryName("Test Directory")
+                .directoryDescription("Test Description")
                 .build();
 
-        Directory directory = createDirectory(1L, page);
-
+        // Reflection으로 ID 설정
+        Field idField = Directory.class.getDeclaredField("id");
+        idField.setAccessible(true);
+        idField.set(directory, 1L);
 
         // Mock 설정
         when(directoryRepository.findById(1L)).thenReturn(Optional.of(directory));
-
         // when
         ApiDirectoryResponseSpec<Long> response = directoryService.updateDirectory(requestDto, principalDetails);
 
         // then
         assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getHttpStatusCode());
+        assertEquals("Directory 수정(이름,설명)에 성공했습니다.", response.getSuccessMessage());
         assertEquals(1L,response.getData());
+
+
+        assertEquals("디렉토리 이름 수정 후", directory.getDirectoryName());
+        assertEquals("디렉토리 설명 수정 후", directory.getDirectoryDescription());
+
+
         verify(directoryRepository, times(1)).findById(1L);
     }
-
-    private Directory createDirectory(Long id,Page page){
-
-        Directory directory = Directory.builder()
-                .directoryName("디렉토리 이름 수정 전")
-                .directoryDescription("디렉토리 설명 수정 전")
-                .parentDirectory(null)
-                .build();
-
-        ReflectionTestUtils.setField(directory,"id",id);
-
-        return directory;
-    }
-*/
 
 }
 
