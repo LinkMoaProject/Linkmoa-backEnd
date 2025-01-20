@@ -9,7 +9,6 @@ import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.member.constant.Role;
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.member.service.MemberService;
-import com.linkmoa.source.domain.page.repository.PageRepository;
 import com.linkmoa.source.global.command.constant.CommandType;
 import com.linkmoa.source.global.dto.request.BaseRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +36,6 @@ class DirectoryServiceCreateTest {
     private DirectoryService directoryService;
     @Mock // 실제 객체와 동일한 모의 객체 Mock 객체를 만들어줌.
     private DirectoryRepository directoryRepository;
-    @Mock
-    private PageRepository pageRepository;
     @Mock
     private MemberService memberService;
     @Mock

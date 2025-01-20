@@ -87,13 +87,14 @@ public class DirectoryService {
         Directory deleteDirectory = directoryRepository.findById(requestDto.directoryId())
                 .orElseThrow(()-> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-
+        Long directoryId = deleteDirectory.getId(); // ID를 삭제 전에 저장
         directoryRepository.delete(deleteDirectory);
 
+        log.info("삭제 했지롱 {}", directoryId);
         return ApiDirectoryResponseSpec.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
                 .successMessage("Directory 삭제에 성공했습니다.")
-                .data(deleteDirectory.getId())
+                .data(directoryId)
                 .build();
     }
 
