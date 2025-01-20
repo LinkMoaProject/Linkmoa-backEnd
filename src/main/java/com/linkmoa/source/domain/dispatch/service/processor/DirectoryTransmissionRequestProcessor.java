@@ -67,7 +67,7 @@ public class DirectoryTransmissionRequestProcessor implements DispatchProcessor{
                 .id(directoryTransmissionRequest.getId())
                 .requestStatus(directoryTransmissionRequest.getRequestStatus())
                 .senderEmail(directoryTransmissionRequest.getSenderEmail())
-                .notificationType(NotificationType.INVITE_PAGE)
+                .notificationType(NotificationType.TRANSMIT_DIRECTORY)
                 .build();
 
         return ApiDispatchResponseSpec.<DispatchDetailResponse>builder()

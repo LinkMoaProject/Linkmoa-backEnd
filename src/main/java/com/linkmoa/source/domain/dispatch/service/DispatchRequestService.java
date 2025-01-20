@@ -73,6 +73,7 @@ public class DispatchRequestService {
                 .directoryName(directoryTransmissionRequest.getDirectory().getDirectoryName())
                 .receiverEmail(directoryTransmissionRequest.getReceiverEmail())
                 .senderEmail(directoryTransmissionRequest.getSenderEmail())
+                .directoryTransmissionId(directoryTransmissionRequest.getRequestId())
                 .build();
 
         return ApiDirectoryResponseSpec.<DirectoryTransmissionResponse>builder()
