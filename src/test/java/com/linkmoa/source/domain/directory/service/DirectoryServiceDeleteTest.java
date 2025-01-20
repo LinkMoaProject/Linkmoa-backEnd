@@ -4,6 +4,8 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryIdRequest;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.directory.entity.Directory;
+import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
+import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.member.constant.Role;
 import com.linkmoa.source.domain.member.entity.Member;
@@ -25,6 +27,7 @@ import java.util.Optional;
 
 import static com.linkmoa.source.global.command.constant.CommandType.EDIT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -109,6 +112,30 @@ class DirectoryServiceDeleteTest {
 
         // Verify
         verify(directoryRepository, times(1)).delete(any(Directory.class)); // delete 호출 검증
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 디렉토리 삭제 시 예외 발생 테스트")
+    void directoryDelete_NotFound() {
+        // Given
+        DirectoryIdRequest requestDto = new DirectoryIdRequest(
+                new BaseRequest(1L, CommandType.EDIT), 99L); // 존재하지 않는 ID 설정
+
+        // Mock 설정
+        when(directoryRepository.findById(99L)).thenReturn(Optional.empty());
+
+        // When & Then
+        DirectoryException exception = assertThrows(
+                DirectoryException.class,
+                () -> directoryService.deleteDirectory(requestDto, principalDetails)
+        );
+
+        // 예외 검증
+        assertEquals(DirectoryErrorCode.DIRECTORY_NOT_FOUND, exception.getDirectoryErrorCode());
+
+        // Verify
+        verify(directoryRepository, times(1)).findById(99L); // findById가 한 번 호출되었는지 검증
+        verify(directoryRepository, never()).delete(any());  // delete가 호출되지 않았는지 검증
     }
 
 
