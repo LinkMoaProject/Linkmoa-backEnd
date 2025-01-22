@@ -96,7 +96,7 @@ public class DirectoryService {
         Integer orderIndex = deleteDirectory.getOrderIndex();
         Directory parentDirectory = deleteDirectory.getParentDirectory();
 
-        directoryRepository.decrementOrderIndexesAfterDeletion(parentDirectory,orderIndex);
+        directoryRepository.decrementOrderIndexesAfterDirectoryDeletion(parentDirectory,orderIndex);
 
         directoryRepository.delete(deleteDirectory);
 

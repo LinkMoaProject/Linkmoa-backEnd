@@ -38,7 +38,7 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
     }
 
     @Override
-    public void decrementOrderIndexesAfterDeletion(Directory parentDirectory, Integer deleteOrderIndex) {
+    public void decrementOrderIndexesAfterDirectoryDeletion(Directory parentDirectory, Integer deleteOrderIndex) {
         jpaQueryFactory.update(directory)
                 .set(directory.orderIndex, directory.orderIndex.subtract(1))
                 .where(directory.parentDirectory.eq(parentDirectory)
