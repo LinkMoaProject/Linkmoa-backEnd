@@ -92,7 +92,7 @@ public class DirectoryService {
         Directory deleteDirectory = directoryRepository.findById(requestDto.directoryId())
                 .orElseThrow(()-> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-        Long directoryId = deleteDirectory.getId(); // ID를 삭제 전에 저장
+        Long directoryId = deleteDirectory.getId();
         Integer orderIndex = deleteDirectory.getOrderIndex();
         Directory parentDirectory = deleteDirectory.getParentDirectory();
 
@@ -165,7 +165,6 @@ public class DirectoryService {
 
         Directory clonedDirectory = originalDirectory.cloneDirectory(newParentDirectory);
 
-        // 복제된 디렉토리 저장
         directoryRepository.save(clonedDirectory);
     }
 }
