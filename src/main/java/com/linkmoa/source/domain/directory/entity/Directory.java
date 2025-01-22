@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Entity(name="directory")
 @Getter
@@ -113,6 +114,17 @@ public class Directory extends BaseEntity {
         }
 
         return clonedDirectory;
+    }
+
+
+    public Integer getNextOrderIndex() {
+        Integer nextOrderIndex = Stream.concat(
+                        this.getChildDirectories().stream().map(d -> d.getOrderIndex()),
+                        this.getSites().stream().map(s -> s.getOrderIndex())
+                )
+                .max((o1, o2) -> o1 - o2)
+                .orElse(-1) + 1;
+        return nextOrderIndex;
     }
 
 
