@@ -22,10 +22,10 @@ public class DirectoryApiController implements DirectoryApiSpecification {
     private final DirectoryService directoryService;
 
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> createDirectory(
-            DirectoryCreateReques directoryCreateReques,
+            DirectoryCreateRequest directoryCreateRequest,
             PrincipalDetails principalDetails) {
-        ApiDirectoryResponseSpec<Long> createDirectroyResponse = directoryService.createDirectory(directoryCreateReques, principalDetails);
-        return ResponseEntity.ok().body(createDirectroyResponse);
+        ApiDirectoryResponseSpec<Long> createDirectoryResponse = directoryService.createDirectory(directoryCreateRequest, principalDetails);
+        return ResponseEntity.ok().body(createDirectoryResponse);
     }
 
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> updateDirectory(

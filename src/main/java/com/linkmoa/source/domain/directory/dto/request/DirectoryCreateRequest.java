@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 
-public record DirectoryCreateReques(
+public record DirectoryCreateRequest(
 
         BaseRequest baseRequest,
         @NotBlank @Size(max=20) String directoryName,
