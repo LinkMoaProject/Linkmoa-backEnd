@@ -119,8 +119,9 @@ public class DirectoryService {
 
         sourceDirectory.setParentDirectory(targetDirectory);
 
-        Integer newOrderIndex = targetDirectory.getNextOrderIndex();
+        directoryRepository.decrementDirectoryAndSiteOrderIndexes(sourceDirectory, sourceDirectory.getOrderIndex());
 
+        Integer newOrderIndex = targetDirectory.getNextOrderIndex();
         sourceDirectory.setOrderIndex(newOrderIndex);
 
         return ApiDirectoryResponseSpec.<Long>builder()

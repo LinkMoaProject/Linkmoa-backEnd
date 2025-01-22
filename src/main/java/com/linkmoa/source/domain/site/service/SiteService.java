@@ -103,7 +103,10 @@ public class SiteService {
         Directory targetDirectory = directoryRepository.findById(siteMoveRequestDto.targetDirectoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
+        directoryRepository.decrementDirectoryAndSiteOrderIndexes(moveSite.getDirectory(),moveSite.getOrderIndex());
+
         Integer newOrderIndex = targetDirectory.getNextOrderIndex();
+
         moveSite.setDirectory(targetDirectory);
 
         moveSite.setOrderIndex(newOrderIndex);
