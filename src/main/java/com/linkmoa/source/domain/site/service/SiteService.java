@@ -81,8 +81,12 @@ public class SiteService {
         Site deleteSite = siteRepository.findById(siteDeleteRequestDto.siteId())
                 .orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
 
-        siteRepository.delete(deleteSite);
+        Directory parentDirectory = deleteSite.getDirectory();
+        Integer orderIndex = deleteSite.getOrderIndex();
 
+        siteRepository.decrementOrderIndexesAfterSiteDeletion(parentDirectory,orderIndex);
+
+        siteRepository.delete(deleteSite);
 
         return ApiSiteResponse.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
