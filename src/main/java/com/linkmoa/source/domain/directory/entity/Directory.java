@@ -52,6 +52,9 @@ public class Directory extends BaseEntity {
     )
     private List<Site> sites =new ArrayList<>();
 
+    @Column(name="order_index")
+    private Integer orderIndex;
+
     @Builder
     public Directory(String directoryName,String directoryDescription){
         this.directoryName=directoryName;
