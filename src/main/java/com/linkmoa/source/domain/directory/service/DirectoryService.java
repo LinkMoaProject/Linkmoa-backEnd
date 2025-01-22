@@ -99,7 +99,6 @@ public class DirectoryService {
         Long directoryId = deleteDirectory.getId(); // ID를 삭제 전에 저장
         directoryRepository.delete(deleteDirectory);
 
-        log.info("삭제 했지롱 {}", directoryId);
         return ApiDirectoryResponseSpec.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
                 .successMessage("Directory 삭제에 성공했습니다.")
@@ -120,9 +119,16 @@ public class DirectoryService {
 
         sourceDirectory.setParentDirectory(targetDirectory);
 
+        int newOrderIndex = targetDirectory.getChildDirectories().stream()
+                .mapToInt(directory -> directory.getOrderIndex())
+                .max()
+                .orElse(-1) + 1;
+
+        sourceDirectory.setOrderIndex(newOrderIndex);
+
         return ApiDirectoryResponseSpec.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successMessage("Directory 위치 이동에 성공했습니다.")
+                .successMessage("Directory를 다른 Directory로 위치 이동에 성공했습니다.")
                 .data(sourceDirectory.getId())
                 .build();
     }

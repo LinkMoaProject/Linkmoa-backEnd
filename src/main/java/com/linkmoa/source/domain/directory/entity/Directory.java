@@ -67,6 +67,10 @@ public class Directory extends BaseEntity {
         this.parentDirectory=parentDirectory;
     }
 
+    public void setOrderIndex(Integer orderIndex){
+        this.orderIndex=orderIndex;
+    }
+
     // 부모 디렉토리가 호출하는 함수
     public void addChildDirectory(Directory childDirectory){
         childDirectories.add(childDirectory);
