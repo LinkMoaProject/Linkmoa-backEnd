@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -38,10 +39,15 @@ public class SiteService {
         Directory directory = directoryRepository.findById(siteCreateRequestDto.directoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
+
+        Integer nextOrderIndex = directory.getNextOrderIndex();
+
+
         Site newSite = Site.builder()
                 .siteName(siteCreateRequestDto.siteName())
                 .siteUrl(siteCreateRequestDto.siteUrl())
                 .directory(directory)
+                .orderIndex(nextOrderIndex)
                 .build();
 
         siteRepository.save(newSite);
