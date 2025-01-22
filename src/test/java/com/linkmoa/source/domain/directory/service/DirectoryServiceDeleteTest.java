@@ -13,6 +13,7 @@ import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.global.command.constant.CommandType;
 import com.linkmoa.source.global.dto.request.BaseRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,9 +27,9 @@ import java.lang.reflect.Field;
 import java.util.Optional;
 
 import static com.linkmoa.source.global.command.constant.CommandType.EDIT;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -105,9 +106,9 @@ class DirectoryServiceDeleteTest {
         ApiDirectoryResponseSpec<Long> response = directoryService.deleteDirectory(requestDto, principalDetails);
 
         // Then
-        assertEquals(HttpStatus.OK, response.getHttpStatusCode());
-        assertEquals("Directory 삭제에 성공했습니다.", response.getSuccessMessage());
-        assertEquals(1L, response.getData()); // 반환된 ID 확인
+        Assertions.assertEquals(HttpStatus.OK, response.getHttpStatusCode());
+        Assertions.assertEquals("Directory 삭제에 성공했습니다.", response.getSuccessMessage());
+        Assertions.assertEquals(1L, response.getData()); // 반환된 ID 확인
         log.info(response.getSuccessMessage());
 
         // Verify
@@ -131,7 +132,7 @@ class DirectoryServiceDeleteTest {
         );
 
         // 예외 검증
-        assertEquals(DirectoryErrorCode.DIRECTORY_NOT_FOUND, exception.getDirectoryErrorCode());
+        Assertions.assertEquals(DirectoryErrorCode.DIRECTORY_NOT_FOUND, exception.getDirectoryErrorCode());
 
         // Verify
         verify(directoryRepository, times(1)).findById(99L); // findById가 한 번 호출되었는지 검증

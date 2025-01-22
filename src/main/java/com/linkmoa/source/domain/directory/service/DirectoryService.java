@@ -14,7 +14,6 @@ import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.site.dto.response.SiteDetailResponse;
 import com.linkmoa.source.domain.site.repository.SiteRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,7 +33,7 @@ public class DirectoryService {
 
     @Transactional
     @ValidationApplied
-    public ApiDirectoryResponseSpec<Long> createDirectory(DirectoryCreateReques requestDto, PrincipalDetails principalDetails){
+    public ApiDirectoryResponseSpec<Long> createDirectory(DirectoryCreateRequest requestDto, PrincipalDetails principalDetails){
 
         Directory parentDirectory = requestDto.parentDirectoryId() == null
                 ? null
