@@ -6,7 +6,8 @@ import lombok.Builder;
 @Builder
 public record DirectoryDetailResponse(
         Long directoryId,
-        String directoryName
+        String directoryName,
+        Integer orderIndex
 ) {
 
 }

@@ -22,11 +22,13 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
         List<DirectoryDetailResponse> directoryDetailResponses = jpaQueryFactory
                 .selectFrom(directory)
                 .where(directory.parentDirectory.id.eq(directoryId))
+                .orderBy(directory.orderIndex.asc())
                 .fetch()
                 .stream()
                 .map(d -> DirectoryDetailResponse.builder()
                         .directoryId(d.getId())
                         .directoryName(d.getDirectoryName())
+                        .orderIndex(d.getOrderIndex())
                         .build())
                 .collect(Collectors.toList());
 
