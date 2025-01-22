@@ -38,18 +38,29 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
     }
 
     @Override
-    public void decrementOrderIndexesAfterDirectoryDeletion(Directory parentDirectory, Integer deleteOrderIndex) {
+    public void decrementDirectoryOrderIndexes(Directory parentDirectory, Integer orderIndex) {
         jpaQueryFactory.update(directory)
                 .set(directory.orderIndex, directory.orderIndex.subtract(1))
                 .where(directory.parentDirectory.eq(parentDirectory)
-                        .and(directory.orderIndex.gt(deleteOrderIndex)))
+                        .and(directory.orderIndex.gt(orderIndex)))
                 .execute();
+    }
+
+    @Override
+    public void decrementSiteOrderIndexes(Directory parentDirectory, Integer orderIndex) {
 
         jpaQueryFactory.update(site)
                 .set(site.orderIndex, site.orderIndex.subtract(1))
                 .where(site.directory.eq(parentDirectory)
-                        .and(site.orderIndex.gt(deleteOrderIndex)))
+                        .and(site.orderIndex.gt(orderIndex)))
                 .execute();
     }
+
+    @Override
+    public void decrementDirectoryAndSiteOrderIndexes(Directory parentDirectory, Integer orderIndex) {
+        decrementDirectoryOrderIndexes(parentDirectory,orderIndex);
+        decrementSiteOrderIndexes(parentDirectory,orderIndex);
+    }
+
 
 }

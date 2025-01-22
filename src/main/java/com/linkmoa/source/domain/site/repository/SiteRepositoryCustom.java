@@ -8,5 +8,4 @@ import java.util.List;
 public interface SiteRepositoryCustom {
     List<SiteDetailResponse> findSitesDetails(Long directoryId);
 
-    void decrementOrderIndexesAfterSiteDeletion(Directory parentDirectory, Integer deleteOrderIndex);
 }

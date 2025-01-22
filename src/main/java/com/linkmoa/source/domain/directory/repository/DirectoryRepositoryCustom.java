@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface DirectoryRepositoryCustom {
     List<DirectoryDetailResponse> findDirectoryDetails(Long directoryId);
-    void decrementOrderIndexesAfterDirectoryDeletion(Directory parentDirectory, Integer deleteOrderIndex);
+    void decrementDirectoryOrderIndexes(Directory parentDirectory, Integer orderIndex);
+    void decrementSiteOrderIndexes(Directory parentDirectory, Integer orderIndex);
+
+    void decrementDirectoryAndSiteOrderIndexes(Directory parentDirectory, Integer orderIndex);
 }

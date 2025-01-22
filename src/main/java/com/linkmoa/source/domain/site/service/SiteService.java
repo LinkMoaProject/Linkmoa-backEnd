@@ -84,8 +84,7 @@ public class SiteService {
         Directory parentDirectory = deleteSite.getDirectory();
         Integer orderIndex = deleteSite.getOrderIndex();
 
-        siteRepository.decrementOrderIndexesAfterSiteDeletion(parentDirectory,orderIndex);
-
+        directoryRepository.decrementDirectoryAndSiteOrderIndexes(parentDirectory,orderIndex);
         siteRepository.delete(deleteSite);
 
         return ApiSiteResponse.<Long>builder()
