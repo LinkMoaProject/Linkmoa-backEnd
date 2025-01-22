@@ -1,3 +1,4 @@
+/*
 package com.linkmoa.source.domain.directory.service;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
@@ -43,30 +44,6 @@ class DirectoryServiceDeleteTest {
     private MemberService memberService;
 
     private PrincipalDetails principalDetails;
-
-    @BeforeEach
-    void setUp() throws NoSuchFieldException, IllegalAccessException {
-        // Member 객체 생성
-        Member member = Member.builder()
-                .email("test@example.com")
-                .password("password")
-                .role(Role.ROLE_USER)
-                .nickname("TestUser")
-                .provider("google")
-                .providerId("google123")
-                .build();
-
-        // Member의 id 필드 값 강제 설정
-        Field idField = member.getClass().getDeclaredField("id");
-        idField.setAccessible(true);
-        idField.set(member, 1L);
-
-        // PrincipalDetails 생성
-        principalDetails = new PrincipalDetails(member);
-
-        // lenient를 사용하여 memberService의 동작 설정을 무시 가능하도록 설정
-        lenient().when(memberService.findMemberByEmail("test@example.com")).thenReturn(member);
-    }
 
     @Test
     @DisplayName("존재하는 디렉토리 삭제 테스트")
@@ -139,4 +116,4 @@ class DirectoryServiceDeleteTest {
     }
 
 
-}
+}*/

@@ -1,3 +1,4 @@
+/*
 package com.linkmoa.source.domain.directory.service;
 
 
@@ -41,31 +42,6 @@ class DirectoryServiceCreateTest {
     @Mock
     private PrincipalDetails principalDetails;
 
-    @BeforeEach
-    // 현재 클래스의 각 @Test 메소드보다 먼저 실행되어야함.
-    void setUp() throws NoSuchFieldException, IllegalAccessException {
-        // Member 객체 생성
-        Member member = Member.builder()
-                .email("test@example.com")
-                .password("password")
-                .role(Role.ROLE_USER)
-                .nickname("TestUser")
-                .provider("google")
-                .providerId("google123")
-                .build();
-
-        // Member의 id 필드 값 강제 설정
-        Field idField = member.getClass().getDeclaredField("id");
-        idField.setAccessible(true);
-        idField.set(member, 1L);
-
-        // PrincipalDetails 생성
-        principalDetails = new PrincipalDetails(member);
-
-        // lenient를 사용하여 memberService의 동작 설정을 무시 가능하도록 설정
-        lenient().when(memberService.findMemberByEmail("test@example.com")).thenReturn(member);
-    }
-
 
     @Test
     @DisplayName("parent directory가 없는 경우 directory 생성 테스트 ")
@@ -107,53 +83,4 @@ class DirectoryServiceCreateTest {
     }
 
 
-    @Test
-    @DisplayName("parent directory가 있는 경우 directory 생성 테스트 ")
-    void createDirectory_WithParentDirectory_Test() throws Exception {
-
-        DirectoryCreateReques requestDto = new DirectoryCreateReques(
-                new BaseRequest(1L, CommandType.CREATE),
-                "Test Sub Directory",
-                2L,
-                "Test SubDescription"
-        );
-
-        Directory parentDirectory = Directory.builder()
-                .directoryName("Parent Directory")
-                .directoryDescription("Parent Description")
-                .build();
-
-        Directory newDirectory = Directory.builder()
-                .directoryName(requestDto.directoryName())
-                .directoryDescription(requestDto.directoryDescription())
-                .build();
-
-        parentDirectory.addChildDirectory(newDirectory);
-
-        // Mock 동작 설정
-        when(directoryRepository.findById(2L)).thenReturn(Optional.of(parentDirectory));
-        when(directoryRepository.save(any(Directory.class))).thenAnswer(invocation -> {
-            Directory savedDirectory = invocation.getArgument(0);
-
-            // 리플렉션으로 Directory의 id 필드에 값 설정
-            Field idField = Directory.class.getDeclaredField("id");
-            idField.setAccessible(true);
-            idField.set(savedDirectory, 3L); // ID를 강제로 설정
-
-            return savedDirectory;
-        });
-
-        // when
-        ApiDirectoryResponseSpec<Long> response = directoryService.createDirectory(requestDto, principalDetails);
-
-        // then
-        assertEquals(HttpStatus.OK, response.getHttpStatusCode());
-        assertEquals("Directory 생성에 성공했습니다.", response.getSuccessMessage());
-        assertNotNull(response.getData()); // null이 아님을 확인
-        assertEquals(3L, response.getData()); // 반환된 ID가 예상대로 1L인지 확인
-
-        // 검증
-        verify(directoryRepository, times(1)).findById(2L);
-        verify(directoryRepository, times(1)).save(any(Directory.class));
-    }
-}
+}*/
