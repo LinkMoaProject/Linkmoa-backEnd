@@ -100,12 +100,14 @@ public class SiteService {
         Directory targetDirectory = directoryRepository.findById(siteMoveRequestDto.targetDirectoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-
+        Integer newOrderIndex = targetDirectory.getNextOrderIndex();
         moveSite.setDirectory(targetDirectory);
+
+        moveSite.setOrderIndex(newOrderIndex);
 
         return ApiSiteResponse.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successMessage("site 위치 이동에 성공했습니다.")
+                .successMessage("site의 위치를 다른 directory로 위치 이동에 성공했습니다.")
                 .data(moveSite.getId())
                 .build();
 

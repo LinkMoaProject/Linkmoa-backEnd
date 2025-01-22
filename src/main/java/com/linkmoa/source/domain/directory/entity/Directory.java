@@ -48,8 +48,7 @@ public class Directory extends BaseEntity {
 
     @OneToMany(
             mappedBy = "directory",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+            cascade = CascadeType.ALL
     )
     private List<Site> sites =new ArrayList<>();
 

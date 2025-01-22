@@ -115,10 +115,7 @@ public class DirectoryService {
 
         sourceDirectory.setParentDirectory(targetDirectory);
 
-        int newOrderIndex = targetDirectory.getChildDirectories().stream()
-                .mapToInt(directory -> directory.getOrderIndex())
-                .max()
-                .orElse(-1) + 1;
+        Integer newOrderIndex = targetDirectory.getNextOrderIndex();
 
         sourceDirectory.setOrderIndex(newOrderIndex);
 
