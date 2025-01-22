@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -41,13 +42,7 @@ public class DirectoryService {
                 : directoryRepository.findById(requestDto.parentDirectoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-        // 부모 디렉토리의 마지막 orderIndex 가져오기
-        int nextOrderIndex = parentDirectory == null
-                ? 0 // 최상위 디렉토리
-                : parentDirectory.getChildDirectories().stream()
-                .mapToInt(directory-> directory.getOrderIndex())
-                .max()
-                .orElse(-1) + 1;
+        Integer nextOrderIndex = parentDirectory.getNextOrderIndex();
 
 
         Directory newDirectory = Directory.builder()
@@ -69,6 +64,7 @@ public class DirectoryService {
                 .data(newDirectory.getId())
                 .build();
     }
+
 
     @Transactional
     @ValidationApplied
