@@ -56,9 +56,10 @@ public class Directory extends BaseEntity {
     private Integer orderIndex;
 
     @Builder
-    public Directory(String directoryName,String directoryDescription){
+    public Directory(String directoryName,String directoryDescription,Integer orderIndex){
         this.directoryName=directoryName;
         this.directoryDescription=directoryDescription;
+        this.orderIndex=orderIndex;
     }
 
 
