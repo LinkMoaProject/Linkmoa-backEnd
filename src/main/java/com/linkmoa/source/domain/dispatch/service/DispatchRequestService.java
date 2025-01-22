@@ -3,6 +3,7 @@ package com.linkmoa.source.domain.dispatch.service;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
+import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
 import com.linkmoa.source.domain.dispatch.dto.response.*;
 import com.linkmoa.source.domain.directory.entity.Directory;
@@ -10,6 +11,9 @@ import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequestCreate;
+import com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest;
+import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
+import com.linkmoa.source.domain.dispatch.exception.DispatchException;
 import com.linkmoa.source.domain.dispatch.repository.DirectoryTransmissionRequestRepository;
 import com.linkmoa.source.domain.dispatch.repository.SharePageInvitationRequestRepository;
 import com.linkmoa.source.domain.member.error.MemberErrorCode;
@@ -27,6 +31,7 @@ import com.linkmoa.source.domain.page.repository.PageRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +40,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DispatchRequestService {
  
     private final MemberService memberService;
@@ -49,16 +55,29 @@ public class DispatchRequestService {
     @Transactional
     @ValidationApplied
     @NotificationApplied
-    public com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest createDirectoryTransmissionRequest(DirectoryTransmissionRequestCreate directoryTransmissionSendRequest, PrincipalDetails principalDetails) {
+    public DirectoryTransmissionRequest createDirectoryTransmissionRequest(
+            DirectoryTransmissionRequestCreate directoryTransmissionSendRequest,
+            PrincipalDetails principalDetails) {
 
         if (!memberService.isMemberExist(directoryTransmissionSendRequest.receiverEmail())) {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL);
         }
 
+        DirectoryTransmissionRequest existingRequest = directoryTransmissionRequestRepository
+                .findByDirectoryIdAndRequestStatus(directoryTransmissionSendRequest.directoryId(), RequestStatus.WAITING)
+                .orElse(null);
+
+        if (existingRequest != null) {
+            log.info("뭐야뭐야 {}", existingRequest.getRequestId());
+            throw new DispatchException(DispatchErrorCode.TRANSMIT_DIRECTORY_REQUEST_ALREADY_EXIST);
+        } else {
+            log.info("뭐야뭐야, existingRequest가 null입니다.");
+        }
+
         Directory directory = directoryRepository.findById(directoryTransmissionSendRequest.directoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-        com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest directoryTransmissionRequest = com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest.builder()
+        DirectoryTransmissionRequest directoryTransmissionRequest = DirectoryTransmissionRequest.builder()
                 .senderEmail(principalDetails.getEmail())
                 .receiverEmail(directoryTransmissionSendRequest.receiverEmail())
                 .directory(directory)
@@ -66,6 +85,7 @@ public class DispatchRequestService {
 
         return directoryTransmissionRequestRepository.save(directoryTransmissionRequest);
     }
+
 
     public ApiDirectoryResponseSpec<DirectoryTransmissionResponse> mapToDirectorySendResponse(com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest directoryTransmissionRequest)
     {

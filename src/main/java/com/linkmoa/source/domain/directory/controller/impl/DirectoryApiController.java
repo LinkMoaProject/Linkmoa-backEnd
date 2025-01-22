@@ -1,7 +1,7 @@
 package com.linkmoa.source.domain.directory.controller.impl;
 
 
-import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import  com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.controller.spec.DirectoryApiSpecification;
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
