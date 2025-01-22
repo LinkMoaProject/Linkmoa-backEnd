@@ -32,26 +32,41 @@ public class Site extends BaseEntity {
     @JoinColumn(name="directory_id")
     private Directory directory;
 
+    @Column(name="order_index")
+    private Integer orderIndex;
 
     @Builder
-    public Site(String siteName,String siteUrl,Directory directory){
+    public Site(String siteName,String siteUrl,Directory directory,Integer orderIndex){
         this.siteName=siteName;
         this.siteUrl=siteUrl;
+        this.orderIndex=orderIndex;
         setDirectory(directory);
+
     }
 
     public void setDirectory(Directory directory) {
-        if (this.directory != null) {
+
+        if (this.directory != null && this.directory != directory) {
+            // 기존 디렉토리에서 먼저 제거
             this.directory.getSites().remove(this);
         }
 
+        // 새로운 디렉토리에 추가
         this.directory = directory;
-        directory.getSites().add(this);
+        if (directory != null && !directory.getSites().contains(this)) {
+            directory.getSites().add(this);
+        }
+
+
     }
 
     public void updateSiteNameAndUrl(String siteName,String siteUrl){
         this.siteName=siteName;
         this.siteUrl=siteUrl;
+    }
+
+    public void setOrderIndex(Integer orderIndex){
+        this.orderIndex=orderIndex;
     }
 
 

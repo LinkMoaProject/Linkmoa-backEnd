@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -40,10 +41,13 @@ public class DirectoryService {
                 : directoryRepository.findById(requestDto.parentDirectoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
+        Integer nextOrderIndex = parentDirectory.getNextOrderIndex();
+
 
         Directory newDirectory = Directory.builder()
                 .directoryName(requestDto.directoryName())
                 .directoryDescription(requestDto.directoryDescription())
+                .orderIndex(nextOrderIndex)
                 .build();
 
         // 부모 디렉토리에 새 디렉토리 추가
@@ -59,6 +63,7 @@ public class DirectoryService {
                 .data(newDirectory.getId())
                 .build();
     }
+
 
     @Transactional
     @ValidationApplied
@@ -86,10 +91,13 @@ public class DirectoryService {
         Directory deleteDirectory = directoryRepository.findById(requestDto.directoryId())
                 .orElseThrow(()-> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-        Long directoryId = deleteDirectory.getId(); // ID를 삭제 전에 저장
+        Long directoryId = deleteDirectory.getId();
+        Integer orderIndex = deleteDirectory.getOrderIndex();
+        Directory parentDirectory = deleteDirectory.getParentDirectory();
+
+        directoryRepository.decrementDirectoryAndSiteOrderIndexes(parentDirectory,orderIndex);
         directoryRepository.delete(deleteDirectory);
 
-        log.info("삭제 했지롱 {}", directoryId);
         return ApiDirectoryResponseSpec.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
                 .successMessage("Directory 삭제에 성공했습니다.")
@@ -110,9 +118,14 @@ public class DirectoryService {
 
         sourceDirectory.setParentDirectory(targetDirectory);
 
+        directoryRepository.decrementDirectoryAndSiteOrderIndexes(sourceDirectory, sourceDirectory.getOrderIndex());
+
+        Integer newOrderIndex = targetDirectory.getNextOrderIndex();
+        sourceDirectory.setOrderIndex(newOrderIndex);
+
         return ApiDirectoryResponseSpec.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successMessage("Directory 위치 이동에 성공했습니다.")
+                .successMessage("Directory를 다른 Directory로 위치 이동에 성공했습니다.")
                 .data(sourceDirectory.getId())
                 .build();
     }
@@ -151,7 +164,6 @@ public class DirectoryService {
 
         Directory clonedDirectory = originalDirectory.cloneDirectory(newParentDirectory);
 
-        // 복제된 디렉토리 저장
         directoryRepository.save(clonedDirectory);
     }
 }

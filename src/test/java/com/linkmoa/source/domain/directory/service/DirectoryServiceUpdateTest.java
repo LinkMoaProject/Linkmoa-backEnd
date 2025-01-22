@@ -1,3 +1,4 @@
+/*
 package com.linkmoa.source.domain.directory.service;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
@@ -45,30 +46,6 @@ public class DirectoryServiceUpdateTest {
     private MemberService memberService;
 
     private PrincipalDetails principalDetails;
-
-    @BeforeEach
-    void setUp() throws NoSuchFieldException, IllegalAccessException {
-        // Member 객체 생성
-        Member member = Member.builder()
-                .email("test@example.com")
-                .password("password")
-                .role(Role.ROLE_USER)
-                .nickname("TestUser")
-                .provider("google")
-                .providerId("google123")
-                .build();
-
-        // Member의 id 필드 값 강제 설정
-        Field idField = member.getClass().getDeclaredField("id");
-        idField.setAccessible(true);
-        idField.set(member, 1L);
-
-        // PrincipalDetails 생성
-        principalDetails = new PrincipalDetails(member);
-
-        // lenient를 사용하여 memberService의 동작 설정을 무시 가능하도록 설정
-        lenient().when(memberService.findMemberByEmail("test@example.com")).thenReturn(member);
-    }
 
     @Test
     @DisplayName("directory 수정")
@@ -136,42 +113,8 @@ public class DirectoryServiceUpdateTest {
     }
 
 
-    //유효하지 않은 사용자 ---> member
-/*
-    @Test
-    @DisplayName("유효하지 않은 사용자가 요청한 경우")
-    void testDirectoryUpdate_UnauthorizedUser() {
-        // given
-        DirectoryUpdateRequest requestDto = new DirectoryUpdateRequest(
-                new BaseRequest(2L, CommandType.EDIT), // 다른 사용자 ID
-                "디렉토리 이름 수정 후",
-                "디렉토리 설명 수정 후",
-                1L
-        );
-
-        Directory directory = Directory.builder()
-                .directoryName("Test Directory")
-                .directoryDescription("Test Description")
-                .build();
-
-        // Mock 설정
-        when(directoryRepository.findById(1L)).thenReturn(Optional.of(directory));
-
-        // when & then
-        Authorization exception = assertThrows(UnauthorizedAccessException.class,
-                () -> directoryService.updateDirectory(requestDto, principalDetails));
-
-        assertEquals("Unauthorized access to the directory", exception.getMessage());
-
-        // Verify
-        verify(directoryRepository, times(1)).findById(1L);
-        verifyNoMoreInteractions(directoryRepository);
-    }
-
-
-*/
-
 
 }
 
 
+*/

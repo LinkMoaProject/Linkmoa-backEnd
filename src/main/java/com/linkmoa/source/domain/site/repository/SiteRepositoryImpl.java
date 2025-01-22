@@ -1,10 +1,10 @@
 package com.linkmoa.source.domain.site.repository;
 
-
 import com.linkmoa.source.domain.site.dto.response.SiteDetailResponse;
-import com.linkmoa.source.domain.site.entity.QSite;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import static com.linkmoa.source.domain.site.entity.QSite.site;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +17,6 @@ public class SiteRepositoryImpl implements SiteRepositoryCustom {
     @Override
     public List<SiteDetailResponse> findSitesDetails(Long directoryId) {
 
-        QSite site = QSite.site;
         List<SiteDetailResponse> siteDetailResponses =jpaQueryFactory
                 .selectFrom(site)
                 .where(site.directory.id.eq(directoryId))
@@ -32,4 +31,5 @@ public class SiteRepositoryImpl implements SiteRepositoryCustom {
 
         return siteDetailResponses;
     }
+
 }

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Entity(name="directory")
 @Getter
@@ -47,20 +48,27 @@ public class Directory extends BaseEntity {
 
     @OneToMany(
             mappedBy = "directory",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+            cascade = CascadeType.ALL
     )
     private List<Site> sites =new ArrayList<>();
 
+    @Column(name="order_index")
+    private Integer orderIndex;
+
     @Builder
-    public Directory(String directoryName,String directoryDescription){
+    public Directory(String directoryName,String directoryDescription,Integer orderIndex){
         this.directoryName=directoryName;
         this.directoryDescription=directoryDescription;
+        this.orderIndex=orderIndex;
     }
 
 
     public void setParentDirectory(Directory parentDirectory){
         this.parentDirectory=parentDirectory;
+    }
+
+    public void setOrderIndex(Integer orderIndex){
+        this.orderIndex=orderIndex;
     }
 
     // 부모 디렉토리가 호출하는 함수
@@ -105,6 +113,17 @@ public class Directory extends BaseEntity {
         }
 
         return clonedDirectory;
+    }
+
+
+    public Integer getNextOrderIndex() {
+        Integer nextOrderIndex = Stream.concat(
+                        this.getChildDirectories().stream().map(d -> d.getOrderIndex()),
+                        this.getSites().stream().map(s -> s.getOrderIndex())
+                )
+                .max((o1, o2) -> o1 - o2)
+                .orElse(-1) + 1;
+        return nextOrderIndex;
     }
 
 

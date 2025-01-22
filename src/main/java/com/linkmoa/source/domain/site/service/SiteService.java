@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -38,10 +39,15 @@ public class SiteService {
         Directory directory = directoryRepository.findById(siteCreateRequestDto.directoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
+
+        Integer nextOrderIndex = directory.getNextOrderIndex();
+
+
         Site newSite = Site.builder()
                 .siteName(siteCreateRequestDto.siteName())
                 .siteUrl(siteCreateRequestDto.siteUrl())
                 .directory(directory)
+                .orderIndex(nextOrderIndex)
                 .build();
 
         siteRepository.save(newSite);
@@ -75,8 +81,11 @@ public class SiteService {
         Site deleteSite = siteRepository.findById(siteDeleteRequestDto.siteId())
                 .orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
 
-        siteRepository.delete(deleteSite);
+        Directory parentDirectory = deleteSite.getDirectory();
+        Integer orderIndex = deleteSite.getOrderIndex();
 
+        directoryRepository.decrementDirectoryAndSiteOrderIndexes(parentDirectory,orderIndex);
+        siteRepository.delete(deleteSite);
 
         return ApiSiteResponse.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
@@ -94,12 +103,17 @@ public class SiteService {
         Directory targetDirectory = directoryRepository.findById(siteMoveRequestDto.targetDirectoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
+        directoryRepository.decrementDirectoryAndSiteOrderIndexes(moveSite.getDirectory(),moveSite.getOrderIndex());
+
+        Integer newOrderIndex = targetDirectory.getNextOrderIndex();
 
         moveSite.setDirectory(targetDirectory);
 
+        moveSite.setOrderIndex(newOrderIndex);
+
         return ApiSiteResponse.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successMessage("site 위치 이동에 성공했습니다.")
+                .successMessage("site의 위치를 다른 directory로 위치 이동에 성공했습니다.")
                 .data(moveSite.getId())
                 .build();
 
