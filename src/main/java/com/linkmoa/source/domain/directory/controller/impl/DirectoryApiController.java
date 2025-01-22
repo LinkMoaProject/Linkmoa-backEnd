@@ -1,7 +1,7 @@
 package com.linkmoa.source.domain.directory.controller.impl;
 
 
-import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import  com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.controller.spec.DirectoryApiSpecification;
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
@@ -22,10 +22,10 @@ public class DirectoryApiController implements DirectoryApiSpecification {
     private final DirectoryService directoryService;
 
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> createDirectory(
-            DirectoryCreateReques directoryCreateReques,
+            DirectoryCreateRequest directoryCreateRequest,
             PrincipalDetails principalDetails) {
-        ApiDirectoryResponseSpec<Long> createDirectroyResponse = directoryService.createDirectory(directoryCreateReques, principalDetails);
-        return ResponseEntity.ok().body(createDirectroyResponse);
+        ApiDirectoryResponseSpec<Long> createDirectoryResponse = directoryService.createDirectory(directoryCreateRequest, principalDetails);
+        return ResponseEntity.ok().body(createDirectoryResponse);
     }
 
     public ResponseEntity<ApiDirectoryResponseSpec<Long>> updateDirectory(

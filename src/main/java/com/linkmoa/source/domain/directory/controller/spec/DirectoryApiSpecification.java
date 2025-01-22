@@ -22,8 +22,8 @@ public interface DirectoryApiSpecification {
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<Long>> createDirectory(
-            @RequestBody @Validated DirectoryCreateReques directoryCreateReques,
+    ResponseEntity<ApiDirectoryResponseSpec<Long>> createDirectory(
+            @RequestBody @Validated DirectoryCreateRequest directoryCreateRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
@@ -31,8 +31,8 @@ public interface DirectoryApiSpecification {
     @Operation(summary = "디렉토리 삭제", description = "디렉토리를 삭제합니다.")
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @DeleteMapping()
-    @PreAuthorize("isAutheetnticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<Long>> deleteDirectory(
+    @PreAuthorize("isAuthenticated()")
+    ResponseEntity<ApiDirectoryResponseSpec<Long>> deleteDirectory(
             @RequestBody @Validated DirectoryIdRequest directoryIdRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
@@ -43,7 +43,7 @@ public interface DirectoryApiSpecification {
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PutMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<Long>> updateDirectory(
+    ResponseEntity<ApiDirectoryResponseSpec<Long>> updateDirectory(
             @RequestBody DirectoryUpdateRequest directoryUpdateRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
@@ -53,7 +53,7 @@ public interface DirectoryApiSpecification {
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @PutMapping("/move")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<Long>> moveDirectory(
+    ResponseEntity<ApiDirectoryResponseSpec<Long>> moveDirectory(
             @RequestBody @Validated DirectoryMoveRequest directoryMoveRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
@@ -63,7 +63,7 @@ public interface DirectoryApiSpecification {
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
     @GetMapping("/details")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryResponse>> getDirectory(
+    ResponseEntity<ApiDirectoryResponseSpec<DirectoryResponse>> getDirectory(
             @RequestBody @Validated DirectoryIdRequest directoryIdRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );

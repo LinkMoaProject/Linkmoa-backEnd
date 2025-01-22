@@ -3,10 +3,18 @@ package com.linkmoa.source.domain.dispatch.exception;
 
 import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @Getter
-@RequiredArgsConstructor
 public class DispatchException extends RuntimeException {
-    private final DispatchErrorCode dispatchErrorCode;
+    private final DispatchErrorCode errorCode;
+
+    public DispatchException(DispatchErrorCode errorCode) {
+        super(errorCode.getErrorMessage()); // 메시지를 RuntimeException에 전달
+        this.errorCode = errorCode;
+    }
+
+    public HttpStatus getHttpStatus() {
+        return errorCode.getHttpStatus();
+    }
 }

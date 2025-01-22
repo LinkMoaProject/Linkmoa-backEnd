@@ -3,7 +3,7 @@ package com.linkmoa.source.domain.directory.service;
 
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateReques;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequest;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
@@ -47,7 +47,7 @@ class DirectoryServiceCreateTest {
     @DisplayName("parent directory가 없는 경우 directory 생성 테스트 ")
     public void createDirectory_WithoutParentDirectory_Test() {
         // given
-        DirectoryCreateReques requestDto = new DirectoryCreateReques(
+        DirectoryCreateRequest requestDto = new DirectoryCreateRequest(
                 new BaseRequest(1L, CommandType.CREATE),
                 "Test Directory",
                 null,
@@ -83,4 +83,6 @@ class DirectoryServiceCreateTest {
     }
 
 
+
 }*/
+
