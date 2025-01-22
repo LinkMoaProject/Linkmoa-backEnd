@@ -93,6 +93,11 @@ public class DirectoryService {
                 .orElseThrow(()-> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
         Long directoryId = deleteDirectory.getId(); // ID를 삭제 전에 저장
+        Integer orderIndex = deleteDirectory.getOrderIndex();
+        Directory parentDirectory = deleteDirectory.getParentDirectory();
+
+        directoryRepository.decrementOrderIndexesAfterDeletion(parentDirectory,orderIndex);
+
         directoryRepository.delete(deleteDirectory);
 
         return ApiDirectoryResponseSpec.<Long>builder()
