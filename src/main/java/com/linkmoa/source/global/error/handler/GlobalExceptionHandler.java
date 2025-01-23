@@ -54,6 +54,14 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(DispatchException.class)
+    public ResponseEntity<?> handleDispatchException(DispatchException e) {
+        ApiResponseErrorSpec dispatchExceptionResponse = ApiResponseErrorSpec.builder()
+                .httpStatusCode(e.getErrorCode().getHttpStatus())
+                .errorMessage(e.getErrorCode().getErrorMessage())
+                .build();
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(dispatchExceptionResponse);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleAllExceptions(Exception e) {
@@ -65,14 +73,7 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(DispatchException.class)
-    public ResponseEntity<?> handleDispatchException(DispatchException e) {
-        ApiResponseErrorSpec dispatchExceptionResponse = ApiResponseErrorSpec.builder()
-                .httpStatusCode(e.getErrorCode().getHttpStatus())
-                .errorMessage(e.getErrorCode().getErrorMessage())
-                .build();
-        return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(dispatchExceptionResponse);
-    }
+
 
 
 
