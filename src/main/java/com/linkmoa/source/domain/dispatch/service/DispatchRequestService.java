@@ -69,10 +69,15 @@ public class DispatchRequestService {
                 .orElse(null);
 
         if (existingRequest != null) {
-            log.info("뭐야뭐야 {}", existingRequest.getRequestId());
             throw new DispatchException(DispatchErrorCode.TRANSMIT_DIRECTORY_REQUEST_ALREADY_EXIST);
-        } else {
-            log.info("뭐야뭐야, existingRequest가 null입니다.");
+        }
+
+        DirectoryTransmissionRequest acceptedRequest = directoryTransmissionRequestRepository
+                .findByDirectoryIdAndRequestStatus(directoryTransmissionSendRequest.directoryId(), RequestStatus.ACCEPTED)
+                .orElse(null);
+
+        if (acceptedRequest != null) {
+            throw new DispatchException(DispatchErrorCode.TRANSMIT_DIRECTORY_REQUEST_ACCEPTED_EXIST);
         }
 
         Directory directory = directoryRepository.findById(directoryTransmissionSendRequest.directoryId())
