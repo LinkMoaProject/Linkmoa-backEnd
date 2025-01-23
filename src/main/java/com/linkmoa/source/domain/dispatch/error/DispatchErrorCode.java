@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum DispatchErrorCode implements ErrorCode {
 
     TRANSMIT_DIRECTORY_REQUEST_ALREADY_EXIST(HttpStatus.BAD_REQUEST , "이미 해당 디렉토리 전송 요청을 전송하였습니다."),
+    TRANSMIT_DIRECTORY_REQUEST_ACCEPTED_EXIST(HttpStatus.BAD_REQUEST , "이미 해당 디렉토리 전송 요청을 수락하였습니다."),
     SHARE_PAGE_INVITATION_REQUEST_ALREADY_EXIST(HttpStatus.BAD_REQUEST , "이미 해당 페이지 초대 요청을 전송하였습니다."),
     SHARE_PAGE_INVITATION_REQUEST_ACCEPTED_EXIST(HttpStatus.BAD_REQUEST , "이미 해당 페이지 초대 요청을 수락하였습니다."),
     REQUEST_ALREADY_PROCESSED(HttpStatus.BAD_REQUEST , "이미 처리된 요청입니다."),
