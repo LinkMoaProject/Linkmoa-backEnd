@@ -26,12 +26,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(SiteException.class)
     public ResponseEntity<?> handleSiteException(SiteException e){
-        ApiResponseErrorSpec siteExcpetionResponse = ApiResponseErrorSpec.builder()
+        ApiResponseErrorSpec siteExceptionResponse = ApiResponseErrorSpec.builder()
                 .httpStatusCode(e.getSiteErrorCode().getHttpStatus())
                 .errorMessage(e.getSiteErrorCode().getErrorMessage())
                 .build();
 
-        return ResponseEntity.status(e.getSiteErrorCode().getHttpStatus()).body(siteExcpetionResponse);
+        return ResponseEntity.status(e.getSiteErrorCode().getHttpStatus()).body(siteExceptionResponse);
     }
 
     @ExceptionHandler(ValidationException.class)
