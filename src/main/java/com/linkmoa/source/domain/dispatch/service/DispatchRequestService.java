@@ -126,8 +126,15 @@ public class DispatchRequestService {
                 .orElse(null);
 
         if(existingRequest != null){
-            log.info("여긴 들어오잖아. ");
             throw new DispatchException(DispatchErrorCode.SHARE_PAGE_INVITATION_REQUEST_ALREADY_EXIST);
+        }
+
+        SharePageInvitationRequest acceptedRequest = sharePageInvitationRequestRepository
+                .findByPageIdAndRequestStatus(page.getId(), RequestStatus.ACCEPTED)
+                .orElse(null);
+
+        if(acceptedRequest != null){
+            throw new DispatchException(DispatchErrorCode.SHARE_PAGE_INVITATION_REQUEST_ACCEPTED_EXIST);
         }
 
         SharePageInvitationRequest sharePageInvitationRequest = SharePageInvitationRequest.builder()
