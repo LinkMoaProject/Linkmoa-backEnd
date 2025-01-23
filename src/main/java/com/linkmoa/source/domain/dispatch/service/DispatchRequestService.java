@@ -12,6 +12,7 @@ import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequestCreate;
 import com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest;
+import com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest;
 import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
 import com.linkmoa.source.domain.dispatch.exception.DispatchException;
 import com.linkmoa.source.domain.dispatch.repository.DirectoryTransmissionRequestRepository;
@@ -107,7 +108,7 @@ public class DispatchRequestService {
     @Transactional
     @ValidationApplied
     @NotificationApplied
-    public com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest createSharePageInviteRequest(SharePageInvitationRequestCreate sharePageInvitationRequestCreate, PrincipalDetails principalDetails){
+    public SharePageInvitationRequest createSharePageInviteRequest(SharePageInvitationRequestCreate sharePageInvitationRequestCreate, PrincipalDetails principalDetails){
 
         if (!memberService.isMemberExist(sharePageInvitationRequestCreate.receiverEmail())) {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL); // 유저가 없으면 예외 발생
@@ -120,12 +121,29 @@ public class DispatchRequestService {
             throw new PageException(PageErrorCode.CANNOT_INVITE_TO_PERSONAL_PAGE);
         }
 
-        com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest sharePageInvitationRequest = com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest.builder()
+        SharePageInvitationRequest existingRequest = sharePageInvitationRequestRepository.
+                findByPageIdAndRequestStatus(page.getId(),RequestStatus.WAITING)
+                .orElse(null);
+
+        if(existingRequest != null){
+            throw new DispatchException(DispatchErrorCode.SHARE_PAGE_INVITATION_REQUEST_ALREADY_EXIST);
+        }
+
+        SharePageInvitationRequest acceptedRequest = sharePageInvitationRequestRepository
+                .findByPageIdAndRequestStatus(page.getId(), RequestStatus.ACCEPTED)
+                .orElse(null);
+
+        if(acceptedRequest != null){
+            throw new DispatchException(DispatchErrorCode.SHARE_PAGE_INVITATION_REQUEST_ACCEPTED_EXIST);
+        }
+
+        SharePageInvitationRequest sharePageInvitationRequest = SharePageInvitationRequest.builder()
                 .senderEmail(principalDetails.getEmail())
                 .receiverEmail(sharePageInvitationRequestCreate.receiverEmail())
                 .page(page)
                 .permissionType(sharePageInvitationRequestCreate.permissionType())
                 .build();
+
         return sharePageInvitationRequestRepository.save(sharePageInvitationRequest);
     }
     public ApiPageResponseSpec<SharePageInvitationResponse> mapToPageInviteRequestResponse(com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest sharePageInvitationRequest){
