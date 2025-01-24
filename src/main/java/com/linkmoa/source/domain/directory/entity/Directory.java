@@ -114,8 +114,6 @@ public class Directory extends BaseEntity {
             clonedDirectory.getChildDirectories().add(clonedChildDirectory);
         }
 
-        clonedDirectory.setOrderIndex(newParentDirectory.getNextOrderIndex());
-
 
         return clonedDirectory;
     }

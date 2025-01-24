@@ -48,7 +48,6 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
 
     @Override
     public void decrementSiteOrderIndexes(Directory parentDirectory, Integer orderIndex) {
-
         jpaQueryFactory.update(site)
                 .set(site.orderIndex, site.orderIndex.subtract(1))
                 .where(site.directory.eq(parentDirectory)
@@ -60,6 +59,30 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
     public void decrementDirectoryAndSiteOrderIndexes(Directory parentDirectory, Integer orderIndex) {
         decrementDirectoryOrderIndexes(parentDirectory,orderIndex);
         decrementSiteOrderIndexes(parentDirectory,orderIndex);
+    }
+
+    @Override
+    public void incrementDirectoryOrderIndexes(Directory parentDirectory, Integer orderIndex) {
+        jpaQueryFactory.update(directory)
+                .set(directory.orderIndex,directory.orderIndex.add(1))
+                .where(directory.parentDirectory.eq(parentDirectory)
+                .and(directory.orderIndex.gt(orderIndex)))
+                .execute();
+    }
+
+    @Override
+    public void incrementSiteOrderIndexes(Directory parentDirectory, Integer orderIndex) {
+        jpaQueryFactory.update(site)
+                .set(site.orderIndex, site.orderIndex.add(1))
+                .where(site.directory.eq(parentDirectory)
+                        .and(site.orderIndex.gt(orderIndex)))
+                .execute();
+    }
+
+    @Override
+    public void incrementDirectoryAndSiteOrderIndexes(Directory parentDirectory, Integer orderIndex) {
+        incrementDirectoryOrderIndexes(parentDirectory, orderIndex);
+        incrementSiteOrderIndexes(parentDirectory, orderIndex);
     }
 
 

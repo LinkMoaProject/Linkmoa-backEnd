@@ -155,6 +155,7 @@ public class DirectoryService {
 
     }
 
+
     public void cloneDirectory(Long newRootDirectoryId, Long originalDirectoryId){
 
         Directory originalDirectory = directoryRepository.findById(originalDirectoryId)
@@ -162,7 +163,11 @@ public class DirectoryService {
 
         Directory newParentDirectory = directoryRepository.findById(newRootDirectoryId).orElse(null);
 
+        directoryRepository.incrementDirectoryAndSiteOrderIndexes(newParentDirectory,0);
         Directory clonedDirectory = originalDirectory.cloneDirectory(newParentDirectory);
+
+        clonedDirectory.setOrderIndex(1);
+
 
         directoryRepository.save(clonedDirectory);
     }
