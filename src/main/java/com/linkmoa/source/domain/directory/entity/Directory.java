@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.stream.Stream;
 @Entity(name="directory")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Slf4j
 public class Directory extends BaseEntity {
 
     @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -112,6 +114,9 @@ public class Directory extends BaseEntity {
             clonedDirectory.getChildDirectories().add(clonedChildDirectory);
         }
 
+        clonedDirectory.setOrderIndex(newParentDirectory.getNextOrderIndex());
+
+
         return clonedDirectory;
     }
 
@@ -121,11 +126,12 @@ public class Directory extends BaseEntity {
                         this.getChildDirectories().stream().map(d -> d.getOrderIndex()),
                         this.getSites().stream().map(s -> s.getOrderIndex())
                 )
-                .max((o1, o2) -> o1 - o2)
-                .orElse(-1) + 1;
-        return nextOrderIndex;
+                .filter(order -> order != null) // null 값을 필터링
+                .max(Integer::compareTo) // 최대 값 계산
+                .orElse(0) + 1; // 값이 없으면 0을 반환하고 1을 더함
+        // nextOrderIndex가 null일 경우 1 반환
+        return (nextOrderIndex == null) ? 1 : nextOrderIndex;
     }
-
 
 
 

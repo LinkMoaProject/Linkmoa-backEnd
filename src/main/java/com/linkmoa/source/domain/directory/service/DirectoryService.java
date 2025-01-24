@@ -158,7 +158,7 @@ public class DirectoryService {
     public void cloneDirectory(Long newRootDirectoryId, Long originalDirectoryId){
 
         Directory originalDirectory = directoryRepository.findById(originalDirectoryId)
-                .orElseThrow(() -> new RuntimeException("Original directory not found"));
+                .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
         Directory newParentDirectory = directoryRepository.findById(newRootDirectoryId).orElse(null);
 
