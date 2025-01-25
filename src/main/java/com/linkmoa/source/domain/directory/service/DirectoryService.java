@@ -4,6 +4,7 @@ package com.linkmoa.source.domain.directory.service;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
+import com.linkmoa.source.domain.directory.dto.response.DirectoryCloneResponse;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryResponse;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
 import com.linkmoa.source.domain.directory.entity.Directory;
@@ -11,6 +12,8 @@ import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.member.service.MemberService;
+import com.linkmoa.source.domain.memberPageLink.repository.MemberPageLinkRepository;
+import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.site.dto.response.SiteDetailResponse;
 import com.linkmoa.source.domain.site.repository.SiteRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
@@ -21,8 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Stream;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -31,6 +32,7 @@ public class DirectoryService {
     private final MemberService memberService;
     private final DirectoryRepository directoryRepository;
     private final SiteRepository siteRepository;
+    private final MemberPageLinkRepository memberPageLinkRepository;
 
     @Transactional
     @ValidationApplied
@@ -155,15 +157,35 @@ public class DirectoryService {
 
     }
 
-    public void cloneDirectory(Long newRootDirectoryId, Long originalDirectoryId){
+    @Transactional
+    public ApiDirectoryResponseSpec<DirectoryCloneResponse> cloneDirectoryToPersonalRoot(Long originalDirectoryId, PrincipalDetails principalDetails){
+        Page personalPage = memberPageLinkRepository.findPersonalPageByMemberId(principalDetails.getId());
+        Directory cloneDirectory = cloneDirectory(personalPage.getRootDirectory().getId(), originalDirectoryId);
+
+        DirectoryCloneResponse directoryCloneResponse = DirectoryCloneResponse.builder()
+                .directoryId(cloneDirectory.getId())
+                .directoryName(cloneDirectory.getDirectoryName())
+                .build();
+
+        return ApiDirectoryResponseSpec.<DirectoryCloneResponse>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("Directory를 개인 페이지의 root Directory로 복사에 성공했습니다.")
+                .data(directoryCloneResponse)
+                .build();
+    }
+
+    public Directory cloneDirectory(Long newRootDirectoryId, Long originalDirectoryId){
 
         Directory originalDirectory = directoryRepository.findById(originalDirectoryId)
-                .orElseThrow(() -> new RuntimeException("Original directory not found"));
+                .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
         Directory newParentDirectory = directoryRepository.findById(newRootDirectoryId).orElse(null);
 
-        Directory clonedDirectory = originalDirectory.cloneDirectory(newParentDirectory);
+        directoryRepository.incrementDirectoryAndSiteOrderIndexes(newParentDirectory,0);
 
+        Directory clonedDirectory = originalDirectory.cloneDirectory(newParentDirectory);
+        clonedDirectory.setOrderIndex(1);
         directoryRepository.save(clonedDirectory);
+        return clonedDirectory;
     }
 }

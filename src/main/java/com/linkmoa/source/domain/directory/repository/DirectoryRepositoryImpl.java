@@ -4,6 +4,8 @@ import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import static com.linkmoa.source.domain.directory.entity.QDirectory.directory;
 import static com.linkmoa.source.domain.site.entity.QSite.site;
 
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
+@Slf4j
 public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
@@ -48,7 +51,6 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
 
     @Override
     public void decrementSiteOrderIndexes(Directory parentDirectory, Integer orderIndex) {
-
         jpaQueryFactory.update(site)
                 .set(site.orderIndex, site.orderIndex.subtract(1))
                 .where(site.directory.eq(parentDirectory)
@@ -60,6 +62,29 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
     public void decrementDirectoryAndSiteOrderIndexes(Directory parentDirectory, Integer orderIndex) {
         decrementDirectoryOrderIndexes(parentDirectory,orderIndex);
         decrementSiteOrderIndexes(parentDirectory,orderIndex);
+    }
+
+    @Override
+    public void incrementDirectoryOrderIndexes(Directory parentDirectory, Integer orderIndex) {
+        jpaQueryFactory.update(directory)
+                .set(directory.orderIndex,directory.orderIndex.add(1))
+                .where(directory.parentDirectory.eq(parentDirectory)
+                        .and(directory.orderIndex.gt(orderIndex)))
+                .execute();
+    }
+
+    @Override
+    public void incrementSiteOrderIndexes(Directory parentDirectory, Integer orderIndex) {
+        jpaQueryFactory.update(site)
+                .set(site.orderIndex, site.orderIndex.add(1))
+                .where(site.directory.eq(parentDirectory)
+                        .and(site.orderIndex.gt(orderIndex)))
+                .execute();
+    }
+    @Override
+    public void incrementDirectoryAndSiteOrderIndexes(Directory parentDirectory, Integer orderIndex) {
+        incrementDirectoryOrderIndexes(parentDirectory, orderIndex);
+        incrementSiteOrderIndexes(parentDirectory, orderIndex);
     }
 
 

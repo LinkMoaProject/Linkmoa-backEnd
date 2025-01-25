@@ -3,6 +3,7 @@ package com.linkmoa.source.domain.directory.controller.spec;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
+import com.linkmoa.source.domain.directory.dto.response.DirectoryCloneResponse;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryResponse;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
@@ -67,4 +68,15 @@ public interface DirectoryApiSpecification {
             @RequestBody @Validated DirectoryIdRequest directoryIdRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
+
+    @Tag(name = "Directory", description = "디렉토리 관련 API")
+    @Operation(summary = "디렉토리 복사 기능", description = "디렉토리 복사 시, 공유 페이지의 디렉토리를 개인 페이지의 최상위 디렉토리로 복사")
+    @ApiErrorCodeExamples(DirectoryErrorCode.class)
+    @PostMapping("/clone")
+    @PreAuthorize("isAuthenticated()")
+    ResponseEntity<ApiDirectoryResponseSpec<DirectoryCloneResponse>> cloneDirectory(
+            @RequestBody TargetDirectoryId targetDirectoryId,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
+
 }
