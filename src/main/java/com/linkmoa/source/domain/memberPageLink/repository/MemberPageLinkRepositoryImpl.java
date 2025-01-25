@@ -23,4 +23,17 @@ public class MemberPageLinkRepositoryImpl implements MemberPageLinkRepositoryCus
                 .fetchOne();
 
     }
+
+    @Override
+    public Long findPersonalPageIdByMemberIdAndPermissionType(Long memberId) {
+
+        Long personalPageId = jpaQueryFactory.select(page.id)
+                .from(memberPageLink)
+                .join(memberPageLink.page, page)
+                .where(memberPageLink.member.id.eq(memberId)
+                        .and(page.pageType.eq(PageType.PERSONAL)))
+                .fetchOne();
+
+        return personalPageId;
+    }
 }
