@@ -1,6 +1,7 @@
 package com.linkmoa.source.domain.dispatch.service.processor;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.service.DirectoryService;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
@@ -86,7 +87,8 @@ public class DirectoryTransmissionRequestProcessor implements DispatchProcessor{
         Long receiverPersonalRootDirectoryId = receiverPersonalPage.getRootDirectory().getId();
         Long transmissionDirectoryId = directoryTransmissionRequest.getDirectory().getId();
 
-        directoryService.cloneDirectory(receiverPersonalRootDirectoryId, transmissionDirectoryId);
+        Directory directory = directoryService.cloneDirectory(receiverPersonalRootDirectoryId, transmissionDirectoryId);
+
     }
 
 
