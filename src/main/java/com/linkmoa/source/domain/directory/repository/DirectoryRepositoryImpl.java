@@ -4,6 +4,8 @@ import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import static com.linkmoa.source.domain.directory.entity.QDirectory.directory;
 import static com.linkmoa.source.domain.site.entity.QSite.site;
 
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
+@Slf4j
 public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
@@ -66,7 +69,7 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
         jpaQueryFactory.update(directory)
                 .set(directory.orderIndex,directory.orderIndex.add(1))
                 .where(directory.parentDirectory.eq(parentDirectory)
-                .and(directory.orderIndex.gt(orderIndex)))
+                        .and(directory.orderIndex.gt(orderIndex)))
                 .execute();
     }
 
@@ -78,7 +81,6 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
                         .and(site.orderIndex.gt(orderIndex)))
                 .execute();
     }
-
     @Override
     public void incrementDirectoryAndSiteOrderIndexes(Directory parentDirectory, Integer orderIndex) {
         incrementDirectoryOrderIndexes(parentDirectory, orderIndex);

@@ -157,11 +157,9 @@ public class DirectoryService {
 
     }
 
-
+    @Transactional
     public ApiDirectoryResponseSpec<DirectoryCloneResponse> cloneDirectoryToPersonalRoot(Long originalDirectoryId, PrincipalDetails principalDetails){
-        // directoryId
         Page personalPage = memberPageLinkRepository.findPersonalPageByMemberId(principalDetails.getId());
-
         Directory cloneDirectory = cloneDirectory(personalPage.getRootDirectory().getId(), originalDirectoryId);
 
         DirectoryCloneResponse directoryCloneResponse = DirectoryCloneResponse.builder()
@@ -184,12 +182,10 @@ public class DirectoryService {
         Directory newParentDirectory = directoryRepository.findById(newRootDirectoryId).orElse(null);
 
         directoryRepository.incrementDirectoryAndSiteOrderIndexes(newParentDirectory,0);
+
         Directory clonedDirectory = originalDirectory.cloneDirectory(newParentDirectory);
-
         clonedDirectory.setOrderIndex(1);
-
         directoryRepository.save(clonedDirectory);
-
         return clonedDirectory;
     }
 }
