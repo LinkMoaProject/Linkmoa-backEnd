@@ -6,6 +6,4 @@ public interface MemberPageLinkRepositoryCustom {
 
     Page findPersonalPageByMemberId(Long memberId);
 
-    Long findPersonalPageIdByMemberIdAndPermissionType(Long memberId);
-
 }
