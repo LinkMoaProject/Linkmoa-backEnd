@@ -14,8 +14,8 @@ public interface DirectoryRepositoryCustom {
     void incrementDirectoryOrderIndexes(Directory parentDirectory, Integer orderIndex);
     void incrementSiteOrderIndexes(Directory parentDirectory, Integer orderIndex);
     void incrementDirectoryAndSiteOrderIndexes(Directory parentDirectory, Integer orderIndex);
-    void incrementDirectoryOrderIndexexInRange(Directory parentDirectory,Integer startIndex,Integer endIndex);
-    void incrementSiteOrderIndexexInRange(Directory parentDirectory,Integer startIndex,Integer endIndex);
-    void incrementDirectoryAndSiteOrderIndexexInRange(Directory parentDirectory,Integer startIndex,Integer endIndex);
+    void incrementDirectoryOrderIndexesInRange(Directory parentDirectory,Integer startIndex,Integer endIndex,Integer adjustmentValue);
+    void incrementSiteOrderIndexesInRange(Directory parentDirectory,Integer startIndex,Integer endIndex,Integer adjustmentValue);
+    void incrementDirectoryAndSiteOrderIndexesInRange(Directory parentDirectory,Integer startIndex,Integer endIndex,boolean isIncrement);
 
 }

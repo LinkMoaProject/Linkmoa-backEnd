@@ -88,27 +88,29 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
     }
 
     @Override
-    public void incrementDirectoryOrderIndexexInRange(Directory parentDirectory, Integer startIndex, Integer endIndex) {
+    public void incrementDirectoryOrderIndexesInRange(Directory parentDirectory, Integer startIndex, Integer endIndex,Integer adjustmentValue) {
         jpaQueryFactory.update(directory)
-                .set(directory.orderIndex,directory.orderIndex.add(1))
+                .set(directory.orderIndex,directory.orderIndex.add(adjustmentValue))
                 .where(directory.parentDirectory.eq(parentDirectory)
                         .and(directory.orderIndex.between(startIndex,endIndex-1)))
                 .execute();
     }
 
     @Override
-    public void incrementSiteOrderIndexexInRange(Directory parentDirectory, Integer startIndex, Integer endIndex) {
+    public void incrementSiteOrderIndexesInRange(Directory parentDirectory, Integer startIndex, Integer endIndex,Integer adjustmentValue) {
         jpaQueryFactory.update(site)
-                .set(site.orderIndex,site.orderIndex.add(1))
+                .set(site.orderIndex,site.orderIndex.add(adjustmentValue))
                 .where(site.directory.eq(parentDirectory)
                         .and(site.orderIndex.between(startIndex,endIndex-1)))
                 .execute();
     }
 
     @Override
-    public void incrementDirectoryAndSiteOrderIndexexInRange(Directory parentDirectory, Integer startIndex, Integer endIndex) {
-        incrementDirectoryOrderIndexexInRange(parentDirectory, startIndex, endIndex);
-        incrementSiteOrderIndexexInRange(parentDirectory,startIndex,endIndex);
+    public void incrementDirectoryAndSiteOrderIndexesInRange(Directory parentDirectory, Integer startIndex, Integer endIndex,boolean isIncrement) {
+        Integer adjustmentValue = isIncrement ? 1 : -1;
+
+        incrementDirectoryOrderIndexesInRange(parentDirectory, startIndex, endIndex,adjustmentValue);
+        incrementSiteOrderIndexesInRange(parentDirectory,startIndex,endIndex,adjustmentValue);
     }
 
 
