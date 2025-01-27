@@ -8,8 +8,12 @@ import lombok.Builder;
 public record DirectoryDragAndDropRequest(
         BaseRequest baseRequest,
         Long targetId,
-        String targetType,
+        TargetType targetType,
         Long targetIdx,
         Long parentDirectoryId
 ) {
-}
+
+    public enum TargetType{
+        DIRECTORY,
+        SITE
+    }
