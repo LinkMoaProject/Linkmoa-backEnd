@@ -9,7 +9,7 @@ public record DirectoryDragAndDropRequest(
         BaseRequest baseRequest,
         Long targetId,
         TargetType targetType,
-        Long targetIdx,
+        Integer targetOrderIndex,
         Long parentDirectoryId
 ) {
 
@@ -17,3 +17,4 @@ public record DirectoryDragAndDropRequest(
         DIRECTORY,
         SITE
     }
+}
