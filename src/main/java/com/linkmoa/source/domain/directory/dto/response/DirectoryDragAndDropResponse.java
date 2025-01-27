@@ -5,7 +5,7 @@ import lombok.Builder;
 @Builder
 public record DirectoryDragAndDropResponse(
         Long targetId,
-        Long targetIdx,
+        Integer targetOrderIndex,
         String targetType
 ) {
 }
