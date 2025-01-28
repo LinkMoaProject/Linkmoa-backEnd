@@ -3,10 +3,7 @@ package com.linkmoa.source.domain.directory.service;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.*;
-import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryCloneResponse;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryResponse;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
+import com.linkmoa.source.domain.directory.dto.response.*;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
@@ -15,6 +12,9 @@ import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.memberPageLink.repository.MemberPageLinkRepository;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.site.dto.response.SiteDetailResponse;
+import com.linkmoa.source.domain.site.entity.Site;
+import com.linkmoa.source.domain.site.error.SiteErrorCode;
+import com.linkmoa.source.domain.site.exception.SiteException;
 import com.linkmoa.source.domain.site.repository.SiteRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -127,10 +129,87 @@ public class DirectoryService {
 
         return ApiDirectoryResponseSpec.<Long>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successMessage("Directory를 다른 Directory로 위치 이동에 성공했습니다.")
+                .successMessage("Directory를 다른 Directory로 이동시켰습니다.")
                 .data(sourceDirectory.getId())
                 .build();
     }
+
+    @Transactional
+    @ValidationApplied
+    public ApiDirectoryResponseSpec<DirectoryDragAndDropResponse> dragAndDropDirectoryOrSite(DirectoryDragAndDropRequest directoryDragAndDropRequest,
+                                                                                             PrincipalDetails principalDetails){
+
+        Integer currentItemOrderIndex ;
+
+        Directory parentDirectory = directoryRepository.findById(directoryDragAndDropRequest.parentDirectoryId())
+                .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+
+        currentItemOrderIndex = getOrderIndex(
+                directoryDragAndDropRequest.targetId(),
+                directoryDragAndDropRequest.targetType()
+        );
+
+
+        boolean isIncrement = currentItemOrderIndex > directoryDragAndDropRequest.targetOrderIndex();
+        int startIndex = Math.min(currentItemOrderIndex, directoryDragAndDropRequest.targetOrderIndex());
+        int endIndex = Math.max(currentItemOrderIndex, directoryDragAndDropRequest.targetOrderIndex());
+
+
+        directoryRepository.updateDirectoryAndSiteOrderIndexesInRange(parentDirectory, startIndex, endIndex, isIncrement);
+
+        setOrderIndex(
+                directoryDragAndDropRequest.targetId(),
+                directoryDragAndDropRequest.targetType(),
+                directoryDragAndDropRequest.targetOrderIndex()
+        );
+
+        DirectoryDragAndDropResponse directoryDragAndDropResponse = DirectoryDragAndDropResponse.builder()
+                .targetId(directoryDragAndDropRequest.targetId())
+                .targetType(String.valueOf(directoryDragAndDropRequest.targetType()))
+                .targetOrderIndex(directoryDragAndDropRequest.targetOrderIndex())
+                .build();
+
+        return ApiDirectoryResponseSpec.<DirectoryDragAndDropResponse>builder()
+                .httpStatusCode(HttpStatus.OK)
+                .successMessage("Drag and Drop를 수행했습니다.")
+                .data(directoryDragAndDropResponse)
+                .build();
+    }
+
+    private Integer getOrderIndex(Long targetId, DirectoryDragAndDropRequest.TargetType targetType) {
+        switch (targetType) {
+            case DIRECTORY -> {
+                Directory directory = directoryRepository.findById(targetId)
+                        .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+                return directory.getOrderIndex();
+            }
+            case SITE -> {
+                Site site = siteRepository.findById(targetId)
+                        .orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
+                return site.getOrderIndex();
+            }
+            default -> throw new DirectoryException(DirectoryErrorCode.UNSUPPORTED_TARGET_TYPE);
+        }
+    }
+
+    private void setOrderIndex(Long targetId, DirectoryDragAndDropRequest.TargetType targetType, Integer targetOrderIndex) {
+        switch (targetType) {
+            case DIRECTORY -> {
+                Directory directory = directoryRepository.findById(targetId)
+                        .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+                directory.setOrderIndex(targetOrderIndex);
+            }
+            case SITE -> {
+                Site site = siteRepository.findById(targetId)
+                        .orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
+                site.setOrderIndex(targetOrderIndex);
+            }
+            default -> throw new DirectoryException(DirectoryErrorCode.UNSUPPORTED_TARGET_TYPE);
+        }
+    }
+
+
+
 
     @ValidationApplied
     public ApiDirectoryResponseSpec<DirectoryResponse> findDirectoryDetails(DirectoryIdRequest directoryIdRequest

@@ -4,6 +4,7 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryCloneResponse;
+import com.linkmoa.source.domain.directory.dto.response.DirectoryDragAndDropResponse;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryResponse;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
@@ -78,5 +79,16 @@ public interface DirectoryApiSpecification {
             @RequestBody TargetDirectoryId targetDirectoryId,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
+
+    @Tag(name = "Directory", description = "디렉토리 관련 API")
+    @Operation(summary = "디렉토리 및 사이트의 드래그 앤 드랍 기능 ", description = "드래그 앤 드롭을 통해 동일한 디렉토리 내에서 디렉토리 및 사이트의 정렬 순서를 자유롭게 변경 가능")
+    @ApiErrorCodeExamples(DirectoryErrorCode.class)
+    @PutMapping("/drag-and-drop")
+    @PreAuthorize("isAuthenticated()")
+    ResponseEntity<ApiDirectoryResponseSpec<DirectoryDragAndDropResponse>> dragAndDropDirectoryOrSite(
+            @RequestBody @Validated DirectoryDragAndDropRequest directoryDragAndDropRequest,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
+
 
 }

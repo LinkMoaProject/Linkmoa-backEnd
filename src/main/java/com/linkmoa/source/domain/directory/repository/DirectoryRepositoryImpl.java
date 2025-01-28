@@ -87,5 +87,31 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
         incrementSiteOrderIndexes(parentDirectory, orderIndex);
     }
 
+    @Override
+    public void updateDirectoryOrderIndexesInRange(Directory parentDirectory, Integer startIndex, Integer endIndex,Integer adjustmentValue) {
+        jpaQueryFactory.update(directory)
+                .set(directory.orderIndex,directory.orderIndex.add(adjustmentValue))
+                .where(directory.parentDirectory.eq(parentDirectory)
+                        .and(directory.orderIndex.between(startIndex,endIndex)))
+                .execute();
+    }
+
+    @Override
+    public void updateSiteOrderIndexesInRange(Directory parentDirectory, Integer startIndex, Integer endIndex,Integer adjustmentValue) {
+        jpaQueryFactory.update(site)
+                .set(site.orderIndex,site.orderIndex.add(adjustmentValue))
+                .where(site.directory.eq(parentDirectory)
+                        .and(site.orderIndex.between(startIndex,endIndex)))
+                .execute();
+    }
+
+    @Override
+    public void updateDirectoryAndSiteOrderIndexesInRange(Directory parentDirectory, Integer startIndex, Integer endIndex,boolean isIncrement) {
+        Integer adjustmentValue = isIncrement ? 1 : -1;
+
+        updateDirectoryOrderIndexesInRange(parentDirectory, startIndex, endIndex,adjustmentValue);
+        updateSiteOrderIndexesInRange(parentDirectory,startIndex,endIndex,adjustmentValue);
+    }
+
 
 }

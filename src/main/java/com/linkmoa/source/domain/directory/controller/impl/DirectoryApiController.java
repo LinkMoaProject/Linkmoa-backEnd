@@ -6,6 +6,7 @@ import com.linkmoa.source.domain.directory.controller.spec.DirectoryApiSpecifica
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryCloneResponse;
+import com.linkmoa.source.domain.directory.dto.response.DirectoryDragAndDropResponse;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryResponse;
 import com.linkmoa.source.domain.directory.service.DirectoryService;
 
@@ -66,6 +67,16 @@ public class DirectoryApiController implements DirectoryApiSpecification {
         ApiDirectoryResponseSpec<DirectoryCloneResponse> directoryCloneResponse =
                 directoryService.cloneDirectoryToPersonalRoot(targetDirectoryId.directoryId(), principalDetails);
         return ResponseEntity.ok().body(directoryCloneResponse);
+    }
+
+    @Override
+    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryDragAndDropResponse>> dragAndDropDirectoryOrSite
+            (DirectoryDragAndDropRequest directoryDragAndDropRequest,
+             PrincipalDetails principalDetails) {
+        ApiDirectoryResponseSpec<DirectoryDragAndDropResponse> directoryDragAndDropResponseApiDirectoryResponse =
+                directoryService.dragAndDropDirectoryOrSite(directoryDragAndDropRequest, principalDetails);
+
+        return ResponseEntity.ok().body(directoryDragAndDropResponseApiDirectoryResponse);
     }
 
 }
