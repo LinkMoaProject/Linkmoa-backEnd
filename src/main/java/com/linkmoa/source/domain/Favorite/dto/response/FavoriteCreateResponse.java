@@ -6,8 +6,7 @@ import lombok.Builder;
 @Builder
 public record FavoriteCreateResponse(
         Long itemId,
-        FavoriteType favoriteType,
-        String itemName
+        FavoriteType favoriteType
 
 ) {
 }
