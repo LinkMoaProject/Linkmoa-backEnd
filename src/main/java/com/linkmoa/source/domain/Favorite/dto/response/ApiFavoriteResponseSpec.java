@@ -2,6 +2,7 @@ package com.linkmoa.source.domain.Favorite.dto.response;
 
 
 import com.linkmoa.source.global.spec.ApiResponseSpec;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -9,7 +10,10 @@ import org.springframework.http.HttpStatus;
 public class ApiFavoriteResponseSpec<T> extends ApiResponseSpec {
 
     private T data;
-    public ApiFavoriteResponseSpec(HttpStatus httpStatusCode, String successMessage) {
+
+    @Builder
+    public ApiFavoriteResponseSpec(HttpStatus httpStatusCode, String successMessage,T data) {
         super(httpStatusCode, successMessage);
+        this.data=data;
     }
 }
