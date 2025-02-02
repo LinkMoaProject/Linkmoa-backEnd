@@ -18,5 +18,13 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
                 .where(favorite.member.eq(member))
                 .execute();
     }
-    
+
+    @Override
+    public void decrementFavoriteOrderIndexes(Integer orderIndex) {
+        jpaQueryFactory.update(favorite)
+                .set(favorite.orderIndex, favorite.orderIndex.subtract(1))
+                .where(favorite.orderIndex.gt(orderIndex))
+                .execute();
+    }
+
 }

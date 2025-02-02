@@ -4,7 +4,7 @@ import com.linkmoa.source.domain.Favorite.constant.FavoriteType;
 import lombok.Builder;
 
 @Builder
-public record FavoriteCreateResponse(
+public record FavoriteResponse(
         Long itemId,
         FavoriteType favoriteType
 
