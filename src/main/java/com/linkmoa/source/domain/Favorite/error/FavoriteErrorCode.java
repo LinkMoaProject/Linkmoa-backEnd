@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum FavoriteErrorCode implements ErrorCode {
-    ;
+
+    FAVORITE_NOT_FOUND(HttpStatus.NOT_FOUND,"즐겨찾기 아이템(디렉토리,사이트)을 찾을 수 없습니다.");
 
     private HttpStatus httpStatus;
     private String errorMessage;
