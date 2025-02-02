@@ -2,7 +2,7 @@ package com.linkmoa.source.domain.Favorite.controller.impl;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.Favorite.controller.spec.FavoriteApiSpecification;
-import com.linkmoa.source.domain.Favorite.dto.request.FavoriteCreateRequest;
+import com.linkmoa.source.domain.Favorite.dto.request.FavoriteUpdateRequest;
 import com.linkmoa.source.domain.Favorite.dto.response.ApiFavoriteResponseSpec;
 import com.linkmoa.source.domain.Favorite.dto.response.FavoriteResponse;
 import com.linkmoa.source.domain.Favorite.service.FavoriteService;
@@ -19,13 +19,13 @@ public class FavoriteApiController implements FavoriteApiSpecification {
 
     private final FavoriteService favoriteService;
 
-    @Override
-    public ResponseEntity<ApiFavoriteResponseSpec<FavoriteResponse>> createFavorite(
-            FavoriteCreateRequest favoriteCreateRequest,
+    public ResponseEntity<ApiFavoriteResponseSpec<FavoriteResponse>> updateFavorite(
+            FavoriteUpdateRequest favoriteUpdateRequest,
             PrincipalDetails principalDetails) {
 
-        ApiFavoriteResponseSpec<FavoriteResponse> favoriteCreateResponse = favoriteService.createFavorite(favoriteCreateRequest, principalDetails);
+        ApiFavoriteResponseSpec<FavoriteResponse> favoriteCreateResponse = favoriteService.updateFavorite(favoriteUpdateRequest, principalDetails);
 
         return ResponseEntity.ok().body(favoriteCreateResponse);
     }
+
 }
