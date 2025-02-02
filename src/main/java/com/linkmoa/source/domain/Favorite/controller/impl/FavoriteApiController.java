@@ -4,7 +4,7 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.Favorite.controller.spec.FavoriteApiSpecification;
 import com.linkmoa.source.domain.Favorite.dto.request.FavoriteCreateRequest;
 import com.linkmoa.source.domain.Favorite.dto.response.ApiFavoriteResponseSpec;
-import com.linkmoa.source.domain.Favorite.dto.response.FavoriteCreateResponse;
+import com.linkmoa.source.domain.Favorite.dto.response.FavoriteResponse;
 import com.linkmoa.source.domain.Favorite.service.FavoriteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +20,11 @@ public class FavoriteApiController implements FavoriteApiSpecification {
     private final FavoriteService favoriteService;
 
     @Override
-    public ResponseEntity<ApiFavoriteResponseSpec<FavoriteCreateResponse>> createFavorite(
+    public ResponseEntity<ApiFavoriteResponseSpec<FavoriteResponse>> createFavorite(
             FavoriteCreateRequest favoriteCreateRequest,
             PrincipalDetails principalDetails) {
 
-        ApiFavoriteResponseSpec<FavoriteCreateResponse> favoriteCreateResponse = favoriteService.createFavorite(favoriteCreateRequest, principalDetails);
+        ApiFavoriteResponseSpec<FavoriteResponse> favoriteCreateResponse = favoriteService.createFavorite(favoriteCreateRequest, principalDetails);
 
         return ResponseEntity.ok().body(favoriteCreateResponse);
     }

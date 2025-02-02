@@ -3,7 +3,7 @@ package com.linkmoa.source.domain.Favorite.controller.spec;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.Favorite.dto.request.FavoriteCreateRequest;
 import com.linkmoa.source.domain.Favorite.dto.response.ApiFavoriteResponseSpec;
-import com.linkmoa.source.domain.Favorite.dto.response.FavoriteCreateResponse;
+import com.linkmoa.source.domain.Favorite.dto.response.FavoriteResponse;
 import com.linkmoa.source.domain.Favorite.error.FavoriteErrorCode;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +23,7 @@ public interface FavoriteApiSpecification {
     @ApiErrorCodeExamples(FavoriteErrorCode.class)
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<ApiFavoriteResponseSpec<FavoriteCreateResponse>> createFavorite(
+    ResponseEntity<ApiFavoriteResponseSpec<FavoriteResponse>> createFavorite(
             @RequestBody @Validated FavoriteCreateRequest favoriteCreateRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );

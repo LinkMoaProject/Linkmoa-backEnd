@@ -4,7 +4,7 @@ package com.linkmoa.source.domain.Favorite.service;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.Favorite.dto.request.FavoriteCreateRequest;
 import com.linkmoa.source.domain.Favorite.dto.response.ApiFavoriteResponseSpec;
-import com.linkmoa.source.domain.Favorite.dto.response.FavoriteCreateResponse;
+import com.linkmoa.source.domain.Favorite.dto.response.FavoriteResponse;
 import com.linkmoa.source.domain.Favorite.entity.Favorite;
 import com.linkmoa.source.domain.Favorite.repository.FavoriteRepository;
 import com.linkmoa.source.domain.member.entity.Member;
@@ -20,7 +20,7 @@ public class FavoriteService {
     private final FavoriteRepository favoriteRepository;
 
     @Transactional
-    public ApiFavoriteResponseSpec<FavoriteCreateResponse> createFavorite(FavoriteCreateRequest favoriteCreateRequest, PrincipalDetails principalDetails){
+    public ApiFavoriteResponseSpec<FavoriteResponse> createFavorite(FavoriteCreateRequest favoriteCreateRequest, PrincipalDetails principalDetails){
         Member member = principalDetails.getMember();
 
 
@@ -35,16 +35,16 @@ public class FavoriteService {
 
         favoriteRepository.save(newFavorite);
 
-        FavoriteCreateResponse favoriteCreateResponse = FavoriteCreateResponse.builder()
+        FavoriteResponse favoriteResponse = FavoriteResponse.builder()
                 .favoriteType(favoriteCreateRequest.favoriteType())
                 .itemId(favoriteCreateRequest.itemId())
                 .build();
 
 
-        return ApiFavoriteResponseSpec.<FavoriteCreateResponse>builder()
+        return ApiFavoriteResponseSpec.<FavoriteResponse>builder()
                 .httpStatusCode(HttpStatus.OK)
                 .successMessage("아이템 ( 디렉토리 , 사이트)를 즐겨 찾기에 등록했습니다.")
-                .data(favoriteCreateResponse)
+                .data(favoriteResponse)
                 .build();
 
     }
