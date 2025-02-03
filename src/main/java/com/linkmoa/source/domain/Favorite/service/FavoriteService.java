@@ -2,6 +2,7 @@ package com.linkmoa.source.domain.Favorite.service;
 
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import com.linkmoa.source.domain.Favorite.constant.FavoriteType;
 import com.linkmoa.source.domain.Favorite.dto.request.FavoriteUpdateRequest;
 import com.linkmoa.source.domain.Favorite.dto.response.ApiFavoriteResponseSpec;
 import com.linkmoa.source.domain.Favorite.dto.response.FavoriteResponse;
@@ -14,6 +15,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -86,5 +92,19 @@ public class FavoriteService {
                 .data(favoriteResponse)
                 .build();
     }
+    public Set<Long> findFavoriteDirectoryIds(List<Favorite> favorites) {
+        return favorites.stream()
+                .filter(favorite -> favorite.getFavoriteType() == FavoriteType.DIRECTORY)
+                .map(favorite -> favorite.getItemId())
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Long> findFavoriteSiteIds(List<Favorite> favorites) {
+        return favorites.stream()
+                .filter(favorite -> favorite.getFavoriteType() == FavoriteType.SITE)
+                .map(favorite -> favorite.getItemId())
+                .collect(Collectors.toSet());
+    }
+
 
 }

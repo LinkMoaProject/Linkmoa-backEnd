@@ -2,6 +2,9 @@ package com.linkmoa.source.domain.page.service;
 
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import com.linkmoa.source.domain.Favorite.entity.Favorite;
+import com.linkmoa.source.domain.Favorite.repository.FavoriteRepository;
+import com.linkmoa.source.domain.Favorite.service.FavoriteService;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.member.entity.Member;
@@ -30,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -43,6 +47,8 @@ public class PageService {
     private final MemberPageLinkRepository memberPageLinkRepository;
     private final SiteRepository siteRepository;
     private final PageAsyncService pageAsyncService;
+    private final FavoriteRepository favoriteRepository;
+    private final FavoriteService favoriteService;
 
 
     @Transactional
@@ -192,7 +198,7 @@ public class PageService {
         Page page = pageRepository.findById(baseRequest.pageId())
                 .orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
 
-        PageDetailsResponse pageDetailsResponse = getPageDetailsResponse(page);
+        PageDetailsResponse pageDetailsResponse = getPageDetailsResponse(page,principalDetails);
 
         return ApiPageResponseSpec.<PageDetailsResponse>builder()
                 .httpStatusCode(HttpStatus.OK)
@@ -201,11 +207,18 @@ public class PageService {
                 .build();
     }
 
-    private PageDetailsResponse getPageDetailsResponse(Page page) {
+    private PageDetailsResponse getPageDetailsResponse(Page page,PrincipalDetails principalDetails) {
         Long directoryId = page.getRootDirectory().getId();
 
+        List<Favorite> favorites = favoriteRepository.findByMember(principalDetails.getMember());
+
+        Set<Long> favoriteDirectoryIds = favoriteService.findFavoriteDirectoryIds(favorites);
+        Set<Long> favoriteSiteIds = favoriteService.findFavoriteSiteIds(favorites);
+
         CompletableFuture<PageDetailsResponse> pageDetailsResponseCompletableFuture =
-                pageAsyncService.combinePageDetails(pageAsyncService.findDirectoryDetailsAsync(directoryId), pageAsyncService.findSitesDetailsAsync(directoryId), page);
+                pageAsyncService.combinePageDetails(pageAsyncService.findDirectoryDetailsAsync(directoryId,favoriteDirectoryIds)
+
+                        , pageAsyncService.findSitesDetailsAsync(directoryId,favoriteSiteIds), page);
 
         // 비동기 작업이 완료되면 결과를 가져와 ApiPageResponseSpec으로 포장하여 반환
         PageDetailsResponse pageDetailsResponse = pageDetailsResponseCompletableFuture.join();
@@ -279,7 +292,7 @@ public class PageService {
 
         Page personalPage = memberPageLinkRepository.findPersonalPageByMemberId(member.getId());
 
-        PageDetailsResponse pageDetailsResponse = getPageDetailsResponse(personalPage);
+        PageDetailsResponse pageDetailsResponse = getPageDetailsResponse(personalPage,principalDetails);
 
         return ApiPageResponseSpec.<PageDetailsResponse>builder()
                 .httpStatusCode(HttpStatus.OK)

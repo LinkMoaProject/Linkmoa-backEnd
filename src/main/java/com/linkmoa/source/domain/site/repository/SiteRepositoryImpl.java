@@ -7,6 +7,7 @@ import static com.linkmoa.source.domain.site.entity.QSite.site;
 
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -15,9 +16,9 @@ public class SiteRepositoryImpl implements SiteRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<SiteDetailResponse> findSitesDetails(Long directoryId) {
+    public List<SiteDetailResponse> findSitesDetails(Long directoryId, Set<Long> favoriteSiteIds) {
 
-        List<SiteDetailResponse> siteDetailResponses =jpaQueryFactory
+        return jpaQueryFactory
                 .selectFrom(site)
                 .where(site.directory.id.eq(directoryId))
                 .fetch()
@@ -26,10 +27,10 @@ public class SiteRepositoryImpl implements SiteRepositoryCustom {
                         .siteId(s.getId())
                         .siteUrl(s.getSiteUrl())
                         .siteName(s.getSiteName())
+                        .isFavorite(favoriteSiteIds.contains(s.getId()))
                         .build())
                 .collect(Collectors.toList());
 
-        return siteDetailResponses;
     }
 
 }

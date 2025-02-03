@@ -1,5 +1,6 @@
 package com.linkmoa.source.domain.directory.repository;
 
+import com.linkmoa.source.domain.Favorite.entity.Favorite;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,6 +12,7 @@ import static com.linkmoa.source.domain.site.entity.QSite.site;
 
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -21,9 +23,9 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<DirectoryDetailResponse> findDirectoryDetails(Long directoryId) {
+    public List<DirectoryDetailResponse> findDirectoryDetails(Long directoryId, Set<Long> favoriteDirectoryIds) {
 
-        List<DirectoryDetailResponse> directoryDetailResponses = jpaQueryFactory
+        return jpaQueryFactory
                 .selectFrom(directory)
                 .where(directory.parentDirectory.id.eq(directoryId))
                 .orderBy(directory.orderIndex.asc())
@@ -33,10 +35,9 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
                         .directoryId(d.getId())
                         .directoryName(d.getDirectoryName())
                         .orderIndex(d.getOrderIndex())
+                        .isFavorite(favoriteDirectoryIds.contains(d.getId()))
                         .build())
                 .collect(Collectors.toList());
-
-        return directoryDetailResponses;
 
     }
 

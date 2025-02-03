@@ -2,6 +2,9 @@ package com.linkmoa.source.domain.directory.service;
 
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import com.linkmoa.source.domain.Favorite.entity.Favorite;
+import com.linkmoa.source.domain.Favorite.repository.FavoriteRepository;
+import com.linkmoa.source.domain.Favorite.service.FavoriteService;
 import com.linkmoa.source.domain.directory.dto.request.*;
 import com.linkmoa.source.domain.directory.dto.response.*;
 import com.linkmoa.source.domain.directory.entity.Directory;
@@ -24,7 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +40,8 @@ public class DirectoryService {
     private final DirectoryRepository directoryRepository;
     private final SiteRepository siteRepository;
     private final MemberPageLinkRepository memberPageLinkRepository;
+    private final FavoriteRepository favoriteRepository;
+    private final FavoriteService favoriteService;
 
     @Transactional
     @ValidationApplied
@@ -218,8 +225,15 @@ public class DirectoryService {
         Directory targetDirectory = directoryRepository.findById(directoryIdRequest.directoryId())
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-        List<DirectoryDetailResponse> directoryDetailResponses = directoryRepository.findDirectoryDetails(targetDirectory.getId());
-        List<SiteDetailResponse> sitesDetails = siteRepository.findSitesDetails(targetDirectory.getId());
+        List<Favorite> favorites = favoriteRepository.findByMember(principalDetails.getMember());
+
+        Set<Long> favoriteDirectoryIds = favoriteService.findFavoriteDirectoryIds(favorites);
+        Set<Long> favoriteSiteIds = favoriteService.findFavoriteSiteIds(favorites);
+
+
+        List<DirectoryDetailResponse> directoryDetailResponses = directoryRepository.findDirectoryDetails(targetDirectory.getId(),favoriteDirectoryIds);
+
+        List<SiteDetailResponse> sitesDetails = siteRepository.findSitesDetails(targetDirectory.getId(), favoriteSiteIds);
 
         DirectoryResponse directoryResponse = DirectoryResponse.builder()
                 .targetDirectoryDescription(targetDirectory.getDirectoryDescription())
