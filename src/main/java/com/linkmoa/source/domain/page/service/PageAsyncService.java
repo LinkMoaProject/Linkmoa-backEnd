@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -24,13 +25,13 @@ public class PageAsyncService {
     private final SiteRepository siteRepository;
 
     @Async("threadPoolTaskExecutor")
-    public CompletableFuture<List<DirectoryDetailResponse>> findDirectoryDetailsAsync(Long directoryId) {
-        return CompletableFuture.completedFuture(directoryRepository.findDirectoryDetails(directoryId));
+    public CompletableFuture<List<DirectoryDetailResponse>> findDirectoryDetailsAsync(Long directoryId, Set<Long> favoriteDirectoryIds) {
+        return CompletableFuture.completedFuture(directoryRepository.findDirectoryDetails(directoryId,favoriteDirectoryIds));
     }
 
     @Async("threadPoolTaskExecutor")
-    public CompletableFuture<List<SiteDetailResponse>> findSitesDetailsAsync(Long directoryId){
-        return CompletableFuture.completedFuture(siteRepository.findSitesDetails(directoryId));
+    public CompletableFuture<List<SiteDetailResponse>> findSitesDetailsAsync(Long directoryId,Set<Long> favoriteSiteIds){
+        return CompletableFuture.completedFuture(siteRepository.findSitesDetails(directoryId,favoriteSiteIds));
     }
 
     public CompletableFuture<PageDetailsResponse> combinePageDetails(

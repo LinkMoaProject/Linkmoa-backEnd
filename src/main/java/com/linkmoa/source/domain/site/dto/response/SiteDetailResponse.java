@@ -7,6 +7,7 @@ import lombok.Builder;
 public record SiteDetailResponse(
         Long siteId,
         String siteName,
-        String siteUrl
+        String siteUrl,
+        Boolean isFavorite
 ) {
 }

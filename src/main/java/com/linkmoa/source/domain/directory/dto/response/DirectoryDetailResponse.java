@@ -7,7 +7,8 @@ import lombok.Builder;
 public record DirectoryDetailResponse(
         Long directoryId,
         String directoryName,
-        Integer orderIndex
+        Integer orderIndex,
+        Boolean isFavorite
 ) {
 
 }
