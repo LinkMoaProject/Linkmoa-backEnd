@@ -8,6 +8,7 @@ public record SiteDetailResponse(
         Long siteId,
         String siteName,
         String siteUrl,
+        Integer orderIndex,
         Boolean isFavorite
 ) {
 }

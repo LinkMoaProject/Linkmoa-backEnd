@@ -20,4 +20,6 @@ public interface DirectoryRepositoryCustom {
     void updateSiteOrderIndexesInRange(Directory parentDirectory,Integer startIndex,Integer endIndex,Integer adjustmentValue);
     void updateDirectoryAndSiteOrderIndexesInRange(Directory parentDirectory,Integer startIndex,Integer endIndex,boolean isIncrement);
 
+    List<DirectoryDetailResponse> findFavoriteDirectories(Set<Long> favoriteDirectoryIds);
+
 }

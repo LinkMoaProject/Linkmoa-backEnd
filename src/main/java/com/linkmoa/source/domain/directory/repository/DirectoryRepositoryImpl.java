@@ -1,12 +1,16 @@
 package com.linkmoa.source.domain.directory.repository;
 
+import com.linkmoa.source.domain.Favorite.constant.FavoriteType;
 import com.linkmoa.source.domain.Favorite.entity.Favorite;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
 import com.linkmoa.source.domain.directory.entity.Directory;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import static com.linkmoa.source.domain.Favorite.entity.QFavorite.favorite;
 import static com.linkmoa.source.domain.directory.entity.QDirectory.directory;
 import static com.linkmoa.source.domain.site.entity.QSite.site;
 
@@ -113,6 +117,24 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
         updateDirectoryOrderIndexesInRange(parentDirectory, startIndex, endIndex,adjustmentValue);
         updateSiteOrderIndexesInRange(parentDirectory,startIndex,endIndex,adjustmentValue);
     }
-
+    @Override
+    public List<DirectoryDetailResponse> findFavoriteDirectories(Set<Long> favoriteDirectoryIds) {
+        return jpaQueryFactory
+                .selectDistinct(
+                        Projections.constructor(
+                                DirectoryDetailResponse.class,
+                                directory.id,
+                                directory.directoryName,
+                                favorite.orderIndex,
+                                Expressions.constant(true) // isFavorite 값을 항상 true로 설정
+                        )
+                )
+                .from(directory)
+                .join(favorite).on(directory.id.eq(favorite.itemId)
+                        .and(favorite.favoriteType.eq(FavoriteType.DIRECTORY)))
+                .where(favorite.itemId.in(favoriteDirectoryIds))
+                .orderBy(favorite.orderIndex.asc())
+                .fetch();
+    }
 
 }
