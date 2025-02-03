@@ -3,6 +3,7 @@ package com.linkmoa.source.domain.Favorite.controller.spec;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.Favorite.dto.request.FavoriteUpdateRequest;
 import com.linkmoa.source.domain.Favorite.dto.response.ApiFavoriteResponseSpec;
+import com.linkmoa.source.domain.Favorite.dto.response.FavoriteDetailResponse;
 import com.linkmoa.source.domain.Favorite.dto.response.FavoriteResponse;
 import com.linkmoa.source.domain.Favorite.error.FavoriteErrorCode;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
@@ -12,10 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 public interface FavoriteApiSpecification {
 
@@ -28,4 +26,16 @@ public interface FavoriteApiSpecification {
             @RequestBody @Validated FavoriteUpdateRequest favoriteUpdateRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
+
+
+    @Tag(name = "Favorite", description = "즐겨찾기 관련 API")
+    @Operation(summary = "즐겨찾기 조회", description = "즐겨찾기한 디렉토리와 사이트 조회합니다.")
+    @ApiErrorCodeExamples(FavoriteErrorCode.class)
+    @GetMapping
+    @PreAuthorize("isAuthenticated()")
+    ResponseEntity<ApiFavoriteResponseSpec<FavoriteDetailResponse>> getFavorite(
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    );
+
+
 }
