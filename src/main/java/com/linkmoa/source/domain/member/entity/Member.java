@@ -42,8 +42,8 @@ public class Member extends BaseEntity {
     @Column(name="provider_id")
     private String providerId;
 
-    @Column(name = "member_age")
-    private Integer age;
+    @Column(name = "member_age_Range")
+    private String ageRange;
 
     @Column(name="member_gender")
     private Gender gender;
@@ -83,9 +83,10 @@ public class Member extends BaseEntity {
         }
     }
 
-    public void updateSignUpMember(Integer age, Gender gender, String job){
-        this.age = age;
+    public void updateSignUpMember(String ageRange, Gender gender, String job,String nickname){
+        this.ageRange = ageRange;
         this.gender = gender;
         this.job = job;
+        this.nickname=nickname;
     }
 }
