@@ -1,7 +1,6 @@
 package com.linkmoa.source.domain.directory.repository;
 
-import com.linkmoa.source.domain.Favorite.constant.FavoriteType;
-import com.linkmoa.source.domain.Favorite.entity.Favorite;
+import com.linkmoa.source.domain.Favorite.constant.ItemType;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.querydsl.core.types.Projections;
@@ -131,7 +130,7 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
                 )
                 .from(directory)
                 .join(favorite).on(directory.id.eq(favorite.itemId)
-                        .and(favorite.favoriteType.eq(FavoriteType.DIRECTORY)))
+                        .and(favorite.itemType.eq(ItemType.DIRECTORY)))
                 .where(favorite.itemId.in(favoriteDirectoryIds))
                 .orderBy(favorite.orderIndex.asc())
                 .fetch();

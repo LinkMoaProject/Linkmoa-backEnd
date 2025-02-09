@@ -1,7 +1,6 @@
 package com.linkmoa.source.domain.site.repository;
 
-import com.linkmoa.source.domain.Favorite.constant.FavoriteType;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
+import com.linkmoa.source.domain.Favorite.constant.ItemType;
 import com.linkmoa.source.domain.site.dto.response.SiteDetailResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
@@ -56,7 +55,7 @@ public class SiteRepositoryImpl implements SiteRepositoryCustom {
                 )
                 .from(site)
                 .join(favorite).on(site.id.eq(favorite.itemId)
-                        .and(favorite.favoriteType.eq(FavoriteType.SITE)))
+                        .and(favorite.itemType.eq(ItemType.SITE)))
                 .where(favorite.itemId.in(favoriteSiteIds))
                 .orderBy(favorite.orderIndex.asc())
                 .fetch();

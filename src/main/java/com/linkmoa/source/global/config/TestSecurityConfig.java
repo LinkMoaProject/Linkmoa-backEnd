@@ -1,3 +1,4 @@
+/*
 package com.linkmoa.source.global.config;
 
 
@@ -19,3 +20,4 @@ public class TestSecurityConfig {
         return http.build();
     }
 }
+*/

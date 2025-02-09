@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 public interface DirectoryApiSpecification {
 
-
     @Tag(name = "Directory", description = "디렉토리 관련 API")
     @Operation(summary = "디렉토리 생성", description = "디렉토리를 생성합니다.")
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
