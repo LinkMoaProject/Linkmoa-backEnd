@@ -4,10 +4,7 @@ package com.linkmoa.source.domain.directory.controller.impl;
 import  com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.controller.spec.DirectoryApiSpecification;
 import com.linkmoa.source.domain.directory.dto.request.*;
-import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryCloneResponse;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryDragAndDropResponse;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryResponse;
+import com.linkmoa.source.domain.directory.dto.response.*;
 import com.linkmoa.source.domain.directory.service.DirectoryService;
 
 import lombok.RequiredArgsConstructor;
@@ -61,12 +58,14 @@ public class DirectoryApiController implements DirectoryApiSpecification {
         ApiDirectoryResponseSpec<DirectoryResponse> directoryResponse = directoryService.findDirectoryDetails(directoryIdRequest, principalDetails);
         return ResponseEntity.ok().body(directoryResponse);
     }
-    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryCloneResponse>> cloneDirectory
-            (TargetDirectoryId targetDirectoryId,
-             PrincipalDetails principalDetails) {
-        ApiDirectoryResponseSpec<DirectoryCloneResponse> directoryCloneResponse =
-                directoryService.cloneDirectoryToPersonalRoot(targetDirectoryId.directoryId(), principalDetails);
-        return ResponseEntity.ok().body(directoryCloneResponse);
+
+    @Override
+    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryPasteResponse>> pasteDirectory(
+            DirectoryPasteRequest directoryPasteRequest,
+            PrincipalDetails principalDetails) {
+        ApiDirectoryResponseSpec<DirectoryPasteResponse> directoryPasteResponse = directoryService.pasteDirectory(directoryPasteRequest, principalDetails);
+
+        return ResponseEntity.ok().body(directoryPasteResponse);
     }
 
     @Override

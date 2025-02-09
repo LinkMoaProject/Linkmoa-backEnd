@@ -34,9 +34,6 @@ public class RefreshTokenService {
 
         // memberEmail을 key로, refreshToken 을 value 저장
         redisTemplate.opsForValue().set(email, refreshToken, 86400, TimeUnit.SECONDS);
-
-        log.info("흠 : {} ", getEmailByRefreshToken(refreshToken));
-        log.info("흠 : {} ", getRefreshTokenByEmail(email));
     }
 
     public String getRefreshTokenByEmail(String email) {

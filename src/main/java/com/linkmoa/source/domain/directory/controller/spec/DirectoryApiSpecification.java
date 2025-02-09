@@ -2,10 +2,7 @@ package com.linkmoa.source.domain.directory.controller.spec;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.request.*;
-import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryCloneResponse;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryDragAndDropResponse;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryResponse;
+import com.linkmoa.source.domain.directory.dto.response.*;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
 import io.swagger.v3.oas.annotations.Operation;
@@ -69,13 +66,14 @@ public interface DirectoryApiSpecification {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 
+
     @Tag(name = "Directory", description = "디렉토리 관련 API")
-    @Operation(summary = "디렉토리 복사 기능", description = "디렉토리 복사 시, 공유 페이지의 디렉토리를 개인 페이지의 최상위 디렉토리로 복사")
+    @Operation(summary = "디렉토리 붙여넣기 기능", description = "지정한 디렉토리를 복사하여 선택한 위치에 붙여넣습니다.")
     @ApiErrorCodeExamples(DirectoryErrorCode.class)
-    @PostMapping("/clone")
+    @PostMapping("/paste")
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<ApiDirectoryResponseSpec<DirectoryCloneResponse>> cloneDirectory(
-            @RequestBody TargetDirectoryId targetDirectoryId,
+    ResponseEntity<ApiDirectoryResponseSpec<DirectoryPasteResponse>> pasteDirectory(
+            @RequestBody DirectoryPasteRequest directoryPasteRequest,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     );
 

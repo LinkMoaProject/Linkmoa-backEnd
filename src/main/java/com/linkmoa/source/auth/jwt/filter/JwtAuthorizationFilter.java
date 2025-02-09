@@ -64,11 +64,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         // JWT 토큰 추출
         String accessToken = authorizationHeader.substring(7);
 
-        log.info("jwt doFilterInternal access token : {}", accessToken);
-
-        /*//헤더에서 access 키에 담긴 토큰을 꺼냄
-        String accessToken = request.getHeader("Authorization").substring(7);
-*/
         log.info("jwt doFilterInternal access token : {} ",accessToken);
         Member member = null;
         if (jwtTokenProvider.validateToken(accessToken)) {
