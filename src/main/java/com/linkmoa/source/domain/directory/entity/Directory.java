@@ -87,9 +87,10 @@ public class Directory extends BaseEntity {
     }
 
     public Directory cloneDirectory(Directory newParentDirectory) {
+
         // 현재 디렉토리 복제
         Directory clonedDirectory = Directory.builder()
-                .directoryName(this.directoryName)
+                .directoryName(this.directoryName+" Copy")
                 .directoryDescription(this.directoryDescription)
                 .build();
 

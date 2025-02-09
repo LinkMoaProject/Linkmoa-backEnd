@@ -36,7 +36,7 @@ public class ElasticsearchConfig {
     public ElasticsearchClient elasticsearchClient() {
         try {
             RestClient restClient = RestClient
-                    .builder(new HttpHost(host, port, "https"))
+                    .builder(new HttpHost(host, port, "http"))
                     .setDefaultHeaders(new Header[]{
                             new BasicHeader("Authorization", "ApiKey " + encodedApiKey)  // API 키만 사용
                     })

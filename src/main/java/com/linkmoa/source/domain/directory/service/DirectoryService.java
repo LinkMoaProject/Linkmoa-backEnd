@@ -250,22 +250,38 @@ public class DirectoryService {
 
     }
 
-    @Transactional
-    public ApiDirectoryResponseSpec<DirectoryCloneResponse> cloneDirectoryToPersonalRoot(Long originalDirectoryId, PrincipalDetails principalDetails){
-        Page personalPage = memberPageLinkRepository.findPersonalPageByMemberId(principalDetails.getId());
-        Directory cloneDirectory = cloneDirectory(personalPage.getRootDirectory().getId(), originalDirectoryId);
 
-        DirectoryCloneResponse directoryCloneResponse = DirectoryCloneResponse.builder()
-                .directoryId(cloneDirectory.getId())
-                .directoryName(cloneDirectory.getDirectoryName())
+
+    @ValidationApplied
+    @Transactional
+    public ApiDirectoryResponseSpec<DirectoryPasteResponse> pasteDirectory(DirectoryPasteRequest directoryPasteRequest,PrincipalDetails principalDetails){
+        Directory originalDirectory = directoryRepository.findById(directoryPasteRequest.originalDirectoryId())
+                .orElseThrow(() ->  new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+
+        Directory destinationDirectory = directoryRepository.findById(directoryPasteRequest.destinationDirectoryId())
+                .orElseThrow(() ->  new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+
+
+        directoryRepository.incrementDirectoryAndSiteOrderIndexes(destinationDirectory,0);
+
+        Directory pastedDirectory = originalDirectory.cloneDirectory(destinationDirectory);
+        pastedDirectory.setOrderIndex(1);
+        directoryRepository.save(pastedDirectory);
+
+        DirectoryPasteResponse directoryPasteResponse = DirectoryPasteResponse.builder()
+                .pastedirectoryId(pastedDirectory.getId())
+                .destinationDirectoryId(destinationDirectory.getId())
+                .clonedDirectoryName(pastedDirectory.getDirectoryName())
                 .build();
 
-        return ApiDirectoryResponseSpec.<DirectoryCloneResponse>builder()
+
+        return ApiDirectoryResponseSpec.<DirectoryPasteResponse>builder()
                 .httpStatusCode(HttpStatus.OK)
-                .successMessage("Directory를 개인 페이지의 root Directory로 복사에 성공했습니다.")
-                .data(directoryCloneResponse)
+                .successMessage("Directory 붙여넣기에 성공했습니다.")
+                .data(directoryPasteResponse)
                 .build();
     }
+
 
     public Directory cloneDirectory(Long newRootDirectoryId, Long originalDirectoryId){
 
