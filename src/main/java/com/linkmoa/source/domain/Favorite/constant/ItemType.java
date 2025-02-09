@@ -1,5 +1,5 @@
 package com.linkmoa.source.domain.Favorite.constant;
 
-public enum FavoriteType {
+public enum ItemType {
     SITE,DIRECTORY
 }

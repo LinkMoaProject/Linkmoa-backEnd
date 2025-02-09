@@ -1,7 +1,7 @@
 package com.linkmoa.source.domain.Favorite.entity;
 
 
-import com.linkmoa.source.domain.Favorite.constant.FavoriteType;
+import com.linkmoa.source.domain.Favorite.constant.ItemType;
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -28,18 +28,18 @@ public class Favorite extends BaseEntity {
     private Long itemId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "favorite_type", nullable = false)
-    private FavoriteType favoriteType;
+    @Column(name = "item_type", nullable = false)
+    private ItemType itemType;
 
     @Column(name="order_index")
     private Integer orderIndex;
 
 
     @Builder
-    private Favorite(Member member, Long itemId, FavoriteType favoriteType, Integer orderIndex) {
+    private Favorite(Member member, Long itemId, ItemType itemType, Integer orderIndex) {
         this.member=member;
         this.itemId = itemId;
-        this.favoriteType=favoriteType;
+        this.itemType=itemType;
         this.orderIndex=orderIndex;
     }
 

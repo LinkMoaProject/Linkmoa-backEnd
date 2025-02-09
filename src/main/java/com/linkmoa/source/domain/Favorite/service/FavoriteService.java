@@ -2,7 +2,7 @@ package com.linkmoa.source.domain.Favorite.service;
 
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.Favorite.constant.FavoriteType;
+import com.linkmoa.source.domain.Favorite.constant.ItemType;
 import com.linkmoa.source.domain.Favorite.dto.request.FavoriteUpdateRequest;
 import com.linkmoa.source.domain.Favorite.dto.response.ApiFavoriteResponseSpec;
 import com.linkmoa.source.domain.Favorite.dto.response.FavoriteDetailResponse;
@@ -35,7 +35,7 @@ public class FavoriteService {
     private final SiteRepository siteRepository;
     @Transactional
     public ApiFavoriteResponseSpec<FavoriteResponse> updateFavorite(FavoriteUpdateRequest favoriteUpdateRequest,PrincipalDetails principalDetails){
-        Favorite favorite = favoriteRepository.findByItemIdAndFavoriteType(favoriteUpdateRequest.itemId(), favoriteUpdateRequest.favoriteType());
+        Favorite favorite = favoriteRepository.findByItemIdAndItemType(favoriteUpdateRequest.itemId(), favoriteUpdateRequest.itemType());
 
         if(favorite==null) {
         return createFavorite(favoriteUpdateRequest, principalDetails);
@@ -57,7 +57,7 @@ public class FavoriteService {
         Favorite newFavorite = Favorite.builder()
                 .member(member)
                 .itemId(favoriteUpdateRequest.itemId())
-                .favoriteType(favoriteUpdateRequest.favoriteType())
+                .itemType(favoriteUpdateRequest.itemType())
                 .orderIndex(1)
                 .build();
 
@@ -66,7 +66,7 @@ public class FavoriteService {
             throw new FavoriteException(FavoriteErrorCode.FAVORITE_DELETE_FAILED);
         }
         FavoriteResponse favoriteResponse = FavoriteResponse.builder()
-                .favoriteType(favoriteUpdateRequest.favoriteType())
+                .itemType(favoriteUpdateRequest.itemType())
                 .itemId(favoriteUpdateRequest.itemId())
                 .build();
 
@@ -89,7 +89,7 @@ public class FavoriteService {
         }
         FavoriteResponse favoriteResponse = FavoriteResponse.builder()
                 .itemId(favorite.getItemId())
-                .favoriteType(favorite.getFavoriteType())
+                .itemType(favorite.getItemType())
                 .build();
 
         return ApiFavoriteResponseSpec.<FavoriteResponse>builder()
@@ -100,14 +100,14 @@ public class FavoriteService {
     }
     public Set<Long> findFavoriteDirectoryIds(List<Favorite> favorites) {
         return favorites.stream()
-                .filter(favorite -> favorite.getFavoriteType() == FavoriteType.DIRECTORY)
+                .filter(favorite -> favorite.getItemType() == ItemType.DIRECTORY)
                 .map(favorite -> favorite.getItemId())
                 .collect(Collectors.toSet());
     }
 
     public Set<Long> findFavoriteSiteIds(List<Favorite> favorites) {
         return favorites.stream()
-                .filter(favorite -> favorite.getFavoriteType() == FavoriteType.SITE)
+                .filter(favorite -> favorite.getItemType() == ItemType.SITE)
                 .map(favorite -> favorite.getItemId())
                 .collect(Collectors.toSet());
     }

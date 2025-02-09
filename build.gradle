@@ -29,6 +29,10 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
+
+	implementation 'co.elastic.clients:elasticsearch-java:8.13.4'
+	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+
 	// Spring Jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
