@@ -65,7 +65,7 @@ public class MemberService {
     public String getRedirectUrlForMember(String email){
         Member member = findMemberByEmail(email);
 
-        if (member.getGender() == null || member.getJob() == null || member.getAge() == null) {
+        if (member.getGender() == null || member.getJob() == null || member.getAgeRange() == null) {
             return "http://localhost:3000/signup";
         }
 
@@ -74,10 +74,16 @@ public class MemberService {
 
     public void memberSignUp(MemberSignUpRequest memberSignUpRequest, PrincipalDetails principalDetails){
         log.info("memberSignUp - email : {}", principalDetails.getEmail());
+
+        // 이메일 중복 검사
+        if (memberRepository.existsByEmail(principalDetails.getEmail())) {
+            throw new MemberException(MemberErrorCode.MEMBER_EXIST_EMAIL);
+        }
+
         Member member = memberRepository.findByEmail(principalDetails.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
 
-        member.updateSignUpMember(memberSignUpRequest.age(), memberSignUpRequest.gender(), memberSignUpRequest.job());
+        member.updateSignUpMember(memberSignUpRequest.ageRange(), memberSignUpRequest.gender(), memberSignUpRequest.job(),memberSignUpRequest.nickName());
         memberRepository.save(member);
 
     }

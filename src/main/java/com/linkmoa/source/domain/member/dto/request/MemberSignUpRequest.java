@@ -7,11 +7,13 @@ import jakarta.validation.constraints.Size;
 
 public record MemberSignUpRequest(
         @NotNull
-        @Min(value = 0, message = "Age는 0 이상이어야 합니다.")
-        Integer age,
+        String ageRange,
         @NotNull(message = "Gender는 필수 값입니다.")
         Gender gender,
         @NotNull @Size(max = 100, message = "Job은 최대 100자까지 가능합니다.")
-        String job
+        String job,
+
+        @NotNull
+        String nickName
 ) {
 }
