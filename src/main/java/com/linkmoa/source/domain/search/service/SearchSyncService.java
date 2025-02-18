@@ -1,3 +1,4 @@
+/*
 package com.linkmoa.source.domain.search.service;
 
 import com.linkmoa.source.domain.Favorite.entity.Favorite;
@@ -83,3 +84,4 @@ public class SearchSyncService {
             throw new SearchException(SearchErrorCode.ES_SYNC_FAILED);        }
     }
 }
+*/

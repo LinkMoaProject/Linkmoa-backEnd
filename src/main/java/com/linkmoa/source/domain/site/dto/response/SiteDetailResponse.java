@@ -1,7 +1,6 @@
 package com.linkmoa.source.domain.site.dto.response;
 
 
-import com.linkmoa.source.domain.search.document.SiteDocument;
 import lombok.Builder;
 
 import java.util.Set;
@@ -14,7 +13,7 @@ public record SiteDetailResponse(
         Integer orderIndex,
         Boolean isFavorite
 ) {
-    public static SiteDetailResponse from(SiteDocument document, Set<Long> favoriteSiteIds) {
+/*    public static SiteDetailResponse from(SiteDocument document, Set<Long> favoriteSiteIds) {
         return SiteDetailResponse.builder()
                 .siteId(Long.parseLong(document.getId())) // Elasticsearch _id 변환
                 .siteName(document.getTitle())
@@ -22,5 +21,5 @@ public record SiteDetailResponse(
                 .orderIndex(document.getOrderIndex())
                 .isFavorite(favoriteSiteIds.contains(Long.parseLong(document.getId())))
                 .build();
-    }
+    }*/
 }

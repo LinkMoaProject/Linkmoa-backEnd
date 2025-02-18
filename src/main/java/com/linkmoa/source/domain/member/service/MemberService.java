@@ -76,9 +76,9 @@ public class MemberService {
         log.info("memberSignUp - email : {}", principalDetails.getEmail());
 
         // 이메일 중복 검사
-        if (memberRepository.existsByEmail(principalDetails.getEmail())) {
+/*        if (memberRepository.existsByEmail(principalDetails.getEmail())) {
             throw new MemberException(MemberErrorCode.MEMBER_EXIST_EMAIL);
-        }
+        }*/
 
         Member member = memberRepository.findByEmail(principalDetails.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));

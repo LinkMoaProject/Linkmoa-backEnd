@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  app:
+  linkmoa-server:
     build:
       context: .
       dockerfile: Dockerfile
@@ -9,8 +9,9 @@ services:
     env_file:
       - .env.local    # 환경 변수 파일 설정
     depends_on:
-      - redis
-      - database
+      - linkmoa-database
+      - linkmoa-redis
+   #   - linkmoa-es
     ports:
       - ${SPRING_PORT}:${SPRING_PORT}   # Spring Boot 포트 매핑
     restart: always
@@ -19,14 +20,14 @@ services:
 #        source: ${SERVER_STORAGE_PATH}  # 서버의 저장 경로 1
 #        target: ${STORAGE_PATH}         # 컨테이너 내부의 저장 경로 1
 
-  database:
+  linkmoa-database:
     image: mysql:8.0
     container_name: linkmoa-database
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}  # MySQL 루트 비밀번호
       MYSQL_DATABASE: ${DB_DATABASE}       # 생성할 데이터베이스 이름
-     # MYSQL_USER: ${DB_USERNAME}           # MySQL 사용자 이름
-     # MYSQL_PASSWORD: ${DB_PASSWORD}       # MySQL 사용자 비밀번호
+      MYSQL_USER: ${DB_USERNAME}           # MySQL 사용자 이름
+      MYSQL_PASSWORD: ${DB_PASSWORD}       # MySQL 사용자 비밀번호
     command:
       --port=${DB_PORT} --max_allowed_packet=32M   # MySQL 설정 명령어
     expose:
@@ -37,7 +38,7 @@ services:
     volumes:
       - linkmoa-database:/var/lib/mysql   # 데이터베이스 볼륨 설정
 
-  redis:
+  linkmoa-redis:
     image: redis:latest
     container_name: linkmoa-redis
     command: --port ${REDIS_PORT} --requirepass ${REDIS_PASSWORD}   # Redis 포트 및 비밀번호 설정
@@ -47,6 +48,27 @@ services:
       - ${REDIS_PORT}:${REDIS_PORT}    # Redis 포트 매핑
     volumes:
       - linkmoa-redis:/data    # Redis 볼륨 설정
+    restart: always
+
+  linkmoa-es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    container_name: linkmoa-es
+    ports:
+      - "9200:9200"
+     # - ${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}
+    environment:
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - discovery.type=single-node
+      - xpack.security.enabled=false # X-Pack 보안 활성화
+      - xpack.security.http.ssl.enabled=false # HTTP SSL 비활성화
+      - xpack.security.transport.ssl.enabled=false # Transport SSL 비활성화
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 10s
+      retries: 5
+      start_period: 20s
+      timeout: 5s
     restart: always
 
 volumes:

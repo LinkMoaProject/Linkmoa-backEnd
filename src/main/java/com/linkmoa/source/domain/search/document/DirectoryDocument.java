@@ -1,3 +1,4 @@
+/*
 package com.linkmoa.source.domain.search.document;
 
 
@@ -32,3 +33,4 @@ public class DirectoryDocument {
         this.isFavorite = isFavorite;
     }
 }
+*/
