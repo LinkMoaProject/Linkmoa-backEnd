@@ -11,7 +11,7 @@ services:
     depends_on:
       - linkmoa-database
       - linkmoa-redis
-   #   - linkmoa-es
+      - linkmoa-es
     ports:
       - ${SPRING_PORT}:${SPRING_PORT}   # Spring Boot 포트 매핑
     restart: always
@@ -63,8 +63,7 @@ services:
       - xpack.security.http.ssl.enabled=false # HTTP SSL 비활성화
       - xpack.security.transport.ssl.enabled=false # Transport SSL 비활성화
       - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
-    depends_on:
-      - linkmoa-server
+
 
 volumes:
   linkmoa-database:
