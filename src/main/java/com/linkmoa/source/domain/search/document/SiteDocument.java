@@ -1,4 +1,3 @@
-/*
 package com.linkmoa.source.domain.search.document;
 
 import com.linkmoa.source.domain.search.constant.Indices;
@@ -36,4 +35,3 @@ public class SiteDocument {
         this.isFavorite = isFavorite;
     }
 }
-*/

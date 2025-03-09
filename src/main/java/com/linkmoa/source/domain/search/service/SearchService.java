@@ -1,4 +1,3 @@
-/*
 package com.linkmoa.source.domain.search.service;
 
 
@@ -34,10 +33,13 @@ public class SearchService {
     private final FavoriteService favoriteService;
     private final FavoriteRepository favoriteRepository;
     private final SearchSyncService searchSyncService;
-    */
-/**
-     * 제목으로 검색하여 DirectoryResponse 형태로 변환
-     *//*
+
+    /**
+     *  제목으로 검색하여 DirectoryResponse 형태로 변환
+     * @param title
+     * @param principalDetails
+     * @return
+     */
 
     @Transactional
     public ApiDirectoryResponseSpec<DirectoryResponse> searchByTitle(String title, PrincipalDetails principalDetails) {
@@ -73,4 +75,3 @@ public class SearchService {
     }
 
 }
-*/

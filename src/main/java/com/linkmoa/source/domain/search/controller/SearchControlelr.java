@@ -1,4 +1,3 @@
-/*
 package com.linkmoa.source.domain.search.controller;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
@@ -28,4 +27,3 @@ public class SearchControlelr implements SearchApiSpecification {
     }
 
 }
-*/
