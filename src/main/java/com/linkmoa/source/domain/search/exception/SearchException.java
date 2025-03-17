@@ -1,3 +1,4 @@
+/*
 package com.linkmoa.source.domain.search.exception;
 
 
@@ -11,3 +12,4 @@ import lombok.RequiredArgsConstructor;
 public class SearchException extends RuntimeException {
     private final SearchErrorCode searchErrorCode;
 }
+*/
