@@ -55,8 +55,7 @@ public class SharePageInvitationRequestProcessor implements DispatchProcessor {
         PermissionType permissionType = sharePageInvitationRequest.getPermissionType();
 
         // 수신자 및 현재 유저 검증
-        validateReceiver(sharePageInvitationRequest.getReceiverEmail(), member.getEmail());
-
+        validateReceiver(sharePageInvitationRequest.getReceiver().getEmail(),member.getEmail());
         sharePageInvitationRequest.changeRequestStatus(requestStatus);
 
         if (requestStatus == RequestStatus.ACCEPTED) {
@@ -70,7 +69,7 @@ public class SharePageInvitationRequestProcessor implements DispatchProcessor {
         DispatchDetailResponse response = DispatchDetailResponse.builder()
                 .id(sharePageInvitationRequest.getId())
                 .requestStatus(sharePageInvitationRequest.getRequestStatus())
-                .senderEmail(sharePageInvitationRequest.getSenderEmail())
+                .senderEmail(sharePageInvitationRequest.getSender().getEmail())
                 .notificationType(NotificationType.INVITE_PAGE)
                 .build();
 

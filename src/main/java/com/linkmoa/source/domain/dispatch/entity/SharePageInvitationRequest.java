@@ -1,6 +1,7 @@
 package com.linkmoa.source.domain.dispatch.entity;
 
 
+import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.domain.notification.aop.proxy.NotificationInfo;
 import com.linkmoa.source.domain.notification.constant.NotificationType;
@@ -24,11 +25,13 @@ public class SharePageInvitationRequest extends BaseEntity implements Notificati
     @Column(name="share_page_invite_request_id")
     private Long id;
 
-    @Column(name="receiver_email")
-    private String receiverEmail;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="sender_id",nullable = false)
+    private Member sender;
 
-    @Column(name="sender_email")
-    private String senderEmail;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="receiver_id",nullable = false)
+    private Member receiver;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -49,9 +52,9 @@ public class SharePageInvitationRequest extends BaseEntity implements Notificati
 
 
     @Builder
-    public SharePageInvitationRequest(String receiverEmail, String senderEmail, Page page, PermissionType permissionType){
-        this.senderEmail=senderEmail;
-        this.receiverEmail=receiverEmail;
+    public SharePageInvitationRequest(Member receiver, Member sender, Page page, PermissionType permissionType){
+        this.sender=sender;
+        this.receiver=receiver;
         this.page=page;
         this.permissionType =permissionType;
     }
@@ -61,12 +64,12 @@ public class SharePageInvitationRequest extends BaseEntity implements Notificati
     }
 
     @Override
-    public String getReceiverEmail() {
-        return receiverEmail;
+    public Member getReceiver() {
+        return receiver;
     }
     @Override
-    public String getSenderEmail() {
-        return senderEmail;
+    public Member getSender() {
+        return sender;
     }
     @Override
     public NotificationType getNotificationType() {

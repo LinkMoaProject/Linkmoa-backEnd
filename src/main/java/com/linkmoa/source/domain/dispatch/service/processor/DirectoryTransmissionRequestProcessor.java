@@ -49,8 +49,7 @@ public class DirectoryTransmissionRequestProcessor implements DispatchProcessor{
 
         Member member = memberService.findMemberByEmail(principalDetails.getEmail());
 
-        validateReceiver(directoryTransmissionRequest.getReceiverEmail(), member.getEmail());
-
+        validateReceiver(directoryTransmissionRequest.getReceiver().getEmail(), member.getEmail());
         directoryTransmissionRequest.changeDirectoryTransmissionRequestStatus(requestStatus);
 
 
@@ -67,7 +66,7 @@ public class DirectoryTransmissionRequestProcessor implements DispatchProcessor{
         DispatchDetailResponse response = DispatchDetailResponse.builder()
                 .id(directoryTransmissionRequest.getId())
                 .requestStatus(directoryTransmissionRequest.getRequestStatus())
-                .senderEmail(directoryTransmissionRequest.getSenderEmail())
+                .senderEmail(directoryTransmissionRequest.getSender().getEmail())
                 .notificationType(NotificationType.TRANSMIT_DIRECTORY)
                 .build();
 
@@ -81,7 +80,7 @@ public class DirectoryTransmissionRequestProcessor implements DispatchProcessor{
 
 
     public void DirectoryTransmissionProcess(DirectoryTransmissionRequest directoryTransmissionRequest){
-        Member receiver = memberService.findMemberByEmail(directoryTransmissionRequest.getReceiverEmail());
+        Member receiver = memberService.findMemberByEmail(directoryTransmissionRequest.getReceiver().getEmail());
         Page receiverPersonalPage =  pageService.getPersonalPage(receiver.getId());
 
         Long receiverPersonalRootDirectoryId = receiverPersonalPage.getRootDirectory().getId();
