@@ -1,3 +1,4 @@
+/*
 package com.linkmoa.source.domain.search.error;
 
 
@@ -36,3 +37,4 @@ public enum SearchErrorCode implements ErrorCode {
         return errorMessage;
     }
 }
+*/

@@ -13,7 +13,7 @@ public record SiteDetailResponse(
         Integer orderIndex,
         Boolean isFavorite
 ) {
-/*    public static SiteDetailResponse from(SiteDocument document, Set<Long> favoriteSiteIds) {
+   /* public static SiteDetailResponse from(SiteDocument document, Set<Long> favoriteSiteIds) {
         return SiteDetailResponse.builder()
                 .siteId(Long.parseLong(document.getId())) // Elasticsearch _id 변환
                 .siteName(document.getTitle())

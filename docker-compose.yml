@@ -11,7 +11,7 @@ services:
     depends_on:
       - linkmoa-database
       - linkmoa-redis
-   #   - linkmoa-es
+    #  - linkmoa-es
     ports:
       - ${SPRING_PORT}:${SPRING_PORT}   # Spring Boot 포트 매핑
     restart: always
@@ -28,8 +28,15 @@ services:
       MYSQL_DATABASE: ${DB_DATABASE}       # 생성할 데이터베이스 이름
       MYSQL_USER: ${DB_USERNAME}           # MySQL 사용자 이름
       MYSQL_PASSWORD: ${DB_PASSWORD}       # MySQL 사용자 비밀번호
-    command:
-      --port=${DB_PORT} --max_allowed_packet=32M   # MySQL 설정 명령어
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    command: [
+      "--port=${DB_PORT}",
+      "--max_allowed_packet=32M",
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci",
+      "--default-authentication-plugin=mysql_native_password"
+    ]
     expose:
       - ${DB_PORT}    # 내부에서 사용하는 MySQL 포트
     ports:
@@ -50,26 +57,6 @@ services:
       - linkmoa-redis:/data    # Redis 볼륨 설정
     restart: always
 
-  linkmoa-es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
-    container_name: linkmoa-es
-    ports:
-      - "9200:9200"
-     # - ${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}
-    environment:
-      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
-      - discovery.type=single-node
-      - xpack.security.enabled=false # X-Pack 보안 활성화
-      - xpack.security.http.ssl.enabled=false # HTTP SSL 비활성화
-      - xpack.security.transport.ssl.enabled=false # Transport SSL 비활성화
-      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9200"]
-      interval: 10s
-      retries: 5
-      start_period: 20s
-      timeout: 5s
-    restart: always
 
 volumes:
   linkmoa-database:

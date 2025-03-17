@@ -1,6 +1,5 @@
 package com.linkmoa.source.domain.directory.dto.response;
 
-
 import lombok.Builder;
 
 import java.util.Set;
@@ -11,8 +10,8 @@ public record DirectoryDetailResponse(
         String directoryName,
         Integer orderIndex,
         Boolean isFavorite
-) {
-/*    public static DirectoryDetailResponse from(DirectoryDocument document, Set<Long> favoriteDirectoryIds) {
+) {/*
+    public static DirectoryDetailResponse from(DirectoryDocument document, Set<Long> favoriteDirectoryIds) {
         return DirectoryDetailResponse.builder()
                 .directoryId(Long.parseLong(document.getId())) // Elasticsearch _id 변환
                 .directoryName(document.getTitle())

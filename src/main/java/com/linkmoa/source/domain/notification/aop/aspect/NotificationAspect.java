@@ -28,14 +28,14 @@ public class NotificationAspect {
         NotificationInfo notificationInfo = (NotificationInfo) result;
 
         String message = String.format("%s 님이 %s",
-                notificationInfo.getSenderEmail(),
+                notificationInfo.getSender().getEmail(),
                 NotificationMessage.getMessageByType(notificationInfo.getNotificationType()));
 
 
         notificationService.sendNotificationDetails(notificationService
                 .createRequestNotification(
-                        notificationInfo.getReceiverEmail(),
-                        notificationInfo.getSenderEmail(),
+                        notificationInfo.getReceiver(),
+                        notificationInfo.getSender(),
                         notificationInfo.getNotificationType(),
                         message,
                         notificationInfo.getRequestId()

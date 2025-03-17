@@ -84,8 +84,8 @@ public class DispatchRequestService {
                 .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
         DirectoryTransmissionRequest directoryTransmissionRequest = DirectoryTransmissionRequest.builder()
-                .senderEmail(principalDetails.getEmail())
-                .receiverEmail(directoryTransmissionSendRequest.receiverEmail())
+                .sender(principalDetails.getMember())
+                .receiver(memberService.findMemberByEmail(directoryTransmissionSendRequest.receiverEmail()))
                 .directory(directory)
                 .build();
 
@@ -93,12 +93,12 @@ public class DispatchRequestService {
     }
 
 
-    public ApiDirectoryResponseSpec<DirectoryTransmissionResponse> mapToDirectorySendResponse(com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest directoryTransmissionRequest)
+    public ApiDirectoryResponseSpec<DirectoryTransmissionResponse> mapToDirectorySendResponse(DirectoryTransmissionRequest directoryTransmissionRequest)
     {
         DirectoryTransmissionResponse directoryTransmissionResponse = DirectoryTransmissionResponse.builder()
                 .directoryName(directoryTransmissionRequest.getDirectory().getDirectoryName())
-                .receiverEmail(directoryTransmissionRequest.getReceiverEmail())
-                .senderEmail(directoryTransmissionRequest.getSenderEmail())
+                .receiverEmail(directoryTransmissionRequest.getReceiver().getEmail())
+                .senderEmail(directoryTransmissionRequest.getSender().getEmail())
                 .directoryTransmissionId(directoryTransmissionRequest.getRequestId())
                 .build();
 
@@ -143,8 +143,8 @@ public class DispatchRequestService {
         }
 
         SharePageInvitationRequest sharePageInvitationRequest = SharePageInvitationRequest.builder()
-                .senderEmail(principalDetails.getEmail())
-                .receiverEmail(sharePageInvitationRequestCreate.receiverEmail())
+                .sender(principalDetails.getMember())
+                .receiver(memberService.findMemberByEmail(sharePageInvitationRequestCreate.receiverEmail()))
                 .page(page)
                 .permissionType(sharePageInvitationRequestCreate.permissionType())
                 .build();
@@ -155,8 +155,8 @@ public class DispatchRequestService {
 
         SharePageInvitationResponse sharePageInvitationResponse = SharePageInvitationResponse.builder()
                 .pageTitle(sharePageInvitationRequest.getPage().getPageTitle())
-                .receiverEmail(sharePageInvitationRequest.getReceiverEmail())
-                .senderEmail(sharePageInvitationRequest.getSenderEmail())
+                .receiverEmail(sharePageInvitationRequest.getReceiver().getEmail())
+                .senderEmail(sharePageInvitationRequest.getSender().getEmail())
                 .pageInvitationRequestId(sharePageInvitationRequest.getId())
                 .build();
 

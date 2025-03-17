@@ -22,7 +22,7 @@ public class DirectoryTransmissionRequestRepositoryImpl implements DirectoryTran
                         Projections.constructor(
                                 DispatchDetailResponse.class,
                                 directoryTransmissionRequest.id,
-                                directoryTransmissionRequest.senderEmail,
+                                directoryTransmissionRequest.sender.email,
                                 directoryTransmissionRequest.requestStatus,
                                 directoryTransmissionRequest.notificationType
                         ))
@@ -33,7 +33,7 @@ public class DirectoryTransmissionRequestRepositoryImpl implements DirectoryTran
         return result;
     }
     private BooleanExpression receiverEmailEq(String receiverEmail){
-        return receiverEmail==null ? null :directoryTransmissionRequest.receiverEmail.eq(receiverEmail);
+        return receiverEmail==null ? null :directoryTransmissionRequest.receiver.email.eq(receiverEmail);
     }
 }
 

@@ -24,7 +24,7 @@ public class SharePageInvitationRequestRepositoryImpl implements SharePageInvita
                         (Projections.constructor(
                                 DispatchDetailResponse.class,
                                 sharePageInvitationRequest.id,
-                                sharePageInvitationRequest.senderEmail,
+                                sharePageInvitationRequest.sender.email,
                                 sharePageInvitationRequest.requestStatus,
                                 sharePageInvitationRequest.notificationType
                         ))
@@ -36,6 +36,6 @@ public class SharePageInvitationRequestRepositoryImpl implements SharePageInvita
     }
 
     private BooleanExpression receiverEmailEq(String receiverEmail){
-        return receiverEmail==null ? null :sharePageInvitationRequest.receiverEmail.eq(receiverEmail);
+        return receiverEmail==null ? null :sharePageInvitationRequest.receiver.email.eq(receiverEmail);
     }
 }

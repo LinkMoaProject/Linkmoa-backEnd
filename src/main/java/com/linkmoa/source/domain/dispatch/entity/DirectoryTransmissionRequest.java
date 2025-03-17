@@ -4,6 +4,7 @@ package com.linkmoa.source.domain.dispatch.entity;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
+import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.notification.aop.proxy.NotificationInfo;
 
 import com.linkmoa.source.domain.notification.constant.NotificationType;
@@ -12,6 +13,7 @@ import com.linkmoa.source.domain.notification.entity.Notification;
 import com.linkmoa.source.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.checkerframework.checker.units.qual.C;
 
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
@@ -23,11 +25,13 @@ public class DirectoryTransmissionRequest extends BaseEntity implements Notifica
     @Column(name="directory_send_request_id")
     private Long id;
 
-    @Column(name="receiver_email")
-    private String receiverEmail;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="sender_id",nullable = false)
+    private Member sender;
 
-    @Column(name="sender_email")
-    private String senderEmail;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="receiver_id",nullable = false)
+    private Member receiver;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -45,20 +49,20 @@ public class DirectoryTransmissionRequest extends BaseEntity implements Notifica
 
 
     @Builder
-    public DirectoryTransmissionRequest(String receiverEmail, String senderEmail, Directory directory) {
-        this.senderEmail = senderEmail;
-        this.receiverEmail = receiverEmail;
+    public DirectoryTransmissionRequest(Member sender, Member receiver, Directory directory) {
+        this.sender = sender;
+        this.receiver = receiver;
         this.directory = directory;
     }
 
     @Override
-    public String getSenderEmail() {
-        return senderEmail;
+    public Member getSender() {
+        return sender;
     }
 
     @Override
-    public String getReceiverEmail() {
-        return receiverEmail;
+    public Member getReceiver() {
+        return receiver;
     }
 
     @Override
