@@ -8,6 +8,8 @@ import com.linkmoa.source.domain.Favorite.service.FavoriteService;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.member.entity.Member;
+import com.linkmoa.source.domain.member.error.MemberErrorCode;
+import com.linkmoa.source.domain.member.exception.MemberException;
 import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.domain.memberPageLink.entity.MemberPageLink;
@@ -56,6 +58,13 @@ public class PageService {
 
         Member hostMember = memberService.findMemberByEmail(principalDetails.getEmail());
 
+
+        // 개인 페이지가 이미 존재하면 예외 발생 (반환값을 사용하지 않고 존재 여부만 확인)
+        if (memberPageLinkRepository.findPersonalPageByMemberId(hostMember.getId()).isPresent()) {
+            throw new MemberException(MemberErrorCode.MEMBER_EXIST_EMAIL);
+        }
+
+
         PageCreateRequest requestDto = PageCreateRequest.builder()
                 .pageTitle(hostMember.getEmail()+ " 개인")
                 .pageDescription(hostMember.getEmail()+" 의 개인 페이지 입니다.")
@@ -93,7 +102,6 @@ public class PageService {
     }
 
     private Page createNewPage(PageCreateRequest requestDto, Directory rootDirectory) {
-        log.info("PageTitle {} :", requestDto.pageTitle());
         return Page.builder()
                 .pageType(requestDto.pageType())
                 .pageTitle(requestDto.pageTitle())
@@ -290,7 +298,8 @@ public class PageService {
     public ApiPageResponseSpec<PageDetailsResponse> loadPersonalPageMain(PrincipalDetails principalDetails){
         Member member = memberService.findMemberByEmail(principalDetails.getEmail());
 
-        Page personalPage = memberPageLinkRepository.findPersonalPageByMemberId(member.getId());
+        Page personalPage = memberPageLinkRepository.findPersonalPageByMemberId(member.getId())
+                .orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
 
         PageDetailsResponse pageDetailsResponse = getPageDetailsResponse(personalPage,principalDetails);
 
@@ -302,7 +311,8 @@ public class PageService {
     }
 
     public Page getPersonalPage(Long memberId){
-        return memberPageLinkRepository.findPersonalPageByMemberId(memberId);
+        return memberPageLinkRepository.findPersonalPageByMemberId(memberId)
+                .orElseThrow(()->new PageException(PageErrorCode.PAGE_NOT_FOUND));
     }
 
 

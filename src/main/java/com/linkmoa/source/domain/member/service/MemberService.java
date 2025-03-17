@@ -75,14 +75,14 @@ public class MemberService {
     public void memberSignUp(MemberSignUpRequest memberSignUpRequest, PrincipalDetails principalDetails){
         log.info("memberSignUp - email : {}", principalDetails.getEmail());
 
-        // 이메일 중복 검사
-/*        if (memberRepository.existsByEmail(principalDetails.getEmail())) {
+      /*  // 이메일 중복 검사
+        if (memberRepository.existsByEmail(principalDetails.getEmail())) {
             throw new MemberException(MemberErrorCode.MEMBER_EXIST_EMAIL);
-        }*/
-
+        }
+*/
         Member member = memberRepository.findByEmail(principalDetails.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
-
+        log.info("member 이메일 {}  ", member.getEmail());
         member.updateSignUpMember(memberSignUpRequest.ageRange(), memberSignUpRequest.gender(), memberSignUpRequest.job(),memberSignUpRequest.nickName());
         memberRepository.save(member);
 
@@ -130,7 +130,8 @@ public class MemberService {
 
         memberPageLinkService.deleteMemberPageLink(member.getId());
 
-        notifyService.deleteAllNotificationByMemberEmail(memberEmail);
+
+        notifyService.deleteAllNotificationByMember(findMemberByEmail(memberEmail));
 
         memberRepository.delete(member);
         refreshTokenService.deleteRefreshToken(memberEmail);

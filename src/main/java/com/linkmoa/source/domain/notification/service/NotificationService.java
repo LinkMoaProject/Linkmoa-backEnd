@@ -1,6 +1,7 @@
 package com.linkmoa.source.domain.notification.service;
 
 
+import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.notification.dto.response.UnreadNotificationCountResponse;
 import com.linkmoa.source.domain.notification.entity.Notification;
 import com.linkmoa.source.domain.notification.repository.NotificationRepository;
@@ -65,12 +66,12 @@ public class NotificationService {
     }
 
 
-    public Notification createRequestNotification(String receiverEmail,String senderEmail, NotificationType notificationType,String content,Long requestId){
+    public Notification createRequestNotification(Member receiver, Member sender, NotificationType notificationType, String content, Long requestId){
 
         return notificationRepository.save(
                 Notification.builder()
-                .receiverEmail(receiverEmail)
-                .senderEmail(senderEmail)
+                .receiver(receiver)
+                .sender(sender)
                 .notificationType(notificationType)
                 .content(content)
                 .isRead(false)
@@ -110,7 +111,7 @@ public class NotificationService {
 
     public void sendNotificationDetails(Notification notification){
 
-        String receiverEmail =notification.getReceiverEmail();
+        String receiverEmail = notification.getReceiver().getEmail();
 
         // 1. 이벤트 ID 생성
         String eventId =makeTimeIncludeId(receiverEmail);
@@ -137,8 +138,8 @@ public class NotificationService {
     }
 
     @Transactional
-    public void deleteAllNotificationByMemberEmail(String email) {
-        notificationRepository.deleteAllBySenderEmailOrReceiverEmail(email);
+    public void deleteAllNotificationByMember(Member member) {
+        notificationRepository.deleteAllBySenderEmailOrReceiver(member);
     }
 
 

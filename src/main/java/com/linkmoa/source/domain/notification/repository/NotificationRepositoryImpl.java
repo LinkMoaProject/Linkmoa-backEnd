@@ -1,6 +1,6 @@
 package com.linkmoa.source.domain.notification.repository;
 
-import com.linkmoa.source.domain.notification.entity.Notification;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom{
                 .update(notification)
                 .set(notification.isRead, true)
                 .where(
-                        notification.receiverEmail.eq(receiverEmail)
+                        notification.receiver.email.eq(receiverEmail)
                         .and(notification.isRead.eq(false))
                 )
                 .execute();
@@ -31,7 +31,7 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom{
                 .select(notification.count().coalesce(0L))
                 .from(notification)
                 .where(
-                        notification.receiverEmail.eq(receiverEmail)
+                        notification.receiver.email.eq(receiverEmail)
                                 .and(notification.isRead.eq(false))
                 )
                 .fetchOne();

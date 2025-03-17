@@ -24,6 +24,9 @@ public class Member extends BaseEntity {
     @Column(name="member_email")
     private String email;
 
+    @Column(name="password")
+    private String password;
+
     @Enumerated(EnumType.STRING)
     @Column(name="role")
     private Role role;
@@ -57,10 +60,10 @@ public class Member extends BaseEntity {
 
 
     @Builder
-    public Member(String email,Role role,String nickname,String provider,String providerId){
+    public Member(String email,String password,Role role,String provider,String providerId){
         this.email=email;
+        this.password=password;
         this.role=role;
-        this.nickname = nickname;
         this.provider=provider;
         this.providerId=providerId;
     }

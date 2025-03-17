@@ -17,8 +17,8 @@ public record NotificationResponse(
         return NotificationResponse.builder()
                 .content(notification.getContent())
                 .notificationType(String.valueOf(notification.getNotificationType()))
-                .receiverEmail(notification.getReceiverEmail())
-                .sendrEmail(notification.getSenderEmail())
+                .receiverEmail(notification.getReceiver().getEmail())
+                .sendrEmail(notification.getSender().getEmail())
                 .countUnreadNotifications(countUnreadNotifications)
                 .build();
     }
