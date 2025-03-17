@@ -46,6 +46,7 @@ public class SearchService {
 
         searchSyncService.syncDataToElasticsearch();
 
+
         List<DirectoryDocument> directoryResults = directoryElasticsearchRepository.findByTitleContaining(title);
         List<SiteDocument> siteResults = siteElasticsearchRepository.findByTitleContaining(title);
 

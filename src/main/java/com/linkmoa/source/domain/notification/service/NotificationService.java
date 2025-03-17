@@ -67,7 +67,6 @@ public class NotificationService {
 
     public Notification createRequestNotification(String receiverEmail,String senderEmail, NotificationType notificationType,String content,Long requestId){
 
-
         return notificationRepository.save(
                 Notification.builder()
                 .receiverEmail(receiverEmail)

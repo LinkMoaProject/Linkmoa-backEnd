@@ -28,8 +28,15 @@ services:
       MYSQL_DATABASE: ${DB_DATABASE}       # 생성할 데이터베이스 이름
       MYSQL_USER: ${DB_USERNAME}           # MySQL 사용자 이름
       MYSQL_PASSWORD: ${DB_PASSWORD}       # MySQL 사용자 비밀번호
-    command:
-      --port=${DB_PORT} --max_allowed_packet=32M   # MySQL 설정 명령어
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    command: [
+      "--port=${DB_PORT}",
+      "--max_allowed_packet=32M",
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci",
+      "--default-authentication-plugin=mysql_native_password"
+    ]
     expose:
       - ${DB_PORT}    # 내부에서 사용하는 MySQL 포트
     ports:
