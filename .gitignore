@@ -42,8 +42,5 @@ out/
 
 local.sh
 
-# Ignore all test files
-**/src/test/**
-
 # Ignore test reports
 build/reports/tests/
