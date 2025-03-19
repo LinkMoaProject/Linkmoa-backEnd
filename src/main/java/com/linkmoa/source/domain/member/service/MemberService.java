@@ -1,5 +1,15 @@
 package com.linkmoa.source.domain.member.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.linkmoa.source.auth.jwt.refresh.service.RefreshTokenService;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.member.dto.request.MemberSignUpRequest;
@@ -15,16 +25,6 @@ import com.linkmoa.source.domain.page.entity.Page;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -73,16 +73,10 @@ public class MemberService {
 	}
 
 	public void memberSignUp(MemberSignUpRequest memberSignUpRequest, PrincipalDetails principalDetails) {
-		log.info("memberSignUp - email : {}", principalDetails.getEmail());
 
-      /*  // 이메일 중복 검사
-        if (memberRepository.existsByEmail(principalDetails.getEmail())) {
-            throw new MemberException(MemberErrorCode.MEMBER_EXIST_EMAIL);
-        }
-*/
 		Member member = memberRepository.findByEmail(principalDetails.getEmail())
-			.orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
-		log.info("member 이메일 {}  ", member.getEmail());
+			.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL));
+
 		member.updateSignUpMember(memberSignUpRequest.ageRange(), memberSignUpRequest.gender(),
 			memberSignUpRequest.job(), memberSignUpRequest.nickName());
 		memberRepository.save(member);
