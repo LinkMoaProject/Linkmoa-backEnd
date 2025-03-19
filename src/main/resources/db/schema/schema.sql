@@ -1,0 +1,9 @@
+SOURCE member.sql;
+SOURCE page.sql;
+SOURCE directory.sql;
+SOURCE member_page_link.sql;
+SOURCE notification.sql;
+SOURCE favorite.sql;
+SOURCE site.sql;
+SOURCE share_page_invitation_request.sql;
+SOURCE directory_transmission_request.sql;
