@@ -55,16 +55,16 @@ class MemberServiceTest {
 
 		when(memberRepository.findByEmail(principalDetails.getEmail())).thenReturn(Optional.of(member));
 
-		// when: 회원가입 메서드 호출
+		// when : 회원가입 메서드 호출
 		memberService.memberSignUp(memberSignUpRequest, principalDetails);
 
-		// then: 회원 정보가 업데이트되고 저장되는지 확인
+		// then : 회원 정보가 업데이트되고 저장되는지 확인
 		assertThat(member.getNickname()).isEqualTo("park");
 		assertThat(member.getAgeRange()).isEqualTo("20-30");
 		assertThat(member.getGender()).isEqualTo(Gender.MALE);
 		assertThat(member.getJob()).isEqualTo("student");
 
-		// verify: save 메서드가 호출되었는지 확인
+		// verify : save 메서드가 호출되었는지 확인
 		verify(memberRepository).save(member);
 	}
 
