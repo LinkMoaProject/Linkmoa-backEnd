@@ -37,11 +37,11 @@ public class SearchService {
 
     */
 /**
-     *  제목으로 검색하여 DirectoryResponse 형태로 변환
-     * @param title
-     * @param principalDetails
-     * @return
-     *//*
+ *  제목으로 검색하여 DirectoryResponse 형태로 변환
+ * @param title
+ * @param principalDetails
+ * @return
+ *//*
 
 
     @Transactional

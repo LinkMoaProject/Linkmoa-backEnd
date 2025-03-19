@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record UnreadNotificationCountResponse(
-        String userEmail,
-        Long countUnreadNotifications
+	String userEmail,
+	Long countUnreadNotifications
 ) {
 }

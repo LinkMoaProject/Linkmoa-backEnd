@@ -1,6 +1,5 @@
 package com.linkmoa.source.domain.site.service;
 
-
 import com.google.protobuf.Api;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.entity.Directory;
@@ -15,7 +14,9 @@ import com.linkmoa.source.domain.site.error.SiteErrorCode;
 import com.linkmoa.source.domain.site.exception.SiteException;
 import com.linkmoa.source.domain.site.repository.SiteRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
+
 import lombok.AllArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,96 +31,94 @@ import java.util.stream.Stream;
 @Transactional
 public class SiteService {
 
-    private final SiteRepository siteRepository;
-    private final DirectoryRepository directoryRepository;
+	private final SiteRepository siteRepository;
+	private final DirectoryRepository directoryRepository;
 
-    @ValidationApplied
-    public ApiSiteResponse<Long> createSite(SiteCreateRequestDto siteCreateRequestDto, PrincipalDetails principalDetails) {
+	@ValidationApplied
+	public ApiSiteResponse<Long> createSite(SiteCreateRequestDto siteCreateRequestDto,
+		PrincipalDetails principalDetails) {
 
-        Directory directory = directoryRepository.findById(siteCreateRequestDto.directoryId())
-                .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+		Directory directory = directoryRepository.findById(siteCreateRequestDto.directoryId())
+			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
+		Integer nextOrderIndex = directory.getNextOrderIndex();
 
-        Integer nextOrderIndex = directory.getNextOrderIndex();
+		Site newSite = Site.builder()
+			.siteName(siteCreateRequestDto.siteName())
+			.siteUrl(siteCreateRequestDto.siteUrl())
+			.directory(directory)
+			.orderIndex(nextOrderIndex)
+			.build();
 
+		siteRepository.save(newSite);
 
-        Site newSite = Site.builder()
-                .siteName(siteCreateRequestDto.siteName())
-                .siteUrl(siteCreateRequestDto.siteUrl())
-                .directory(directory)
-                .orderIndex(nextOrderIndex)
-                .build();
+		return ApiSiteResponse.<Long>builder()
+			.httpStatusCode(HttpStatus.OK)
+			.successMessage("site 생성에 성공했습니다.")
+			.data(newSite.getId())
+			.build();
+	}
 
-        siteRepository.save(newSite);
+	@ValidationApplied
+	public ApiSiteResponse<Long> updateSite(SiteUpdateRequestDto siteUpdateRequestDto,
+		PrincipalDetails principalDetails) {
 
-        return ApiSiteResponse.<Long>builder()
-                .httpStatusCode(HttpStatus.OK)
-                .successMessage("site 생성에 성공했습니다.")
-                .data(newSite.getId())
-                .build();
-    }
+		Site updateSite = siteRepository.findById(siteUpdateRequestDto.siteId())
+			.orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
 
-    @ValidationApplied
-    public ApiSiteResponse<Long> updateSite(SiteUpdateRequestDto siteUpdateRequestDto, PrincipalDetails principalDetails) {
+		updateSite.updateSiteNameAndUrl(siteUpdateRequestDto.siteName(), siteUpdateRequestDto.siteUrl());
 
-        Site updateSite = siteRepository.findById(siteUpdateRequestDto.siteId())
-                .orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
+		return ApiSiteResponse.<Long>builder()
+			.httpStatusCode(HttpStatus.OK)
+			.successMessage("site 수정(이름,url)에 성공했습니다.")
+			.data(updateSite.getId())
+			.build();
 
-        updateSite.updateSiteNameAndUrl(siteUpdateRequestDto.siteName(), siteUpdateRequestDto.siteUrl());
+	}
 
-        return ApiSiteResponse.<Long>builder()
-                .httpStatusCode(HttpStatus.OK)
-                .successMessage("site 수정(이름,url)에 성공했습니다.")
-                .data(updateSite.getId())
-                .build();
+	@ValidationApplied
+	public ApiSiteResponse<Long> deleteSite(SiteDeleteRequestDto siteDeleteRequestDto,
+		PrincipalDetails principalDetails) {
 
-    }
+		Site deleteSite = siteRepository.findById(siteDeleteRequestDto.siteId())
+			.orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
 
-    @ValidationApplied
-    public ApiSiteResponse<Long> deleteSite(SiteDeleteRequestDto siteDeleteRequestDto, PrincipalDetails principalDetails) {
+		Directory parentDirectory = deleteSite.getDirectory();
+		Integer orderIndex = deleteSite.getOrderIndex();
 
-        Site deleteSite = siteRepository.findById(siteDeleteRequestDto.siteId())
-                .orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
+		directoryRepository.decrementDirectoryAndSiteOrderIndexes(parentDirectory, orderIndex);
+		siteRepository.delete(deleteSite);
 
-        Directory parentDirectory = deleteSite.getDirectory();
-        Integer orderIndex = deleteSite.getOrderIndex();
+		return ApiSiteResponse.<Long>builder()
+			.httpStatusCode(HttpStatus.OK)
+			.successMessage("site 삭제에 성공했습니다.")
+			.data(deleteSite.getId())
+			.build();
+	}
 
-        directoryRepository.decrementDirectoryAndSiteOrderIndexes(parentDirectory,orderIndex);
-        siteRepository.delete(deleteSite);
+	@ValidationApplied
+	public ApiSiteResponse<Long> moveSite(SiteMoveRequestDto siteMoveRequestDto, PrincipalDetails principalDetails) {
 
-        return ApiSiteResponse.<Long>builder()
-                .httpStatusCode(HttpStatus.OK)
-                .successMessage("site 삭제에 성공했습니다.")
-                .data(deleteSite.getId())
-                .build();
-    }
+		Site moveSite = siteRepository.findById(siteMoveRequestDto.siteId())
+			.orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
 
-    @ValidationApplied
-    public ApiSiteResponse<Long> moveSite(SiteMoveRequestDto siteMoveRequestDto, PrincipalDetails principalDetails) {
+		Directory targetDirectory = directoryRepository.findById(siteMoveRequestDto.targetDirectoryId())
+			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-        Site moveSite = siteRepository.findById(siteMoveRequestDto.siteId())
-                .orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
+		directoryRepository.decrementDirectoryAndSiteOrderIndexes(moveSite.getDirectory(), moveSite.getOrderIndex());
 
-        Directory targetDirectory = directoryRepository.findById(siteMoveRequestDto.targetDirectoryId())
-                .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+		Integer newOrderIndex = targetDirectory.getNextOrderIndex();
 
-        directoryRepository.decrementDirectoryAndSiteOrderIndexes(moveSite.getDirectory(),moveSite.getOrderIndex());
+		moveSite.setDirectory(targetDirectory);
 
-        Integer newOrderIndex = targetDirectory.getNextOrderIndex();
+		moveSite.setOrderIndex(newOrderIndex);
 
-        moveSite.setDirectory(targetDirectory);
+		return ApiSiteResponse.<Long>builder()
+			.httpStatusCode(HttpStatus.OK)
+			.successMessage("site의 위치를 다른 directory로 위치 이동에 성공했습니다.")
+			.data(moveSite.getId())
+			.build();
 
-        moveSite.setOrderIndex(newOrderIndex);
-
-        return ApiSiteResponse.<Long>builder()
-                .httpStatusCode(HttpStatus.OK)
-                .successMessage("site의 위치를 다른 directory로 위치 이동에 성공했습니다.")
-                .data(moveSite.getId())
-                .build();
-
-
-    }
-
-
+	}
 
 }

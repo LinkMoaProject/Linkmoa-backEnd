@@ -1,6 +1,5 @@
 package com.linkmoa.source.domain.member.service;
 
-
 import com.linkmoa.source.auth.jwt.refresh.service.RefreshTokenService;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.member.dto.request.MemberSignUpRequest;
@@ -13,8 +12,10 @@ import com.linkmoa.source.domain.notification.service.NotificationService;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.dto.response.PageResponse;
 import com.linkmoa.source.domain.page.entity.Page;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,111 +32,109 @@ import java.util.Optional;
 @Slf4j
 public class MemberService {
 
+	private final MemberRepository memberRepository;
+	private final RefreshTokenService refreshTokenService;
+	private final NotificationService notifyService;
+	private final MemberPageLinkService memberPageLinkService;
 
-    private final MemberRepository memberRepository;
-    private final RefreshTokenService refreshTokenService;
-    private final NotificationService notifyService;
-    private final MemberPageLinkService memberPageLinkService;
+	public Member saveOrUpdate(Member member) {
+		Optional<Member> optionalMember = memberRepository.findByEmail(member.getEmail());
 
+		if (optionalMember.isPresent()) {
+			Member existingMember = optionalMember.get();
+			existingMember.updateMember(member);
 
-    public Member saveOrUpdate(Member member){
-        Optional<Member> optionalMember = memberRepository.findByEmail(member.getEmail());
+			return memberRepository.save(existingMember);
+		} else {
+			return memberRepository.save(member);
+		}
+	}
 
-        if (optionalMember.isPresent()) {
-            Member existingMember = optionalMember.get();
-            existingMember.updateMember(member);
+	public Member findMemberByEmail(String email) {
 
-            return memberRepository.save(existingMember);
-        } else {
-            return memberRepository.save(member);
-        }
-    }
+		Member member = memberRepository.findByEmail(email)
+			.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL));
 
-    public Member findMemberByEmail(String email)  {
+		return member;
+	}
 
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL));
+	public boolean isMemberExist(String email) {
+		return memberRepository.existsByEmail(email);
+	}
 
-        return member;
-    }
-    public boolean isMemberExist(String email) {
-        return memberRepository.existsByEmail(email);
-    }
+	public String getRedirectUrlForMember(String email) {
+		Member member = findMemberByEmail(email);
 
-    public String getRedirectUrlForMember(String email){
-        Member member = findMemberByEmail(email);
+		if (member.getGender() == null || member.getJob() == null || member.getAgeRange() == null) {
+			return "http://localhost:3000/signup";
+		}
 
-        if (member.getGender() == null || member.getJob() == null || member.getAgeRange() == null) {
-            return "http://localhost:3000/signup";
-        }
+		return "http://localhost:3000/mainpage";
+	}
 
-        return "http://localhost:3000/mainpage";
-    }
-
-    public void memberSignUp(MemberSignUpRequest memberSignUpRequest, PrincipalDetails principalDetails){
-        log.info("memberSignUp - email : {}", principalDetails.getEmail());
+	public void memberSignUp(MemberSignUpRequest memberSignUpRequest, PrincipalDetails principalDetails) {
+		log.info("memberSignUp - email : {}", principalDetails.getEmail());
 
       /*  // 이메일 중복 검사
         if (memberRepository.existsByEmail(principalDetails.getEmail())) {
             throw new MemberException(MemberErrorCode.MEMBER_EXIST_EMAIL);
         }
 */
-        Member member = memberRepository.findByEmail(principalDetails.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
-        log.info("member 이메일 {}  ", member.getEmail());
-        member.updateSignUpMember(memberSignUpRequest.ageRange(), memberSignUpRequest.gender(), memberSignUpRequest.job(),memberSignUpRequest.nickName());
-        memberRepository.save(member);
+		Member member = memberRepository.findByEmail(principalDetails.getEmail())
+			.orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
+		log.info("member 이메일 {}  ", member.getEmail());
+		member.updateSignUpMember(memberSignUpRequest.ageRange(), memberSignUpRequest.gender(),
+			memberSignUpRequest.job(), memberSignUpRequest.nickName());
+		memberRepository.save(member);
 
-    }
+	}
 
-    public void memberLogout(PrincipalDetails principalDetails){
-        log.info("memberLogout - email : {}", principalDetails.getEmail());
-        Member member = memberRepository.findByEmail(principalDetails.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
-        refreshTokenService.deleteRefreshToken(member.getEmail());
-    }
+	public void memberLogout(PrincipalDetails principalDetails) {
+		log.info("memberLogout - email : {}", principalDetails.getEmail());
+		Member member = memberRepository.findByEmail(principalDetails.getEmail())
+			.orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
+		refreshTokenService.deleteRefreshToken(member.getEmail());
+	}
 
+	public ApiPageResponseSpec<List<PageResponse>> processMemberDeletion(PrincipalDetails principalDetails) {
+		log.info("memberDelete - email : {}", principalDetails.getEmail());
+		Member member = memberRepository.findByEmail(principalDetails.getEmail())
+			.orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
 
-    public ApiPageResponseSpec<List<PageResponse>> processMemberDeletion(PrincipalDetails principalDetails){
-        log.info("memberDelete - email : {}", principalDetails.getEmail());
-        Member member = memberRepository.findByEmail(principalDetails.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
+		List<Page> pagesWithUniqueHost = memberPageLinkService.PagesWithUniqueHostByMember(member.getId());
 
-        List<Page> pagesWithUniqueHost = memberPageLinkService.PagesWithUniqueHostByMember(member.getId());
+		List<PageResponse> pageResponses = new ArrayList<>();
 
-        List<PageResponse> pageResponses = new ArrayList<>();
+		for (Page pageWithUniqueHost : pagesWithUniqueHost) {
+			pageResponses.add(PageResponse.builder()
+				.pageId(pageWithUniqueHost.getId())
+				.pageTitle(pageWithUniqueHost.getPageTitle())
+				.pageType(pageWithUniqueHost.getPageType())
+				.build());
 
-        for(Page pageWithUniqueHost : pagesWithUniqueHost){
-            pageResponses.add(PageResponse.builder()
-                    .pageId(pageWithUniqueHost.getId())
-                    .pageTitle(pageWithUniqueHost.getPageTitle())
-                    .pageType(pageWithUniqueHost.getPageType())
-                    .build());
+		}
+		return ApiPageResponseSpec.<List<PageResponse>>builder()
+			.httpStatusCode(HttpStatus.OK)
+			.successMessage("해당 회원이 유일한 호스트인 페이지 반환 완료!")
+			.data(pageResponses)
+			.build();
+	}
 
-        }
-        return ApiPageResponseSpec.<List<PageResponse>>builder()
-                .httpStatusCode(HttpStatus.OK)
-                .successMessage("해당 회원이 유일한 호스트인 페이지 반환 완료!")
-                .data(pageResponses)
-                .build();
-    }
+	@Transactional
+	public void memberDelete(PrincipalDetails principalDetails) {
+		log.info("memberDelete - email : {}", principalDetails.getEmail());
+		Member member = memberRepository.findByEmail(principalDetails.getEmail())
+			.orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
 
-    @Transactional
-    public void memberDelete(PrincipalDetails principalDetails){
-        log.info("memberDelete - email : {}", principalDetails.getEmail());
-        Member member = memberRepository.findByEmail(principalDetails.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
+		String memberEmail = member.getEmail();
 
-        String memberEmail = member.getEmail();
+		memberPageLinkService.deleteMemberPageLink(member.getId());
 
-        memberPageLinkService.deleteMemberPageLink(member.getId());
+		notifyService.deleteAllNotificationByMember(findMemberByEmail(memberEmail));
 
-
-        notifyService.deleteAllNotificationByMember(findMemberByEmail(memberEmail));
-
-        memberRepository.delete(member);
-        refreshTokenService.deleteRefreshToken(memberEmail);
-        SecurityContextHolder.clearContext();
-    }
+		memberRepository.delete(member);
+		refreshTokenService.deleteRefreshToken(memberEmail);
+		SecurityContextHolder.clearContext();
+	}
 
 }

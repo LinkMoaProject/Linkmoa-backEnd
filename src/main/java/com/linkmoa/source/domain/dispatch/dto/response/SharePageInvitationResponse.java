@@ -4,9 +4,9 @@ import lombok.Builder;
 
 @Builder
 public record SharePageInvitationResponse(
-        String receiverEmail,
-        String senderEmail,
-        String pageTitle,
-        Long pageInvitationRequestId
+	String receiverEmail,
+	String senderEmail,
+	String pageTitle,
+	Long pageInvitationRequestId
 ) {
 }

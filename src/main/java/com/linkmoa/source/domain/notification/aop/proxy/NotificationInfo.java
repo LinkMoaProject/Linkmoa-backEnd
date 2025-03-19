@@ -5,8 +5,11 @@ import com.linkmoa.source.domain.notification.constant.NotificationType;
 
 public interface NotificationInfo {
 
-    Member getSender();
-    Member getReceiver();
-    NotificationType getNotificationType();
-    Long getRequestId();
+	Member getSender();
+
+	Member getReceiver();
+
+	NotificationType getNotificationType();
+
+	Long getRequestId();
 }

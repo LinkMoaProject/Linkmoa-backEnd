@@ -1,17 +1,16 @@
 package com.linkmoa.source.domain.site.dto.response;
 
-
 import lombok.Builder;
 
 import java.util.Set;
 
 @Builder
 public record SiteDetailResponse(
-        Long siteId,
-        String siteName,
-        String siteUrl,
-        Integer orderIndex,
-        Boolean isFavorite
+	Long siteId,
+	String siteName,
+	String siteUrl,
+	Integer orderIndex,
+	Boolean isFavorite
 ) {
    /* public static SiteDetailResponse from(SiteDocument document, Set<Long> favoriteSiteIds) {
         return SiteDetailResponse.builder()

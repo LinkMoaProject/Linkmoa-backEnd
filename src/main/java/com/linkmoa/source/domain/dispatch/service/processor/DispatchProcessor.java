@@ -9,24 +9,25 @@ import com.linkmoa.source.domain.dispatch.exception.DispatchException;
 import com.linkmoa.source.domain.notification.constant.NotificationType;
 
 public interface DispatchProcessor {
-    ApiDispatchResponseSpec<?> processRequest(DispatchProcessingRequest dispatchProcessingRequest,PrincipalDetails principalDetails);
+	ApiDispatchResponseSpec<?> processRequest(DispatchProcessingRequest dispatchProcessingRequest,
+		PrincipalDetails principalDetails);
 
-    default void validateRequestStatus(RequestStatus status) {
-        if (status == RequestStatus.ACCEPTED || status == RequestStatus.REJECTED) {
-            throw new DispatchException(DispatchErrorCode.REQUEST_ALREADY_PROCESSED);
-        }
-    }
+	default void validateRequestStatus(RequestStatus status) {
+		if (status == RequestStatus.ACCEPTED || status == RequestStatus.REJECTED) {
+			throw new DispatchException(DispatchErrorCode.REQUEST_ALREADY_PROCESSED);
+		}
+	}
 
-    default void validateNotificationType(NotificationType expectedType, NotificationType actualType) {
-        if (expectedType != actualType) {
-            throw new DispatchException(DispatchErrorCode.INVALID_NOTIFICATION_TYPE);
-        }
-    }
+	default void validateNotificationType(NotificationType expectedType, NotificationType actualType) {
+		if (expectedType != actualType) {
+			throw new DispatchException(DispatchErrorCode.INVALID_NOTIFICATION_TYPE);
+		}
+	}
 
-    default void validateReceiver(String expectedReceiver, String currentMemberEmail) {
-        if (!expectedReceiver.equals(currentMemberEmail)) {
-            throw new DispatchException(DispatchErrorCode.INVALID_RECEIVER);
-        }
-    }
+	default void validateReceiver(String expectedReceiver, String currentMemberEmail) {
+		if (!expectedReceiver.equals(currentMemberEmail)) {
+			throw new DispatchException(DispatchErrorCode.INVALID_RECEIVER);
+		}
+	}
 
 }

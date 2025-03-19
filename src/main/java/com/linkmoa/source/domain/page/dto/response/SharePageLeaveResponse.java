@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record SharePageLeaveResponse(
-        String pageTitle,
-        Long pageId
+	String pageTitle,
+	Long pageId
 ) {
 }
