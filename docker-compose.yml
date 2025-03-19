@@ -44,7 +44,7 @@ services:
     restart: always
     volumes:
       - linkmoa-database:/var/lib/mysql   # 데이터베이스 볼륨 설정
-
+      - ./src/main/resources/db/schema/schema.sql:/docker-entrypoint-initdb.d/schema.sql
   linkmoa-redis:
     image: redis:latest
     container_name: linkmoa-redis

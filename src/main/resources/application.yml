@@ -10,13 +10,15 @@ spring:
             scope: profile, email
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
 #        show_sql: true
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
-
+  sql:
+    init:
+      mode: always
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
