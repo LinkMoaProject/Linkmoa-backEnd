@@ -1,103 +1,130 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.3.3'
-	id 'io.spring.dependency-management' version '1.1.6'
+    id 'java'
+    id 'org.springframework.boot' version '3.3.3'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
 group = 'com.init'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    asciidoctorExt
+}
+
+ext {
+    set('snippetsDir', file("build/generated-snippets"))
+
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testCompileOnly 'org.projectlombok:lombok'
-	testAnnotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 
 
-	implementation 'co.elastic.clients:elasticsearch-java:8.13.4'
-	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    implementation 'co.elastic.clients:elasticsearch-java:8.13.4'
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 
-	// Spring Jpa
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // Spring Jpa
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-	// Spring Security
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	testImplementation 'org.springframework.security:spring-security-test'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-	// Spring Web
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+    // Spring Web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	// Spring Validation
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // Spring Validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	// Lombok
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
-	// Mysql
-	runtimeOnly 'com.mysql:mysql-connector-j'
+    // Mysql
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
-	// Jwt
-	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
-	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
-	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+    // Jwt
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
-	// Swagger
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4")
+    // Swagger
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4")
 
-	//validation
-	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+    //validation
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 
-	// Redis
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'org.springframework.data:spring-data-redis'
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.data:spring-data-redis'
 
-	// Google Cloud Storage
-	implementation 'com.google.cloud:google-cloud-storage:2.12.0'
+    // Google Cloud Storage
+    implementation 'com.google.cloud:google-cloud-storage:2.12.0'
 
-	// redis
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-	// validation
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	// Swagger
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+    // Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
-	// spring security test
-	testImplementation("org.springframework.security:spring-security-test")
-	testImplementation 'org.junit.jupiter:junit-jupiter'
+    // spring security test
+    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation 'org.junit.jupiter:junit-jupiter'
 
-	//Querydsl 추가
-	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
-	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    //Querydsl 추가
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
-	// mockito
-	testImplementation 'org.mockito:mockito-core:4.11.0'
-	testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
+    // mockito
+    testImplementation 'org.mockito:mockito-core:4.11.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
 
+    // Spring REST Docs Asciidoctor 확장
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+
+    // Spring REST Docs MockMvc, 테스트에서 스니펫 생성용
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    outputs.dir snippetsDir
+    useJUnitPlatform()
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+    finalizedBy test
+}
+
+bootJar {
+    dependsOn asciidoctor
+
+    from("${asciidoctor.outputDir}") {
+        into 'static/docs'
+    }
 }
