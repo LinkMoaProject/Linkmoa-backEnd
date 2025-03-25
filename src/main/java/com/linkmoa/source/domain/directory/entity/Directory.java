@@ -34,10 +34,10 @@ public class Directory extends BaseEntity {
 	@Column(name = "directory_id")
 	private Long id;
 
-	@Column(name = "directory_name")
+	@Column(name = "name")
 	private String directoryName;
 
-	@Column(name = "directory_description")
+	@Column(name = "description")
 	private String directoryDescription;
 
 	@ManyToOne(

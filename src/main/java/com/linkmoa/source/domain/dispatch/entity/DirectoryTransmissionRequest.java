@@ -3,18 +3,26 @@ package com.linkmoa.source.domain.dispatch.entity;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
+import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.notification.aop.proxy.NotificationInfo;
-
 import com.linkmoa.source.domain.notification.constant.NotificationType;
-import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
-import com.linkmoa.source.domain.notification.entity.Notification;
 import com.linkmoa.source.global.entity.BaseEntity;
 
-import jakarta.persistence.*;
-import lombok.*;
-
-import org.checkerframework.checker.units.qual.C;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -35,11 +43,11 @@ public class DirectoryTransmissionRequest extends BaseEntity implements Notifica
 	private Member receiver;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
+	@Column(nullable = false, name = "notification_type")
 	private NotificationType notificationType = NotificationType.TRANSMIT_DIRECTORY;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
+	@Column(nullable = false, name = "request_status")
 	private RequestStatus requestStatus = RequestStatus.WAITING;
 
 	@ManyToOne(fetch = FetchType.LAZY)

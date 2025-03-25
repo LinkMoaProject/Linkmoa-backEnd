@@ -37,7 +37,7 @@ class MemberServiceTest {
 
 		member = Member.builder()
 			.email("test")
-			.role(Role.ROLE_USER)
+			.role(Role.USER)
 			.provider("google")
 			.providerId("google12345")
 			.build();

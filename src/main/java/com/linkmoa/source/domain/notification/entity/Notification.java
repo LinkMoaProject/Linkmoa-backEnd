@@ -26,17 +26,17 @@ public class Notification extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "notice_id")
+	@Column(name = "notification_id")
 	private Long id;
 
 	@Column(name = "is_read", nullable = false)
 	private boolean isRead;
 
-	@Column(name = "notice_content")
+	@Column(name = "content")
 	private String content;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
+	@Column(nullable = false, name = "notification_type")
 	private NotificationType notificationType;
 
 	@ManyToOne(fetch = FetchType.LAZY)

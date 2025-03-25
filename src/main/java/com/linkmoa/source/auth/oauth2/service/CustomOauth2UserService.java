@@ -1,20 +1,20 @@
 package com.linkmoa.source.auth.oauth2.service;
 
-import com.linkmoa.source.auth.oauth2.entity.GoogleUserDetails;
-import com.linkmoa.source.auth.oauth2.entity.OAuth2UserInfo;
-import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.member.entity.Member;
-import com.linkmoa.source.domain.member.constant.Role;
-import com.linkmoa.source.domain.member.service.MemberService;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import com.linkmoa.source.auth.oauth2.entity.GoogleUserDetails;
+import com.linkmoa.source.auth.oauth2.entity.OAuth2UserInfo;
+import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import com.linkmoa.source.domain.member.constant.Role;
+import com.linkmoa.source.domain.member.entity.Member;
+import com.linkmoa.source.domain.member.service.MemberService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +34,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
 
 		Member member = memberService.saveOrUpdate(Member.builder()
 			.email(oAuth2UserInfo.getEmail())
-			.role(Role.ROLE_USER)
+			.role(Role.USER)
 			.provider(provider)
 			.providerId(oAuth2UserInfo.getProviderId())
 			.build());

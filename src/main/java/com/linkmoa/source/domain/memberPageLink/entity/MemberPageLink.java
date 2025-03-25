@@ -5,7 +5,6 @@ import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.global.entity.BaseEntity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -32,15 +31,13 @@ public class MemberPageLink extends BaseEntity {
 	private Long id;
 
 	@ManyToOne(
-		fetch = FetchType.LAZY,
-		cascade = CascadeType.ALL
+		fetch = FetchType.LAZY
 	)
 	@JoinColumn(name = "member_id")
 	private Member member;
 
 	@ManyToOne(
-		fetch = FetchType.LAZY,
-		cascade = CascadeType.PERSIST
+		fetch = FetchType.LAZY
 	)
 	@JoinColumn(name = "page_id")
 	private Page page;
@@ -57,12 +54,12 @@ public class MemberPageLink extends BaseEntity {
 
 	}
 
-	public void setMember(Member member) {
+	private void setMember(Member member) {
 		this.member = member;
 		member.getMemberPageLinks().add(this);
 	}
 
-	public void setPage(Page page) {
+	private void setPage(Page page) {
 		this.page = page;
 		page.getMemberPageLinks().add(this);
 	}

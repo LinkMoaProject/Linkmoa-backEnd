@@ -1,24 +1,26 @@
 package com.linkmoa.source.auth.oauth2.principal;
 
-import com.linkmoa.source.domain.member.entity.Member;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
+import com.linkmoa.source.domain.member.entity.Member;
+
+import lombok.Getter;
 
 @Getter
 public class PrincipalDetails implements OAuth2User, UserDetails {
 
 	private Member member;
 	private Map<String, Object> attributes; // attributes : 구글에서 받아온 정보들
+
+	public PrincipalDetails() {
+
+	}
 
 	/**
 	 * 자체 로그인
@@ -55,7 +57,7 @@ public class PrincipalDetails implements OAuth2User, UserDetails {
 	// UserDetails //
 	@Override
 	public String getPassword() {
-		return member.getPassword();
+		return null;
 	}
 
 	@Override

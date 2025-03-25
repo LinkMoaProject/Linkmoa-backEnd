@@ -58,7 +58,6 @@ public class LogAspect {
 	 * 즉, 한번 사용되면 재사용되지 않는 성질이 있어 필터나 인터셉터에서 @RequestBody 데이터를 중간에 한번 읽으려면 Wrapper를 통해서 감싸줘야 함.
 	 * RequestBody가 스트림 형태로 들어오기 때문.
 	 * 스트림은 한번 소비하면 다시 못쓰기 때문에 로깅에서 써버리면 서비스 로직에서 @RequestBody를 사용할 수 없음.
-	 *
 	 * 현재 아래 메소드는 request body의 파라미터 로깅이 안됨. 해결 못함
 	 */
 

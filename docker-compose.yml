@@ -11,14 +11,13 @@ services:
     depends_on:
       - linkmoa-database
       - linkmoa-redis
-    #  - linkmoa-es
     ports:
       - ${SPRING_PORT}:${SPRING_PORT}   # Spring Boot 포트 매핑
     restart: always
-#    volumes:
-#      - type: bind
-#        source: ${SERVER_STORAGE_PATH}  # 서버의 저장 경로 1
-#        target: ${STORAGE_PATH}         # 컨테이너 내부의 저장 경로 1
+  #    volumes:
+  #      - type: bind
+  #        source: ${SERVER_STORAGE_PATH}  # 서버의 저장 경로 1
+  #        target: ${STORAGE_PATH}         # 컨테이너 내부의 저장 경로 1
 
   linkmoa-database:
     image: mysql:8.0

@@ -1,10 +1,16 @@
 package com.linkmoa.source.domain.site.entity;
 
 import com.linkmoa.source.domain.directory.entity.Directory;
-import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.global.entity.BaseEntity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,10 +26,10 @@ public class Site extends BaseEntity {
 	@Column(name = "site_id")
 	private Long id;
 
-	@Column(name = "site_name")
+	@Column(name = "name")
 	private String siteName;
 
-	@Column(name = "site_url")
+	@Column(name = "url")
 	private String siteUrl;
 
 	@ManyToOne(

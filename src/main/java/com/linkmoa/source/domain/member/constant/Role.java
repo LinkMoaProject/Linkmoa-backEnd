@@ -1,6 +1,9 @@
 package com.linkmoa.source.domain.member.constant;
 
 public enum Role {
+	USER, ADMIN;
 
-	ROLE_USER, ROLE_ADMIN
+	public String getRoleName() {
+		return "ROLE_" + name();
+	}
 }

@@ -1,18 +1,26 @@
 package com.linkmoa.source.domain.member.entity;
 
-import com.linkmoa.source.domain.member.constant.Role;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.linkmoa.source.domain.member.constant.Gender;
+import com.linkmoa.source.domain.member.constant.Role;
 import com.linkmoa.source.domain.memberPageLink.entity.MemberPageLink;
 import com.linkmoa.source.global.entity.BaseEntity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -24,17 +32,14 @@ public class Member extends BaseEntity {
 	@Column(name = "member_id")
 	private Long id;
 
-	@Column(name = "member_email")
+	@Column(name = "email")
 	private String email;
-
-	@Column(name = "password")
-	private String password;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role")
 	private Role role;
 
-	@Column(name = "member_nickname")
+	@Column(name = "nickname")
 	private String nickname;
 
 	// provider : google이 들어감
@@ -45,13 +50,14 @@ public class Member extends BaseEntity {
 	@Column(name = "provider_id")
 	private String providerId;
 
-	@Column(name = "member_age_Range")
+	@Column(name = "age_range")
 	private String ageRange;
 
-	@Column(name = "member_gender")
+	@Column(name = "gender")
+	@Enumerated(EnumType.STRING)
 	private Gender gender;
 
-	@Column(name = "member_job")
+	@Column(name = "job")
 	private String job;
 
 	@OneToMany(
@@ -62,9 +68,8 @@ public class Member extends BaseEntity {
 	private List<MemberPageLink> memberPageLinks = new ArrayList<>();
 
 	@Builder
-	public Member(String email, String password, Role role, String provider, String providerId) {
+	public Member(String email, Role role, String provider, String providerId) {
 		this.email = email;
-		this.password = password;
 		this.role = role;
 		this.provider = provider;
 		this.providerId = providerId;
