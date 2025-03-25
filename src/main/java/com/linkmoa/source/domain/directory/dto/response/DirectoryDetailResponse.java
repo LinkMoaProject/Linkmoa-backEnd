@@ -2,14 +2,12 @@ package com.linkmoa.source.domain.directory.dto.response;
 
 import lombok.Builder;
 
-import java.util.Set;
-
 @Builder
 public record DirectoryDetailResponse(
-        Long directoryId,
-        String directoryName,
-        Integer orderIndex,
-        Boolean isFavorite
+	Long directoryId,
+	String directoryName,
+	Integer orderIndex,
+	Boolean isFavorite
 ) {/*
     public static DirectoryDetailResponse from(DirectoryDocument document, Set<Long> favoriteDirectoryIds) {
         return DirectoryDetailResponse.builder()

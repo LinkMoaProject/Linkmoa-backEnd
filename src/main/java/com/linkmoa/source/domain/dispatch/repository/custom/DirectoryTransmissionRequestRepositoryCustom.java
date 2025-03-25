@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface DirectoryTransmissionRequestRepositoryCustom {
 
-    List<DispatchDetailResponse> findAllDirectoryTransmissionRequestByReceiverEmail(String receiverEmail);
+	List<DispatchDetailResponse> findAllDirectoryTransmissionRequestByReceiverEmail(String receiverEmail);
 }

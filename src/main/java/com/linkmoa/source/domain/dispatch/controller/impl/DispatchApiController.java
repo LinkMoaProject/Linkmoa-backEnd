@@ -12,7 +12,9 @@ import com.linkmoa.source.domain.dispatch.service.DispatchRequestService;
 import com.linkmoa.source.domain.dispatch.service.processor.DirectoryTransmissionRequestProcessor;
 import com.linkmoa.source.domain.dispatch.service.processor.SharePageInvitationRequestProcessor;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,61 +24,60 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/dispatch")
 public class DispatchApiController implements DispatchApiSpecification {
 
-    //[BE] [공유 페이지 초대 수락 또는 거절] 공유 페이지 초대 수락 또는 거절 구현
+	//[BE] [공유 페이지 초대 수락 또는 거절] 공유 페이지 초대 수락 또는 거절 구현
 
-    private final DispatchRequestService dispatchRequestService;
-    private final DirectoryTransmissionRequestProcessor directoryTransmissionRequestProcessor;
-    private final SharePageInvitationRequestProcessor sharePageInvitationRequestProcessor;
+	private final DispatchRequestService dispatchRequestService;
+	private final DirectoryTransmissionRequestProcessor directoryTransmissionRequestProcessor;
+	private final SharePageInvitationRequestProcessor sharePageInvitationRequestProcessor;
 
-    public ResponseEntity<ApiDirectoryResponseSpec<DirectoryTransmissionResponse>> transmitDirectory(
-            DirectoryTransmissionRequestCreate directoryTransmissionRequestCreate,
-            PrincipalDetails principalDetails) {
-        ApiDirectoryResponseSpec<DirectoryTransmissionResponse> directoryTransmissionResponse = dispatchRequestService.mapToDirectorySendResponse(
-                dispatchRequestService.createDirectoryTransmissionRequest(
-                        directoryTransmissionRequestCreate,
-                        principalDetails)
-        );
-        return ResponseEntity.ok().body(directoryTransmissionResponse);
-    }
+	public ResponseEntity<ApiDirectoryResponseSpec<DirectoryTransmissionResponse>> transmitDirectory(
+		DirectoryTransmissionRequestCreate directoryTransmissionRequestCreate,
+		PrincipalDetails principalDetails) {
+		ApiDirectoryResponseSpec<DirectoryTransmissionResponse> directoryTransmissionResponse = dispatchRequestService.mapToDirectorySendResponse(
+			dispatchRequestService.createDirectoryTransmissionRequest(
+				directoryTransmissionRequestCreate,
+				principalDetails)
+		);
+		return ResponseEntity.ok().body(directoryTransmissionResponse);
+	}
 
-    public ResponseEntity<ApiDispatchResponseSpec<DispatchDetailResponse>> processDirectoryTransmission(
-            DispatchProcessingRequest dispatchProcessingRequest,
-            PrincipalDetails principalDetails) {
+	public ResponseEntity<ApiDispatchResponseSpec<DispatchDetailResponse>> processDirectoryTransmission(
+		DispatchProcessingRequest dispatchProcessingRequest,
+		PrincipalDetails principalDetails) {
 
-        ApiDispatchResponseSpec<DispatchDetailResponse> directoryTransmissionResponse = directoryTransmissionRequestProcessor.processRequest(
-                dispatchProcessingRequest, principalDetails);
+		ApiDispatchResponseSpec<DispatchDetailResponse> directoryTransmissionResponse = directoryTransmissionRequestProcessor.processRequest(
+			dispatchProcessingRequest, principalDetails);
 
-        return ResponseEntity.ok().body(directoryTransmissionResponse);
-    }
+		return ResponseEntity.ok().body(directoryTransmissionResponse);
+	}
 
+	public ResponseEntity<ApiPageResponseSpec<SharePageInvitationResponse>> inviteSharePage(
+		SharePageInvitationRequestCreate pageInvitationRequest,
+		PrincipalDetails principalDetails) {
+		ApiPageResponseSpec<SharePageInvitationResponse> pageInviteRequestResponse =
+			dispatchRequestService.mapToPageInviteRequestResponse(
+				dispatchRequestService.createSharePageInviteRequest(pageInvitationRequest, principalDetails));
 
-    public ResponseEntity<ApiPageResponseSpec<SharePageInvitationResponse>> inviteSharePage(
-            SharePageInvitationRequestCreate pageInvitationRequest,
-            PrincipalDetails principalDetails) {
-        ApiPageResponseSpec<SharePageInvitationResponse> pageInviteRequestResponse =
-                dispatchRequestService.mapToPageInviteRequestResponse(dispatchRequestService.createSharePageInviteRequest(pageInvitationRequest, principalDetails));
+		return ResponseEntity.ok().body(pageInviteRequestResponse);
+	}
 
-        return ResponseEntity.ok().body(pageInviteRequestResponse);
-    }
+	public ResponseEntity<ApiDispatchResponseSpec<DispatchDetailResponse>> processSharePageInvitation(
+		DispatchProcessingRequest dispatchProcessingRequest,
+		PrincipalDetails principalDetails) {
 
-    public ResponseEntity<ApiDispatchResponseSpec<DispatchDetailResponse>> processSharePageInvitation(
-            DispatchProcessingRequest dispatchProcessingRequest,
-            PrincipalDetails principalDetails) {
+		ApiDispatchResponseSpec<DispatchDetailResponse> sharePageInvitationResponse = sharePageInvitationRequestProcessor.processRequest(
+			dispatchProcessingRequest, principalDetails);
 
-        ApiDispatchResponseSpec<DispatchDetailResponse> sharePageInvitationResponse = sharePageInvitationRequestProcessor.processRequest(
-                dispatchProcessingRequest, principalDetails);
+		return ResponseEntity.ok().body(sharePageInvitationResponse);
+	}
 
-        return ResponseEntity.ok().body(sharePageInvitationResponse);
-    }
+	public ResponseEntity<ApiDispatchResponseSpec<NotificationsDetailsResponse>> getAllNotification(
+		PrincipalDetails principalDetails) {
 
-    public ResponseEntity<ApiDispatchResponseSpec<NotificationsDetailsResponse>> getAllNotification(
-            PrincipalDetails principalDetails) {
+		ApiDispatchResponseSpec<NotificationsDetailsResponse> allNotificationsForReceiver =
+			dispatchRequestService.findAllNotificationsForReceiver(principalDetails.getEmail());
 
-        ApiDispatchResponseSpec<NotificationsDetailsResponse> allNotificationsForReceiver =
-                dispatchRequestService.findAllNotificationsForReceiver(principalDetails.getEmail());
-
-        return ResponseEntity.ok().body(allNotificationsForReceiver);
-    }
-
+		return ResponseEntity.ok().body(allNotificationsForReceiver);
+	}
 
 }

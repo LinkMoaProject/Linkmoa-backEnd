@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class NotValidTokenException extends RuntimeException{
-    private final JwtErrorCode errorCode;
+public class NotValidTokenException extends RuntimeException {
+	private final JwtErrorCode errorCode;
 
 }
 

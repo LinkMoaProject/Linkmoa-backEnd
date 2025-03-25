@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 public interface SiteRepositoryCustom {
-    List<SiteDetailResponse> findSitesDetails(Long directoryId, Set<Long> favoriteSiteIds);
-    List<SiteDetailResponse> findFavoriteSites(Set<Long> favoriteSitesIds);
+	List<SiteDetailResponse> findSitesDetails(Long directoryId, Set<Long> favoriteSiteIds);
+
+	List<SiteDetailResponse> findFavoriteSites(Set<Long> favoriteSitesIds);
 
 }

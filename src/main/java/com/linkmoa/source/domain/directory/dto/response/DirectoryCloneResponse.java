@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record DirectoryCloneResponse(
-        Long directoryId,
-        String directoryName
+	Long directoryId,
+	String directoryName
 ) {
 }

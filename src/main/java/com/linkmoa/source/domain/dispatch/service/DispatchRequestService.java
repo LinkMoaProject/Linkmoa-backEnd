@@ -1,6 +1,5 @@
 package com.linkmoa.source.domain.dispatch.service;
 
-
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
@@ -33,6 +32,7 @@ import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,166 +43,161 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class DispatchRequestService {
- 
-    private final MemberService memberService;
-    private final DirectoryRepository directoryRepository;
-    private final DirectoryTransmissionRequestRepository directoryTransmissionRequestRepository;
-    private final PageRepository pageRepository;
-    private final SharePageInvitationRequestRepository sharePageInvitationRequestRepository;
-    private final NotificationRepository notificationRepository;
-    private final NotificationService notificationService;
 
+	private final MemberService memberService;
+	private final DirectoryRepository directoryRepository;
+	private final DirectoryTransmissionRequestRepository directoryTransmissionRequestRepository;
+	private final PageRepository pageRepository;
+	private final SharePageInvitationRequestRepository sharePageInvitationRequestRepository;
+	private final NotificationRepository notificationRepository;
+	private final NotificationService notificationService;
 
-    @Transactional
-    @ValidationApplied
-    @NotificationApplied
-    public DirectoryTransmissionRequest createDirectoryTransmissionRequest(
-            DirectoryTransmissionRequestCreate directoryTransmissionSendRequest,
-            PrincipalDetails principalDetails) {
+	@Transactional
+	@ValidationApplied
+	@NotificationApplied
+	public DirectoryTransmissionRequest createDirectoryTransmissionRequest(
+		DirectoryTransmissionRequestCreate directoryTransmissionSendRequest,
+		PrincipalDetails principalDetails) {
 
-        if (!memberService.isMemberExist(directoryTransmissionSendRequest.receiverEmail())) {
-            throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL);
-        }
+		if (!memberService.isMemberExist(directoryTransmissionSendRequest.receiverEmail())) {
+			throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL);
+		}
 
-        DirectoryTransmissionRequest existingRequest = directoryTransmissionRequestRepository
-                .findByDirectoryIdAndRequestStatus(directoryTransmissionSendRequest.directoryId(), RequestStatus.WAITING)
-                .orElse(null);
+		DirectoryTransmissionRequest existingRequest = directoryTransmissionRequestRepository
+			.findByDirectoryIdAndRequestStatus(directoryTransmissionSendRequest.directoryId(), RequestStatus.WAITING)
+			.orElse(null);
 
-        if (existingRequest != null) {
-            throw new DispatchException(DispatchErrorCode.TRANSMIT_DIRECTORY_REQUEST_ALREADY_EXIST);
-        }
+		if (existingRequest != null) {
+			throw new DispatchException(DispatchErrorCode.TRANSMIT_DIRECTORY_REQUEST_ALREADY_EXIST);
+		}
 
-        DirectoryTransmissionRequest acceptedRequest = directoryTransmissionRequestRepository
-                .findByDirectoryIdAndRequestStatus(directoryTransmissionSendRequest.directoryId(), RequestStatus.ACCEPTED)
-                .orElse(null);
+		DirectoryTransmissionRequest acceptedRequest = directoryTransmissionRequestRepository
+			.findByDirectoryIdAndRequestStatus(directoryTransmissionSendRequest.directoryId(), RequestStatus.ACCEPTED)
+			.orElse(null);
 
-        if (acceptedRequest != null) {
-            throw new DispatchException(DispatchErrorCode.TRANSMIT_DIRECTORY_REQUEST_ACCEPTED_EXIST);
-        }
+		if (acceptedRequest != null) {
+			throw new DispatchException(DispatchErrorCode.TRANSMIT_DIRECTORY_REQUEST_ACCEPTED_EXIST);
+		}
 
-        Directory directory = directoryRepository.findById(directoryTransmissionSendRequest.directoryId())
-                .orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+		Directory directory = directoryRepository.findById(directoryTransmissionSendRequest.directoryId())
+			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-        DirectoryTransmissionRequest directoryTransmissionRequest = DirectoryTransmissionRequest.builder()
-                .sender(principalDetails.getMember())
-                .receiver(memberService.findMemberByEmail(directoryTransmissionSendRequest.receiverEmail()))
-                .directory(directory)
-                .build();
+		DirectoryTransmissionRequest directoryTransmissionRequest = DirectoryTransmissionRequest.builder()
+			.sender(principalDetails.getMember())
+			.receiver(memberService.findMemberByEmail(directoryTransmissionSendRequest.receiverEmail()))
+			.directory(directory)
+			.build();
 
-        return directoryTransmissionRequestRepository.save(directoryTransmissionRequest);
-    }
+		return directoryTransmissionRequestRepository.save(directoryTransmissionRequest);
+	}
 
+	public ApiDirectoryResponseSpec<DirectoryTransmissionResponse> mapToDirectorySendResponse(
+		DirectoryTransmissionRequest directoryTransmissionRequest) {
+		DirectoryTransmissionResponse directoryTransmissionResponse = DirectoryTransmissionResponse.builder()
+			.directoryName(directoryTransmissionRequest.getDirectory().getDirectoryName())
+			.receiverEmail(directoryTransmissionRequest.getReceiver().getEmail())
+			.senderEmail(directoryTransmissionRequest.getSender().getEmail())
+			.directoryTransmissionId(directoryTransmissionRequest.getRequestId())
+			.build();
 
-    public ApiDirectoryResponseSpec<DirectoryTransmissionResponse> mapToDirectorySendResponse(DirectoryTransmissionRequest directoryTransmissionRequest)
-    {
-        DirectoryTransmissionResponse directoryTransmissionResponse = DirectoryTransmissionResponse.builder()
-                .directoryName(directoryTransmissionRequest.getDirectory().getDirectoryName())
-                .receiverEmail(directoryTransmissionRequest.getReceiver().getEmail())
-                .senderEmail(directoryTransmissionRequest.getSender().getEmail())
-                .directoryTransmissionId(directoryTransmissionRequest.getRequestId())
-                .build();
+		return ApiDirectoryResponseSpec.<DirectoryTransmissionResponse>builder()
+			.httpStatusCode(HttpStatus.OK)
+			.successMessage("디렉토리 전송 요청을 보냈습니다.")
+			.data(directoryTransmissionResponse)
+			.build();
+	}
 
-        return ApiDirectoryResponseSpec.<DirectoryTransmissionResponse>builder()
-                .httpStatusCode(HttpStatus.OK)
-                .successMessage("디렉토리 전송 요청을 보냈습니다.")
-                .data(directoryTransmissionResponse)
-                .build();
-    }
+	@Transactional
+	@ValidationApplied
+	@NotificationApplied
+	public SharePageInvitationRequest createSharePageInviteRequest(
+		SharePageInvitationRequestCreate sharePageInvitationRequestCreate, PrincipalDetails principalDetails) {
 
+		if (!memberService.isMemberExist(sharePageInvitationRequestCreate.receiverEmail())) {
+			throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL); // 유저가 없으면 예외 발생
+		}
 
-    @Transactional
-    @ValidationApplied
-    @NotificationApplied
-    public SharePageInvitationRequest createSharePageInviteRequest(SharePageInvitationRequestCreate sharePageInvitationRequestCreate, PrincipalDetails principalDetails){
+		Page page = pageRepository.findById(sharePageInvitationRequestCreate.baseRequest().pageId())
+			.orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
 
-        if (!memberService.isMemberExist(sharePageInvitationRequestCreate.receiverEmail())) {
-            throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL); // 유저가 없으면 예외 발생
-        }
+		if (page.getPageType() == PageType.PERSONAL) {
+			throw new PageException(PageErrorCode.CANNOT_INVITE_TO_PERSONAL_PAGE);
+		}
 
-        Page page = pageRepository.findById(sharePageInvitationRequestCreate.baseRequest().pageId())
-                .orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
+		SharePageInvitationRequest existingRequest = sharePageInvitationRequestRepository.
+			findByPageIdAndRequestStatus(page.getId(), RequestStatus.WAITING)
+			.orElse(null);
 
-        if (page.getPageType() == PageType.PERSONAL) {
-            throw new PageException(PageErrorCode.CANNOT_INVITE_TO_PERSONAL_PAGE);
-        }
+		if (existingRequest != null) {
+			throw new DispatchException(DispatchErrorCode.SHARE_PAGE_INVITATION_REQUEST_ALREADY_EXIST);
+		}
 
-        SharePageInvitationRequest existingRequest = sharePageInvitationRequestRepository.
-                findByPageIdAndRequestStatus(page.getId(),RequestStatus.WAITING)
-                .orElse(null);
+		SharePageInvitationRequest acceptedRequest = sharePageInvitationRequestRepository
+			.findByPageIdAndRequestStatus(page.getId(), RequestStatus.ACCEPTED)
+			.orElse(null);
 
-        if(existingRequest != null){
-            throw new DispatchException(DispatchErrorCode.SHARE_PAGE_INVITATION_REQUEST_ALREADY_EXIST);
-        }
+		if (acceptedRequest != null) {
+			throw new DispatchException(DispatchErrorCode.SHARE_PAGE_INVITATION_REQUEST_ACCEPTED_EXIST);
+		}
 
-        SharePageInvitationRequest acceptedRequest = sharePageInvitationRequestRepository
-                .findByPageIdAndRequestStatus(page.getId(), RequestStatus.ACCEPTED)
-                .orElse(null);
+		SharePageInvitationRequest sharePageInvitationRequest = SharePageInvitationRequest.builder()
+			.sender(principalDetails.getMember())
+			.receiver(memberService.findMemberByEmail(sharePageInvitationRequestCreate.receiverEmail()))
+			.page(page)
+			.permissionType(sharePageInvitationRequestCreate.permissionType())
+			.build();
 
-        if(acceptedRequest != null){
-            throw new DispatchException(DispatchErrorCode.SHARE_PAGE_INVITATION_REQUEST_ACCEPTED_EXIST);
-        }
+		return sharePageInvitationRequestRepository.save(sharePageInvitationRequest);
+	}
 
-        SharePageInvitationRequest sharePageInvitationRequest = SharePageInvitationRequest.builder()
-                .sender(principalDetails.getMember())
-                .receiver(memberService.findMemberByEmail(sharePageInvitationRequestCreate.receiverEmail()))
-                .page(page)
-                .permissionType(sharePageInvitationRequestCreate.permissionType())
-                .build();
+	public ApiPageResponseSpec<SharePageInvitationResponse> mapToPageInviteRequestResponse(
+		com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest sharePageInvitationRequest) {
 
-        return sharePageInvitationRequestRepository.save(sharePageInvitationRequest);
-    }
-    public ApiPageResponseSpec<SharePageInvitationResponse> mapToPageInviteRequestResponse(com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest sharePageInvitationRequest){
+		SharePageInvitationResponse sharePageInvitationResponse = SharePageInvitationResponse.builder()
+			.pageTitle(sharePageInvitationRequest.getPage().getPageTitle())
+			.receiverEmail(sharePageInvitationRequest.getReceiver().getEmail())
+			.senderEmail(sharePageInvitationRequest.getSender().getEmail())
+			.pageInvitationRequestId(sharePageInvitationRequest.getId())
+			.build();
 
-        SharePageInvitationResponse sharePageInvitationResponse = SharePageInvitationResponse.builder()
-                .pageTitle(sharePageInvitationRequest.getPage().getPageTitle())
-                .receiverEmail(sharePageInvitationRequest.getReceiver().getEmail())
-                .senderEmail(sharePageInvitationRequest.getSender().getEmail())
-                .pageInvitationRequestId(sharePageInvitationRequest.getId())
-                .build();
+		return ApiPageResponseSpec.<SharePageInvitationResponse>builder()
+			.httpStatusCode(HttpStatus.OK)
+			.successMessage("공유 페이지 초대를 보냈습니다.")
+			.data(sharePageInvitationResponse)
+			.build();
+	}
 
-        return ApiPageResponseSpec.<SharePageInvitationResponse>builder()
-                .httpStatusCode(HttpStatus.OK)
-                .successMessage("공유 페이지 초대를 보냈습니다.")
-                .data(sharePageInvitationResponse)
-                .build();
-    }
+	public List<DispatchDetailResponse> findSharePageInvitationsForReceiver(String receiverEmail) {
+		List<DispatchDetailResponse> allSharePageInvitationsByReceiverEmail =
+			sharePageInvitationRequestRepository.findAllSharePageInvitationsByReceiverEmail(receiverEmail);
 
-    public List<DispatchDetailResponse> findSharePageInvitationsForReceiver(String receiverEmail){
-        List<DispatchDetailResponse> allSharePageInvitationsByReceiverEmail =
-                sharePageInvitationRequestRepository.findAllSharePageInvitationsByReceiverEmail(receiverEmail);
+		return allSharePageInvitationsByReceiverEmail;
+	}
 
-        return allSharePageInvitationsByReceiverEmail;
-    }
+	public List<DispatchDetailResponse> findDirectoryDirectoryTransmissionsForReceiver(String receiverEmail) {
+		List<DispatchDetailResponse> allDirectoryTransmissionRequestByReceiverEmail =
+			directoryTransmissionRequestRepository.findAllDirectoryTransmissionRequestByReceiverEmail(receiverEmail);
 
-    public List<DispatchDetailResponse> findDirectoryDirectoryTransmissionsForReceiver(String receiverEmail){
-        List<DispatchDetailResponse> allDirectoryTransmissionRequestByReceiverEmail =
-                directoryTransmissionRequestRepository.findAllDirectoryTransmissionRequestByReceiverEmail(receiverEmail);
+		return allDirectoryTransmissionRequestByReceiverEmail;
+	}
 
-        return allDirectoryTransmissionRequestByReceiverEmail;
-    }
+	@Transactional
+	public ApiDispatchResponseSpec<NotificationsDetailsResponse> findAllNotificationsForReceiver(String receiverEmail) {
+		NotificationsDetailsResponse notificationDetails = NotificationsDetailsResponse.builder()
+			.DirectoryTransmissionRequests(findDirectoryDirectoryTransmissionsForReceiver(receiverEmail))
+			.SharePageInvitationRequests(findSharePageInvitationsForReceiver(receiverEmail))
+			.build();
 
-    @Transactional
-    public ApiDispatchResponseSpec<NotificationsDetailsResponse> findAllNotificationsForReceiver(String receiverEmail){
-        NotificationsDetailsResponse notificationDetails = NotificationsDetailsResponse.builder()
-                .DirectoryTransmissionRequests(findDirectoryDirectoryTransmissionsForReceiver(receiverEmail))
-                .SharePageInvitationRequests(findSharePageInvitationsForReceiver(receiverEmail))
-                .build();
+		notificationRepository.updateUnreadNotificationsToReadByReceiverEmail(receiverEmail);
 
-        notificationRepository.updateUnreadNotificationsToReadByReceiverEmail(receiverEmail);
+		notificationService.sendUnreadNotificationCount(receiverEmail);
 
-        notificationService.sendUnreadNotificationCount(receiverEmail);
+		return ApiDispatchResponseSpec.<NotificationsDetailsResponse>builder()
+			.httpStatusCode(HttpStatus.OK)
+			.successMessage("알람 목록을 조회했습니다.")
+			.data(notificationDetails)
+			.build();
 
-        return ApiDispatchResponseSpec.<NotificationsDetailsResponse>builder()
-                .httpStatusCode(HttpStatus.OK)
-                .successMessage("알람 목록을 조회했습니다.")
-                .data(notificationDetails)
-                .build();
-
-    }
-
-
-
-
-
+	}
 
 }

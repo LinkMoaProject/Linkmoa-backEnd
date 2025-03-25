@@ -7,34 +7,37 @@ import com.linkmoa.source.domain.Favorite.dto.response.ApiFavoriteResponseSpec;
 import com.linkmoa.source.domain.Favorite.dto.response.FavoriteDetailResponse;
 import com.linkmoa.source.domain.Favorite.dto.response.FavoriteResponse;
 import com.linkmoa.source.domain.Favorite.service.FavoriteService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/favorite")
 public class FavoriteApiController implements FavoriteApiSpecification {
 
-    private final FavoriteService favoriteService;
+	private final FavoriteService favoriteService;
 
-    public ResponseEntity<ApiFavoriteResponseSpec<FavoriteResponse>> updateFavorite(
-            FavoriteUpdateRequest favoriteUpdateRequest,
-            PrincipalDetails principalDetails) {
+	public ResponseEntity<ApiFavoriteResponseSpec<FavoriteResponse>> updateFavorite(
+		FavoriteUpdateRequest favoriteUpdateRequest,
+		PrincipalDetails principalDetails) {
 
-        ApiFavoriteResponseSpec<FavoriteResponse> favoriteCreateResponse = favoriteService.updateFavorite(favoriteUpdateRequest, principalDetails);
+		ApiFavoriteResponseSpec<FavoriteResponse> favoriteCreateResponse = favoriteService.updateFavorite(
+			favoriteUpdateRequest, principalDetails);
 
-        return ResponseEntity.ok().body(favoriteCreateResponse);
-    }
+		return ResponseEntity.ok().body(favoriteCreateResponse);
+	}
 
-    public ResponseEntity<ApiFavoriteResponseSpec<FavoriteDetailResponse>> getFavorite(
-            PrincipalDetails principalDetails) {
+	public ResponseEntity<ApiFavoriteResponseSpec<FavoriteDetailResponse>> getFavorite(
+		PrincipalDetails principalDetails) {
 
-        ApiFavoriteResponseSpec<FavoriteDetailResponse> favoriteDetails = favoriteService.findFavoriteDetails(principalDetails);
+		ApiFavoriteResponseSpec<FavoriteDetailResponse> favoriteDetails = favoriteService.findFavoriteDetails(
+			principalDetails);
 
-        return ResponseEntity.ok().body(favoriteDetails);
-    }
+		return ResponseEntity.ok().body(favoriteDetails);
+	}
 
 }
