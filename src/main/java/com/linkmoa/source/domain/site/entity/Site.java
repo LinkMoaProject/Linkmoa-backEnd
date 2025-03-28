@@ -28,10 +28,10 @@ public class Site extends BaseEntity {
 	@Column(name = "site_id")
 	private Long id;
 
-	@Column(name = "name")
+	@Column(name = "name", length = 45)
 	private String siteName;
 
-	@Column(name = "url")
+	@Column(name = "url", length = 255)
 	private String siteUrl;
 
 	@ManyToOne(
