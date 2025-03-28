@@ -5,14 +5,16 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.member.controller.spec.MemberApiSpecification;
 import com.linkmoa.source.domain.member.dto.request.MemberSignUpRequest;
 import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
@@ -21,13 +23,11 @@ import com.linkmoa.source.domain.page.service.PageService;
 import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
-@Slf4j
-public class MemberApiController implements MemberApiSpecification {
+public class MemberApiController {
 
 	private final MemberService memberService;
 	private final PageService pageService;
@@ -35,8 +35,8 @@ public class MemberApiController implements MemberApiSpecification {
 	@PostMapping("/sign-up")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<ApiResponseSpec> memberSignUp(
-		MemberSignUpRequest memberSignUpRequest,
-		PrincipalDetails principalDetails
+		@RequestBody @Validated MemberSignUpRequest memberSignUpRequest,
+		@AuthenticationPrincipal PrincipalDetails principalDetails
 	) {
 		memberService.memberSignUp(memberSignUpRequest, principalDetails);
 		pageService.createPersonalPage(principalDetails);
@@ -48,7 +48,8 @@ public class MemberApiController implements MemberApiSpecification {
 
 	@PostMapping("/log-out")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiResponseSpec> memberLogout(PrincipalDetails principalDetails) {
+	public ResponseEntity<ApiResponseSpec> memberLogout(
+		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
 		memberService.memberLogout(principalDetails);
 		ApiResponseSpec apiResponseSpec = new ApiResponseSpec(HttpStatus.OK, "로그아웃 성공");
@@ -59,7 +60,7 @@ public class MemberApiController implements MemberApiSpecification {
 	@GetMapping("/deletion-process")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<ApiPageResponseSpec<List<PageResponse>>> memberDeletionProcess(
-		PrincipalDetails principalDetails) {
+		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
 		ApiPageResponseSpec<List<PageResponse>> pagesWithUniqueHost = memberService.processMemberDeletion(
 			principalDetails);
@@ -69,7 +70,8 @@ public class MemberApiController implements MemberApiSpecification {
 
 	@DeleteMapping("/deletion")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiResponseSpec> memberDeletion(PrincipalDetails principalDetails) {
+	public ResponseEntity<ApiResponseSpec> memberDeletion(
+		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 		memberService.memberDelete(principalDetails);
 		ApiResponseSpec apiResponseSpec = new ApiResponseSpec(HttpStatus.OK, "회원 탈퇴 성공");
 		return ResponseEntity.ok()
