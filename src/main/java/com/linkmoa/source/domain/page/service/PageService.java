@@ -32,7 +32,6 @@ import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
 import com.linkmoa.source.domain.page.exception.PageException;
 import com.linkmoa.source.domain.page.repository.PageRepository;
-import com.linkmoa.source.domain.site.repository.SiteRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import com.linkmoa.source.global.dto.request.BaseRequest;
 
@@ -48,20 +47,22 @@ public class PageService {
 	private final MemberService memberService;
 	private final DirectoryRepository directoryRepository;
 	private final MemberPageLinkRepository memberPageLinkRepository;
-	private final SiteRepository siteRepository;
 	private final PageAsyncService pageAsyncService;
 	private final FavoriteRepository favoriteRepository;
 	private final FavoriteService favoriteService;
 
+	/**
+	 *  회원 가입 시 자동으로 생성되는 개인 페이지 생성 로직.
+	 *  해당 이메일로 이미 개인 페이지가 존재하는 경우 예외가 발생함.
+	 * @param principalDetails
+	 * @return
+	 */
 	@Transactional
 	public ApiPageResponseSpec<Long> createPersonalPage(PrincipalDetails principalDetails) {
 
 		Member hostMember = memberService.findMemberByEmail(principalDetails.getEmail());
 
-		// 개인 페이지가 이미 존재하면 예외 발생 (반환값을 사용하지 않고 존재 여부만 확인)
-		if (memberPageLinkRepository.findPersonalPageByMemberId(hostMember.getId()).isPresent()) {
-			throw new MemberException(MemberErrorCode.MEMBER_EXIST_EMAIL);
-		}
+		validatePersonalPageNotExists(hostMember);
 
 		PageCreateRequest requestDto = PageCreateRequest.builder()
 			.pageTitle(hostMember.getEmail() + " 개인")
@@ -81,9 +82,28 @@ public class PageService {
 			.build();
 	}
 
-	@Transactional
-	public ApiPageResponseSpec<Long> createPage(PageCreateRequest requestDto, PrincipalDetails principalDetails) {
+	/**
+	 * 해당 회원이 개인 페이지가 이미 존재하면 예외 발생 (반환값을 사용하지 않고 존재 여부만 확인)
+	 * @param hostMember
+	 */
+	private void validatePersonalPageNotExists(Member hostMember) {
 
+		if (memberPageLinkRepository.findPersonalPageByMemberId(hostMember.getId()).isPresent()) {
+			throw new MemberException(MemberErrorCode.MEMBER_EXIST_EMAIL);
+		}
+	}
+
+	/**
+	 * 공유 페이지를 생성하는 서비스 로직.
+	 * 개인 페이지는 생성할 수 없으며, 이를 사전에 검증한다.
+	 * @param requestDto
+	 * @param principalDetails
+	 * @return
+	 */
+	@Transactional
+	public ApiPageResponseSpec<Long> createSharedPage(PageCreateRequest requestDto, PrincipalDetails principalDetails) {
+
+		validatePageTypeIsNotPersonal(requestDto);
 		Member hostMember = memberService.findMemberByEmail(principalDetails.getEmail());
 
 		Directory rootDirectory = createRootDirectory(hostMember);
@@ -96,6 +116,13 @@ public class PageService {
 			.successMessage(newPage.getPageType().toString() + "페이지 생성에 성공했습니다.")
 			.data(newPage.getId())
 			.build();
+	}
+
+	private static void validatePageTypeIsNotPersonal(PageCreateRequest requestDto) {
+		PageType pageType = requestDto.pageType();
+		if (pageType.equals(PageType.PERSONAL)) {
+			throw new PageException(PageErrorCode.PERSONAL_PAGE_ALREADY_EXISTS);
+		}
 	}
 
 	private Page createNewPage(PageCreateRequest requestDto, Directory rootDirectory) {

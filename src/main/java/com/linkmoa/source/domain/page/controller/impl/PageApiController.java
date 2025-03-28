@@ -37,7 +37,8 @@ public class PageApiController {
 	public ResponseEntity<ApiPageResponseSpec<Long>> createPage(
 		@RequestBody @Validated PageCreateRequest pageCreateRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiPageResponseSpec<Long> createPageResponse = pageService.createPage(pageCreateRequest, principalDetails);
+		ApiPageResponseSpec<Long> createPageResponse = pageService.createSharedPage(pageCreateRequest,
+			principalDetails);
 
 		return ResponseEntity.ok().body(createPageResponse);
 	}
