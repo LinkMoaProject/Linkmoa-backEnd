@@ -7,4 +7,5 @@ public class SiteSimpleResponse {
 	private Long siteId;
 	private String siteName;
 	private Boolean isFavorite;
+	private String siteUrl;
 }

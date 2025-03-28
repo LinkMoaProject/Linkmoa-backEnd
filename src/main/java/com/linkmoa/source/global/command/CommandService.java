@@ -1,4 +1,4 @@
-package com.linkmoa.source.global.command.service;
+package com.linkmoa.source.global.command;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.domain.memberPageLink.repository.MemberPageLinkRepository;
-import com.linkmoa.source.global.command.constant.CommandType;
+import com.linkmoa.source.global.constant.CommandType;
 
 @Service
 public class CommandService {
