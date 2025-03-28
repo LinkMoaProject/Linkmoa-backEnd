@@ -39,13 +39,12 @@ public class Page extends BaseEntity {
 	@Column(name = "title", length = 50)
 	private String pageTitle;
 
-	@Column(name = "description", length = 100)
+	@Column(name = "description", length = 300)
 	private String pageDescription;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "page_type", nullable = false)
 	private PageType pageType;
-
 	@OneToMany(
 		mappedBy = "page",
 		cascade = CascadeType.ALL,  // Page 삭제 시 관련된 MemberPageLink도 삭제
