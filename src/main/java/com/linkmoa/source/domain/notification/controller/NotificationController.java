@@ -20,7 +20,6 @@ public class NotificationController {
 
 	private final NotificationService notificationService;
 
-	//@RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId)
 	@GetMapping(value = "/subscribe", produces = "text/event-stream")
 	@PreAuthorize("isAuthenticated()")
 	public SseEmitter subscribe(

@@ -1,20 +1,5 @@
 package com.linkmoa.source.domain.dispatch.controller.spec;
 
-import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
-import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
-import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
-import com.linkmoa.source.domain.dispatch.dto.response.*;
-import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
-import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequestCreate;
-import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
-import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
-import com.linkmoa.source.domain.page.error.PageErrorCode;
-import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,6 +8,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
+import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
+import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequestCreate;
+import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
+import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
+import com.linkmoa.source.domain.dispatch.dto.response.ApiDispatchResponseSpec;
+import com.linkmoa.source.domain.dispatch.dto.response.DirectoryTransmissionResponse;
+import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
+import com.linkmoa.source.domain.dispatch.dto.response.NotificationsDetailsResponse;
+import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationResponse;
+import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
+import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
+import com.linkmoa.source.domain.page.error.PageErrorCode;
+import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 public interface DispatchApiSpecification {
 

@@ -1,5 +1,11 @@
 package com.linkmoa.source.domain.page.controller.impl;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.page.controller.spec.PageApiSpecification;
 import com.linkmoa.source.domain.page.dto.request.PageCreateRequest;
@@ -12,12 +18,6 @@ import com.linkmoa.source.domain.page.service.PageService;
 import com.linkmoa.source.global.dto.request.BaseRequest;
 
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

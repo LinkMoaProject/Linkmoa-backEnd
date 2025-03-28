@@ -45,14 +45,6 @@ public class NotificationAspect {
 				notificationInfo.getRequestId()
 			)
 		);
-    /*    notificationService.send(
-                notificationInfo.getReceiverEmail(),
-                notificationInfo.getSenderEmail(),
-                notificationInfo.getNotificationType(),
-                message,
-                "url 테스트중",
-                notificationInfo.getRequestId()
-        );*/
 
 	}
 

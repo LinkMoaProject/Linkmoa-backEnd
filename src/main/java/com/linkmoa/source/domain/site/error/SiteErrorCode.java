@@ -1,10 +1,10 @@
 package com.linkmoa.source.domain.site.error;
 
+import org.springframework.http.HttpStatus;
+
 import com.linkmoa.source.global.error.code.spec.ErrorCode;
 
 import lombok.Getter;
-
-import org.springframework.http.HttpStatus;
 
 @Getter
 public enum SiteErrorCode implements ErrorCode {

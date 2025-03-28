@@ -6,7 +6,6 @@ import com.linkmoa.source.domain.notification.constant.NotificationType;
 import lombok.Builder;
 
 @Builder
-
 public record DispatchDetailResponse(
 	Long id,
 	String senderEmail,

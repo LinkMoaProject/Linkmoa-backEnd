@@ -1,17 +1,16 @@
 package com.linkmoa.source.domain.dispatch.repository.impl;
 
+import static com.linkmoa.source.domain.dispatch.entity.QDirectoryTransmissionRequest.*;
+
+import java.util.List;
+
 import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
 import com.linkmoa.source.domain.dispatch.repository.custom.DirectoryTransmissionRequestRepositoryCustom;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-
-import static com.linkmoa.source.domain.dispatch.entity.QDirectoryTransmissionRequest.directoryTransmissionRequest;
 
 @RequiredArgsConstructor
 public class DirectoryTransmissionRequestRepositoryImpl implements DirectoryTransmissionRequestRepositoryCustom {

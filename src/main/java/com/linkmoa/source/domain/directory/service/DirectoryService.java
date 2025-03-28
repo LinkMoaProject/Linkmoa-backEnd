@@ -26,8 +26,6 @@ import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
-import com.linkmoa.source.domain.member.service.MemberService;
-import com.linkmoa.source.domain.memberPageLink.repository.MemberPageLinkRepository;
 import com.linkmoa.source.domain.site.dto.response.SiteDetailResponse;
 import com.linkmoa.source.domain.site.entity.Site;
 import com.linkmoa.source.domain.site.error.SiteErrorCode;
@@ -43,10 +41,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DirectoryService {
 
-	private final MemberService memberService;
 	private final DirectoryRepository directoryRepository;
 	private final SiteRepository siteRepository;
-	private final MemberPageLinkRepository memberPageLinkRepository;
 	private final FavoriteRepository favoriteRepository;
 	private final FavoriteService favoriteService;
 

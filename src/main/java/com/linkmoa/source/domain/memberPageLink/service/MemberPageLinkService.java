@@ -44,7 +44,6 @@ public class MemberPageLinkService {
 		if (!uniqueHostPages.isEmpty()) {
 			// 유일한 호스트인 페이지가 있다면 해당 페이지 삭제
 			for (Page page : uniqueHostPages) {
-				log.info("uniqueHostPages : {} ", page.getId());
 				pageRepository.deleteById(page.getId());
 			}
 		}
