@@ -1,11 +1,19 @@
 package com.linkmoa.source.domain.page.service;
 
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.Favorite.entity.Favorite;
 import com.linkmoa.source.domain.Favorite.repository.FavoriteRepository;
 import com.linkmoa.source.domain.Favorite.service.FavoriteService;
-import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.directory.entity.Directory;
+import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.member.error.MemberErrorCode;
 import com.linkmoa.source.domain.member.exception.MemberException;
@@ -30,14 +38,6 @@ import com.linkmoa.source.global.dto.request.BaseRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @Slf4j
@@ -231,67 +231,6 @@ public class PageService {
 		PageDetailsResponse pageDetailsResponse = pageDetailsResponseCompletableFuture.join();
 		return pageDetailsResponse;
 	}
-
-
-   /*
-    /**
-     * findPageMain 동기 방식
-     * @param baseRequest
-     * @param principalDetails
-     * @return
-     *//*
-    public ApiPageResponseSpec<PageDetailsResponse> findPageMain(BaseRequest baseRequest, PrincipalDetails principalDetails){
-        Page page = pageRepository.findById(baseRequest.pageId())
-                .orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
-
-        Long directoryId = page.getRootDirectory().getId();
-
-        List<DirectoryDetailResponse> directoryDetailResponses = directoryRepository.findDirectoryDetails(directoryId);
-
-        List<SiteDetailResponse> sitesDetails = siteRepository.findSitesDetails(directoryId);
-
-
-        PageDetailsResponse pageDetailsResponse = PageDetailsResponse.builder()
-                .pageId(page.getId())
-                .pageTitle(page.getPageTitle())
-                .pageDescription(page.getPageDescription())
-                .directoryDetailRespons(directoryDetailResponses)
-                .siteDetailResponses(sitesDetails)
-                .build();
-
-        return ApiPageResponseSpec.<PageDetailsResponse>builder()
-                .httpStatusCode(HttpStatus.OK)
-                .successMessage("페이지 접속 시, 해당 페이지 메인화면을 조회합니다")
-                .data(pageDetailsResponse)
-                .build();
-    }*/
-
-	/**
-	 * 1.로그인 성공
-	 * 2.리다이렉트로 개인 페이지 메인 화면으로 이동
-	 * 로그인 성공 후, 개인 메인 페이지로 이동 후 데이터 조회
-	 *
-	 *  request Dto
-	 *  1.PrincipalDetails
-	 *
-	 *  response Dto
-	 *  1.PageDetailsResponse
-	 *    1.pageId
-	 *    2.pageTitle
-	 *    3.pageDescription
-	 *    4.List<DirectoryDetailResponse> directoryDetailRespons
-	 *    5.List<SiteDetailResponse> siteDetailResponses
-	 *
-	 *
-	 * 로직 순서
-	 * 1.PrincipalDetails로 member 조회 -> member 테이블 접근 ( 쿼리 1번 )
-	 * 2.memberId로 memberPageLink + Personal 페이지 조회 => memberPageLink 테이블 접근 ( 쿼리 1번 )
-	 * 3.pageId로 page 조회 => page 테이블 접근 ( 쿼리 1번 )
-	 * 4.page의 rootDirectoryId 조회
-	 * 5.rootDirecotryId로  => directory , page 테이블 각각 접근 ( 쿼리 2번 )
-	 *
-
-	 */
 
 	public ApiPageResponseSpec<PageDetailsResponse> loadPersonalPageMain(PrincipalDetails principalDetails) {
 		Member member = memberService.findMemberByEmail(principalDetails.getEmail());
