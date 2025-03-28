@@ -1,11 +1,18 @@
 package com.linkmoa.source.domain.directory.controller.impl;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.directory.controller.spec.DirectoryApiSpecification;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryDragAndDropRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryIdRequest;
@@ -25,67 +32,79 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("/api/directories")
 @Slf4j
-public class DirectoryApiController implements DirectoryApiSpecification {
+public class DirectoryApiController {
 
 	private final DirectoryService directoryService;
 
+	@PostMapping
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<ApiDirectoryResponseSpec<Long>> createDirectory(
-		DirectoryCreateRequest directoryCreateRequest,
-		PrincipalDetails principalDetails) {
+		@RequestBody @Validated DirectoryCreateRequest directoryCreateRequest,
+		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 		ApiDirectoryResponseSpec<Long> createDirectoryResponse = directoryService.createDirectory(
 			directoryCreateRequest, principalDetails);
 		return ResponseEntity.ok().body(createDirectoryResponse);
 	}
 
+	@PutMapping
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<ApiDirectoryResponseSpec<Long>> updateDirectory(
-		DirectoryUpdateRequest directoryUpdateRequest,
-		PrincipalDetails principalDetails
+		@RequestBody DirectoryUpdateRequest directoryUpdateRequest,
+		@AuthenticationPrincipal PrincipalDetails principalDetails
 	) {
 		ApiDirectoryResponseSpec<Long> updateDirectoryResponse = directoryService.updateDirectory(
 			directoryUpdateRequest, principalDetails);
 		return ResponseEntity.ok().body(updateDirectoryResponse);
 	}
 
+	@DeleteMapping()
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<ApiDirectoryResponseSpec<Long>> deleteDirectory(
-		DirectoryIdRequest directoryIdRequestDto,
-		PrincipalDetails principalDetails
+		@RequestBody @Validated DirectoryIdRequest directoryIdRequestDto,
+		@AuthenticationPrincipal PrincipalDetails principalDetails
 	) {
 		ApiDirectoryResponseSpec<Long> deleteDirectoryResponse = directoryService.deleteDirectory(directoryIdRequestDto,
 			principalDetails);
 		return ResponseEntity.ok().body(deleteDirectoryResponse);
 	}
 
+	@PutMapping("/move")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<ApiDirectoryResponseSpec<Long>> moveDirectory(
-		DirectoryMoveRequest directoryMoveRequest,
-		PrincipalDetails principalDetails
+		@RequestBody @Validated DirectoryMoveRequest directoryMoveRequest,
+		@AuthenticationPrincipal PrincipalDetails principalDetails
 	) {
 		ApiDirectoryResponseSpec<Long> moveDirectoryResponse = directoryService.moveDirectory(directoryMoveRequest,
 			principalDetails);
 		return ResponseEntity.ok().body(moveDirectoryResponse);
 	}
 
-	public ResponseEntity<ApiDirectoryResponseSpec<DirectoryResponse>> getDirectory
-		(DirectoryIdRequest directoryIdRequest,
-			PrincipalDetails principalDetails) {
+	@GetMapping("/details")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<ApiDirectoryResponseSpec<DirectoryResponse>> getDirectory(
+		@RequestBody @Validated DirectoryIdRequest directoryIdRequest,
+		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 		ApiDirectoryResponseSpec<DirectoryResponse> directoryResponse = directoryService.findDirectoryDetails(
 			directoryIdRequest, principalDetails);
 		return ResponseEntity.ok().body(directoryResponse);
 	}
 
-	@Override
+	@PostMapping("/paste")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<ApiDirectoryResponseSpec<DirectoryPasteResponse>> pasteDirectory(
-		DirectoryPasteRequest directoryPasteRequest,
-		PrincipalDetails principalDetails) {
+		@RequestBody @Validated DirectoryPasteRequest directoryPasteRequest,
+		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 		ApiDirectoryResponseSpec<DirectoryPasteResponse> directoryPasteResponse = directoryService.pasteDirectory(
 			directoryPasteRequest, principalDetails);
 
 		return ResponseEntity.ok().body(directoryPasteResponse);
 	}
 
-	@Override
-	public ResponseEntity<ApiDirectoryResponseSpec<DirectoryDragAndDropResponse>> dragAndDropDirectoryOrSite
-		(DirectoryDragAndDropRequest directoryDragAndDropRequest,
-			PrincipalDetails principalDetails) {
+	@PutMapping("/drag-and-drop")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<ApiDirectoryResponseSpec<DirectoryDragAndDropResponse>> dragAndDropDirectoryOrSite(
+		@RequestBody @Validated DirectoryDragAndDropRequest directoryDragAndDropRequest,
+		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 		ApiDirectoryResponseSpec<DirectoryDragAndDropResponse> directoryDragAndDropResponseApiDirectoryResponse =
 			directoryService.dragAndDropDirectoryOrSite(directoryDragAndDropRequest, principalDetails);
 
