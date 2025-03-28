@@ -1,6 +1,6 @@
-package com.linkmoa.source.domain.Favorite.dto.request;
+package com.linkmoa.source.domain.favorite.dto.request;
 
-import com.linkmoa.source.domain.Favorite.constant.ItemType;
+import com.linkmoa.source.domain.favorite.constant.ItemType;
 
 import jakarta.validation.constraints.NotNull;
 

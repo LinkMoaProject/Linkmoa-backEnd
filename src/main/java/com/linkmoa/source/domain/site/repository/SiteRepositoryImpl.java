@@ -1,13 +1,13 @@
 package com.linkmoa.source.domain.site.repository;
 
-import static com.linkmoa.source.domain.Favorite.entity.QFavorite.*;
+import static com.linkmoa.source.domain.favorite.entity.QFavorite.*;
 import static com.linkmoa.source.domain.site.entity.QSite.*;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.linkmoa.source.domain.Favorite.constant.ItemType;
+import com.linkmoa.source.domain.favorite.constant.ItemType;
 import com.linkmoa.source.domain.site.dto.response.SiteDetailResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;

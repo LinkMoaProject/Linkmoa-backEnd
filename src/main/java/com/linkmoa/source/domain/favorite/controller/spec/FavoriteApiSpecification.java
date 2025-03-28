@@ -1,4 +1,4 @@
-package com.linkmoa.source.domain.Favorite.controller.spec;
+package com.linkmoa.source.domain.favorite.controller.spec;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.Favorite.dto.request.FavoriteUpdateRequest;
-import com.linkmoa.source.domain.Favorite.dto.response.ApiFavoriteResponseSpec;
-import com.linkmoa.source.domain.Favorite.dto.response.FavoriteDetailResponse;
-import com.linkmoa.source.domain.Favorite.dto.response.FavoriteResponse;
-import com.linkmoa.source.domain.Favorite.error.FavoriteErrorCode;
+import com.linkmoa.source.domain.favorite.dto.request.FavoriteUpdateRequest;
+import com.linkmoa.source.domain.favorite.dto.response.ApiFavoriteResponseSpec;
+import com.linkmoa.source.domain.favorite.dto.response.FavoriteDetailResponse;
+import com.linkmoa.source.domain.favorite.dto.response.FavoriteResponse;
+import com.linkmoa.source.domain.favorite.error.FavoriteErrorCode;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
 
 import io.swagger.v3.oas.annotations.Operation;

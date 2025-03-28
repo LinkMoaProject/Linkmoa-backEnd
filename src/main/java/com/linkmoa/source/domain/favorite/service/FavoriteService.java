@@ -1,4 +1,4 @@
-package com.linkmoa.source.domain.Favorite.service;
+package com.linkmoa.source.domain.favorite.service;
 
 import java.util.List;
 import java.util.Set;
@@ -9,17 +9,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.Favorite.constant.ItemType;
-import com.linkmoa.source.domain.Favorite.dto.request.FavoriteUpdateRequest;
-import com.linkmoa.source.domain.Favorite.dto.response.ApiFavoriteResponseSpec;
-import com.linkmoa.source.domain.Favorite.dto.response.FavoriteDetailResponse;
-import com.linkmoa.source.domain.Favorite.dto.response.FavoriteResponse;
-import com.linkmoa.source.domain.Favorite.entity.Favorite;
-import com.linkmoa.source.domain.Favorite.error.FavoriteErrorCode;
-import com.linkmoa.source.domain.Favorite.exception.FavoriteException;
-import com.linkmoa.source.domain.Favorite.repository.FavoriteRepository;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
+import com.linkmoa.source.domain.favorite.constant.ItemType;
+import com.linkmoa.source.domain.favorite.dto.request.FavoriteUpdateRequest;
+import com.linkmoa.source.domain.favorite.dto.response.ApiFavoriteResponseSpec;
+import com.linkmoa.source.domain.favorite.dto.response.FavoriteDetailResponse;
+import com.linkmoa.source.domain.favorite.dto.response.FavoriteResponse;
+import com.linkmoa.source.domain.favorite.entity.Favorite;
+import com.linkmoa.source.domain.favorite.error.FavoriteErrorCode;
+import com.linkmoa.source.domain.favorite.exception.FavoriteException;
+import com.linkmoa.source.domain.favorite.repository.FavoriteRepository;
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.site.dto.response.SiteDetailResponse;
 import com.linkmoa.source.domain.site.repository.SiteRepository;

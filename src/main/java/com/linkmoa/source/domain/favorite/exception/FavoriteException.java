@@ -1,6 +1,6 @@
-package com.linkmoa.source.domain.Favorite.exception;
+package com.linkmoa.source.domain.favorite.exception;
 
-import com.linkmoa.source.domain.Favorite.error.FavoriteErrorCode;
+import com.linkmoa.source.domain.favorite.error.FavoriteErrorCode;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

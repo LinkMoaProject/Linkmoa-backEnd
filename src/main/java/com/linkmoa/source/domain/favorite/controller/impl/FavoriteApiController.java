@@ -1,16 +1,16 @@
-package com.linkmoa.source.domain.Favorite.controller.impl;
+package com.linkmoa.source.domain.favorite.controller.impl;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.Favorite.controller.spec.FavoriteApiSpecification;
-import com.linkmoa.source.domain.Favorite.dto.request.FavoriteUpdateRequest;
-import com.linkmoa.source.domain.Favorite.dto.response.ApiFavoriteResponseSpec;
-import com.linkmoa.source.domain.Favorite.dto.response.FavoriteDetailResponse;
-import com.linkmoa.source.domain.Favorite.dto.response.FavoriteResponse;
-import com.linkmoa.source.domain.Favorite.service.FavoriteService;
+import com.linkmoa.source.domain.favorite.controller.spec.FavoriteApiSpecification;
+import com.linkmoa.source.domain.favorite.dto.request.FavoriteUpdateRequest;
+import com.linkmoa.source.domain.favorite.dto.response.ApiFavoriteResponseSpec;
+import com.linkmoa.source.domain.favorite.dto.response.FavoriteDetailResponse;
+import com.linkmoa.source.domain.favorite.dto.response.FavoriteResponse;
+import com.linkmoa.source.domain.favorite.service.FavoriteService;
 
 import lombok.RequiredArgsConstructor;
 

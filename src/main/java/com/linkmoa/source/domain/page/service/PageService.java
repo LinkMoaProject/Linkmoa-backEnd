@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.Favorite.entity.Favorite;
-import com.linkmoa.source.domain.Favorite.repository.FavoriteRepository;
-import com.linkmoa.source.domain.Favorite.service.FavoriteService;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
+import com.linkmoa.source.domain.favorite.entity.Favorite;
+import com.linkmoa.source.domain.favorite.repository.FavoriteRepository;
+import com.linkmoa.source.domain.favorite.service.FavoriteService;
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.member.error.MemberErrorCode;
 import com.linkmoa.source.domain.member.exception.MemberException;

@@ -1,4 +1,4 @@
-package com.linkmoa.source.domain.Favorite.repository;
+package com.linkmoa.source.domain.favorite.repository;
 
 import com.linkmoa.source.domain.member.entity.Member;
 

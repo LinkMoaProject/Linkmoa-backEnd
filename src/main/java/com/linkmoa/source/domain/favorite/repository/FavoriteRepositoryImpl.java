@@ -1,6 +1,6 @@
-package com.linkmoa.source.domain.Favorite.repository;
+package com.linkmoa.source.domain.favorite.repository;
 
-import static com.linkmoa.source.domain.Favorite.entity.QFavorite.*;
+import static com.linkmoa.source.domain.favorite.entity.QFavorite.*;
 
 import com.linkmoa.source.domain.member.entity.Member;
 import com.querydsl.jpa.impl.JPAQueryFactory;

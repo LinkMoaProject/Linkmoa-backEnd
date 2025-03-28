@@ -1,6 +1,6 @@
-package com.linkmoa.source.domain.Favorite.entity;
+package com.linkmoa.source.domain.favorite.entity;
 
-import com.linkmoa.source.domain.Favorite.constant.ItemType;
+import com.linkmoa.source.domain.favorite.constant.ItemType;
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.global.entity.BaseEntity;
 

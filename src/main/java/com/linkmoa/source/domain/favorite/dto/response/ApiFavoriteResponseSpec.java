@@ -1,4 +1,4 @@
-package com.linkmoa.source.domain.Favorite.dto.response;
+package com.linkmoa.source.domain.favorite.dto.response;
 
 import org.springframework.http.HttpStatus;
 

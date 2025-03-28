@@ -1,4 +1,4 @@
-package com.linkmoa.source.domain.Favorite.error;
+package com.linkmoa.source.domain.favorite.error;
 
 import org.springframework.http.HttpStatus;
 
