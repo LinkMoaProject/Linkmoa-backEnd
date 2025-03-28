@@ -34,32 +34,32 @@ public class Member extends BaseEntity {
 	@Column(name = "member_id")
 	private Long id;
 
-	@Column(name = "email")
+	@Column(name = "email", length = 100, unique = true)
 	private String email;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role")
 	private Role role;
 
-	@Column(name = "nickname")
+	@Column(name = "nickname", length = 30)
 	private String nickname;
 
 	// provider : google이 들어감
-	@Column(name = "provider")
+	@Column(name = "provider", length = 20)
 	private String provider;
 
 	// providerId : 구굴 로그인 한 유저의 고유 ID가 들어감
-	@Column(name = "provider_id")
+	@Column(name = "provider_id", length = 40)
 	private String providerId;
 
-	@Column(name = "age_range")
+	@Column(name = "age_range", length = 30)
 	private String ageRange;
 
 	@Column(name = "gender")
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
 
-	@Column(name = "job")
+	@Column(name = "job", length = 30)
 	private String job;
 
 	@OneToMany(
