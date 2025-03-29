@@ -6,6 +6,6 @@ import lombok.Builder;
 public record DirectoryDragAndDropResponse(
 	Long targetId,
 	Integer targetOrderIndex,
-	String targetType
+	String itemType
 ) {
 }
