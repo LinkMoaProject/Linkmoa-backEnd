@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryChangeParentRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryDragAndDropRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryIdRequest;
-import com.linkmoa.source.domain.directory.dto.request.DirectoryMoveRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryPasteRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequest;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
@@ -70,11 +70,12 @@ public class DirectoryApiController {
 
 	@PutMapping("/move")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiDirectoryResponseSpec<Long>> moveDirectory(
-		@RequestBody @Validated DirectoryMoveRequest directoryMoveRequest,
+	public ResponseEntity<ApiDirectoryResponseSpec<Long>> changeParentDirectory(
+		@RequestBody @Validated DirectoryChangeParentRequest directoryChangeParentRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails
 	) {
-		ApiDirectoryResponseSpec<Long> moveDirectoryResponse = directoryService.moveDirectory(directoryMoveRequest,
+		ApiDirectoryResponseSpec<Long> moveDirectoryResponse = directoryService.changeParentDirectory(
+			directoryChangeParentRequest,
 			principalDetails);
 		return ResponseEntity.ok().body(moveDirectoryResponse);
 	}

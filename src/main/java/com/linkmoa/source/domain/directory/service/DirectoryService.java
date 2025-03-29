@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryChangeParentRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryDragAndDropRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryIdRequest;
-import com.linkmoa.source.domain.directory.dto.request.DirectoryMoveRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryPasteRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequest;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
@@ -22,6 +22,7 @@ import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
+import com.linkmoa.source.domain.favorite.constant.ItemType;
 import com.linkmoa.source.domain.favorite.entity.Favorite;
 import com.linkmoa.source.domain.favorite.repository.FavoriteRepository;
 import com.linkmoa.source.domain.favorite.service.FavoriteService;
@@ -120,26 +121,28 @@ public class DirectoryService {
 
 	@Transactional
 	@ValidationApplied
-	public ApiDirectoryResponseSpec<Long> moveDirectory(DirectoryMoveRequest requestDto,
+	public ApiDirectoryResponseSpec<Long> changeParentDirectory(DirectoryChangeParentRequest requestDto,
 		PrincipalDetails principalDetails) {
 
-		Directory sourceDirectory = directoryRepository.findById(requestDto.sourceDirectoryId())
+		Directory movingDirectory = directoryRepository.findById(requestDto.movingDirectoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-		Directory targetDirectory = directoryRepository.findById(requestDto.targetDirectoryId())
+		Directory newParentDirectory = directoryRepository.findById(requestDto.newParentDirectoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-		sourceDirectory.setParentDirectory(targetDirectory);
+		directoryRepository.decrementDirectoryAndSiteOrderIndexes(movingDirectory.getParentDirectory(),
+			movingDirectory.getOrderIndex());
 
-		directoryRepository.decrementDirectoryAndSiteOrderIndexes(sourceDirectory, sourceDirectory.getOrderIndex());
+		movingDirectory.setParentDirectory(newParentDirectory);
 
-		Integer newOrderIndex = targetDirectory.getNextOrderIndex();
-		sourceDirectory.setOrderIndex(newOrderIndex);
+		Integer newOrderIndex = newParentDirectory.getNextOrderIndex();
+
+		movingDirectory.setOrderIndex(newOrderIndex);
 
 		return ApiDirectoryResponseSpec.<Long>builder()
 			.httpStatusCode(HttpStatus.OK)
 			.successMessage("Directory를 다른 Directory로 이동시켰습니다.")
-			.data(sourceDirectory.getId())
+			.data(movingDirectory.getId())
 			.build();
 	}
 
@@ -156,7 +159,7 @@ public class DirectoryService {
 
 		currentItemOrderIndex = getOrderIndex(
 			directoryDragAndDropRequest.targetId(),
-			directoryDragAndDropRequest.targetType()
+			directoryDragAndDropRequest.itemType()
 		);
 
 		boolean isIncrement = currentItemOrderIndex > directoryDragAndDropRequest.targetOrderIndex();
@@ -168,13 +171,13 @@ public class DirectoryService {
 
 		setOrderIndex(
 			directoryDragAndDropRequest.targetId(),
-			directoryDragAndDropRequest.targetType(),
+			directoryDragAndDropRequest.itemType(),
 			directoryDragAndDropRequest.targetOrderIndex()
 		);
 
 		DirectoryDragAndDropResponse directoryDragAndDropResponse = DirectoryDragAndDropResponse.builder()
 			.targetId(directoryDragAndDropRequest.targetId())
-			.targetType(String.valueOf(directoryDragAndDropRequest.targetType()))
+			.itemType(String.valueOf(directoryDragAndDropRequest.itemType()))
 			.targetOrderIndex(directoryDragAndDropRequest.targetOrderIndex())
 			.build();
 
@@ -185,8 +188,8 @@ public class DirectoryService {
 			.build();
 	}
 
-	private Integer getOrderIndex(Long targetId, DirectoryDragAndDropRequest.TargetType targetType) {
-		switch (targetType) {
+	private Integer getOrderIndex(Long targetId, ItemType itemType) {
+		switch (itemType) {
 			case DIRECTORY -> {
 				Directory directory = directoryRepository.findById(targetId)
 					.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
@@ -201,9 +204,9 @@ public class DirectoryService {
 		}
 	}
 
-	private void setOrderIndex(Long targetId, DirectoryDragAndDropRequest.TargetType targetType,
+	private void setOrderIndex(Long targetId, ItemType itemType,
 		Integer targetOrderIndex) {
-		switch (targetType) {
+		switch (itemType) {
 			case DIRECTORY -> {
 				Directory directory = directoryRepository.findById(targetId)
 					.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));

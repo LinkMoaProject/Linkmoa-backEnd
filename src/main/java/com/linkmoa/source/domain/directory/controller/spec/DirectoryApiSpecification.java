@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryChangeParentRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryDragAndDropRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryIdRequest;
-import com.linkmoa.source.domain.directory.dto.request.DirectoryMoveRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryPasteRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequest;
 import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
@@ -60,12 +60,12 @@ public interface DirectoryApiSpecification {
 	);
 
 	@Tag(name = "Directory", description = "디렉토리 관련 API")
-	@Operation(summary = "디렉토리 위치 이동", description = "같은 부모 디렉토리를 가진 디렉토리를 다른 디렉토리로 이동(드래그 앤 스탑)")
+	@Operation(summary = "디렉토리 위치 이동", description = "같은 부모 디렉토리를 가진 디렉토리를 다른 디렉토리로 이동(드래그 앤 드롭)")
 	@ApiErrorCodeExamples(DirectoryErrorCode.class)
 	@PutMapping("/move")
 	@PreAuthorize("isAuthenticated()")
 	ResponseEntity<ApiDirectoryResponseSpec<Long>> moveDirectory(
-		@RequestBody @Validated DirectoryMoveRequest directoryMoveRequest,
+		@RequestBody @Validated DirectoryChangeParentRequest directoryMoveRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails
 	);
 

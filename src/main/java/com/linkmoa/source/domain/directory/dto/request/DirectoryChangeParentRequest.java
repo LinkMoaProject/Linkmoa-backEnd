@@ -4,10 +4,10 @@ import com.linkmoa.source.global.dto.request.BaseRequest;
 
 import jakarta.validation.constraints.NotNull;
 
-public record DirectoryMoveRequest(
+public record DirectoryChangeParentRequest(
 	BaseRequest baseRequest,
-	@NotNull Long sourceDirectoryId, // 원본 디렉토리 ID
-	@NotNull Long targetDirectoryId  // 이동 대상 디렉토리 ID
+	@NotNull Long movingDirectoryId,         // 이동시키려는 디렉토리
+	@NotNull Long newParentDirectoryId       // 새 부모 디렉토리
 
 ) {
 }
