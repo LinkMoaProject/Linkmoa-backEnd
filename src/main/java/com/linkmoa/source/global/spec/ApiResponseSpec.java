@@ -27,6 +27,10 @@ public class ApiResponseSpec<T> {
 		return new ApiResponseSpec<>(status, message, null);
 	}
 
+	public static <T> ApiResponseSpec<T> fail(HttpStatus status, String message, T data) {
+		return new ApiResponseSpec<>(status, message, data);
+	}
+
 	public static <T> ApiResponseSpec<T> fail(HttpStatus status, String message) {
 		return new ApiResponseSpec<>(status, message, null);
 	}

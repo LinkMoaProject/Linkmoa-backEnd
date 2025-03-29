@@ -1,7 +1,11 @@
 package com.linkmoa.source.global.error.handler;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -73,6 +77,20 @@ public class GlobalExceptionHandler {
 			.message("서버에서 예상치 못한 오류가 발생했습니다.")
 			.build();
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseSpec);
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ApiResponseSpec<Map<String, String>>> handleValidationException(
+		MethodArgumentNotValidException ex) {
+		Map<String, String> errors = new LinkedHashMap<>();
+
+		ex.getBindingResult().getFieldErrors().forEach(error -> {
+			errors.put(error.getField(), error.getDefaultMessage());
+		});
+
+		return ResponseEntity
+			.status(HttpStatus.BAD_REQUEST)
+			.body(ApiResponseSpec.fail(HttpStatus.BAD_REQUEST, "입력값이 올바르지 않습니다.", errors));
 	}
 
 }
