@@ -12,7 +12,10 @@ import com.linkmoa.source.domain.site.exception.SiteException;
 import com.linkmoa.source.global.exception.ValidationException;
 import com.linkmoa.source.global.spec.ApiResponseErrorSpec;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
 	@ExceptionHandler(MemberException.class)
@@ -63,6 +66,8 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> handleAllExceptions(Exception e) {
+		log.error("예기치 못한 오류가 발생했습니다", e);
+
 		ApiResponseErrorSpec apiResponseErrorSpec = ApiResponseErrorSpec.builder()
 			.httpStatusCode(HttpStatus.INTERNAL_SERVER_ERROR)
 			.errorMessage("서버에서 예상치 못한 오류가 발생했습니다.")
