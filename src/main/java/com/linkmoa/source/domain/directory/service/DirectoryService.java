@@ -1,7 +1,6 @@
 package com.linkmoa.source.domain.directory.service;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -228,8 +227,8 @@ public class DirectoryService {
 
 		List<Favorite> favorites = favoriteRepository.findByMember(principalDetails.getMember());
 
-		Set<Long> favoriteDirectoryIds = favoriteService.findFavoriteDirectoryIds(favorites);
-		Set<Long> favoriteSiteIds = favoriteService.findFavoriteSiteIds(favorites);
+		List<Long> favoriteDirectoryIds = favoriteService.findFavoriteDirectoryIds(favorites);
+		List<Long> favoriteSiteIds = favoriteService.findFavoriteSiteIds(favorites);
 
 		List<DirectoryDetailResponse> directoryDetailResponses = directoryRepository.findDirectoryDetails(
 			targetDirectory.getId(), favoriteDirectoryIds);

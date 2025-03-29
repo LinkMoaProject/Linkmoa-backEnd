@@ -1,7 +1,6 @@
 package com.linkmoa.source.domain.page.service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.http.HttpStatus;
@@ -245,8 +244,8 @@ public class PageService {
 
 		List<Favorite> favorites = favoriteRepository.findByMember(principalDetails.getMember());
 
-		Set<Long> favoriteDirectoryIds = favoriteService.findFavoriteDirectoryIds(favorites);
-		Set<Long> favoriteSiteIds = favoriteService.findFavoriteSiteIds(favorites);
+		List<Long> favoriteDirectoryIds = favoriteService.findFavoriteDirectoryIds(favorites);
+		List<Long> favoriteSiteIds = favoriteService.findFavoriteSiteIds(favorites);
 
 		CompletableFuture<PageDetailsResponse> pageDetailsResponseCompletableFuture =
 			pageAsyncService.combinePageDetails(

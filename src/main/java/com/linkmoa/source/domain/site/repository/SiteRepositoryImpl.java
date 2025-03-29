@@ -4,7 +4,6 @@ import static com.linkmoa.source.domain.favorite.entity.QFavorite.*;
 import static com.linkmoa.source.domain.site.entity.QSite.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.linkmoa.source.domain.favorite.constant.ItemType;
@@ -21,7 +20,7 @@ public class SiteRepositoryImpl implements SiteRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public List<SiteDetailResponse> findSitesDetails(Long directoryId, Set<Long> favoriteSiteIds) {
+	public List<SiteDetailResponse> findSitesDetails(Long directoryId, List<Long> favoriteSiteIds) {
 
 		return jpaQueryFactory
 			.selectFrom(site)
@@ -40,7 +39,7 @@ public class SiteRepositoryImpl implements SiteRepositoryCustom {
 	}
 
 	@Override
-	public List<SiteDetailResponse> findFavoriteSites(Set<Long> favoriteSiteIds) {
+	public List<SiteDetailResponse> findFavoriteSites(List<Long> favoriteSiteIds) {
 
 		return jpaQueryFactory
 			.selectDistinct(

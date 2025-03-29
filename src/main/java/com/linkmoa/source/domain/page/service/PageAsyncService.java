@@ -1,7 +1,6 @@
 package com.linkmoa.source.domain.page.service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.scheduling.annotation.Async;
@@ -25,14 +24,14 @@ public class PageAsyncService {
 
 	@Async("threadPoolTaskExecutor")
 	public CompletableFuture<List<DirectoryDetailResponse>> findDirectoryDetailsAsync(Long directoryId,
-		Set<Long> favoriteDirectoryIds) {
+		List<Long> favoriteDirectoryIds) {
 		return CompletableFuture.completedFuture(
 			directoryRepository.findDirectoryDetails(directoryId, favoriteDirectoryIds));
 	}
 
 	@Async("threadPoolTaskExecutor")
 	public CompletableFuture<List<SiteDetailResponse>> findSitesDetailsAsync(Long directoryId,
-		Set<Long> favoriteSiteIds) {
+		List<Long> favoriteSiteIds) {
 		return CompletableFuture.completedFuture(siteRepository.findSitesDetails(directoryId, favoriteSiteIds));
 	}
 

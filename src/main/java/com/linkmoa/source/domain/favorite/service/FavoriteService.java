@@ -1,7 +1,6 @@
 package com.linkmoa.source.domain.favorite.service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
@@ -99,25 +98,25 @@ public class FavoriteService {
 			.build();
 	}
 
-	public Set<Long> findFavoriteDirectoryIds(List<Favorite> favorites) {
+	public List<Long> findFavoriteDirectoryIds(List<Favorite> favorites) {
 		return favorites.stream()
 			.filter(favorite -> favorite.getItemType() == ItemType.DIRECTORY)
 			.map(favorite -> favorite.getItemId())
-			.collect(Collectors.toSet());
+			.collect(Collectors.toList());
 	}
 
-	public Set<Long> findFavoriteSiteIds(List<Favorite> favorites) {
+	public List<Long> findFavoriteSiteIds(List<Favorite> favorites) {
 		return favorites.stream()
 			.filter(favorite -> favorite.getItemType() == ItemType.SITE)
 			.map(favorite -> favorite.getItemId())
-			.collect(Collectors.toSet());
+			.collect(Collectors.toList());
 	}
 
 	public ApiFavoriteResponseSpec<FavoriteDetailResponse> findFavoriteDetails(PrincipalDetails principalDetails) {
 		List<Favorite> favorites = favoriteRepository.findByMember(principalDetails.getMember());
 
-		Set<Long> favoriteDirectoryIds = findFavoriteDirectoryIds(favorites);
-		Set<Long> favoriteSiteIds = findFavoriteSiteIds(favorites);
+		List<Long> favoriteDirectoryIds = findFavoriteDirectoryIds(favorites);
+		List<Long> favoriteSiteIds = findFavoriteSiteIds(favorites);
 
 		List<DirectoryDetailResponse> directoryDetailResponses = directoryRepository.findFavoriteDirectories(
 			favoriteDirectoryIds);

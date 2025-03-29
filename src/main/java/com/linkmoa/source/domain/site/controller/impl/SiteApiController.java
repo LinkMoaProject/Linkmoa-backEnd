@@ -58,8 +58,8 @@ public class SiteApiController {
 	@PutMapping("/move")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<ApiSiteResponse<Long>> moveSite(
-		SiteMoveRequestDto siteMoveRequestDto,
-		PrincipalDetails principalDetails) {
+		@RequestBody @Validated SiteMoveRequestDto siteMoveRequestDto,
+		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 		ApiSiteResponse<Long> siteMoveResponse = siteService.moveSite(siteMoveRequestDto, principalDetails);
 		return ResponseEntity.ok().body(siteMoveResponse);
 	}

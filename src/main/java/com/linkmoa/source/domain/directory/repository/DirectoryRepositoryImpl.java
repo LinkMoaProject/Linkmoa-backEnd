@@ -5,7 +5,6 @@ import static com.linkmoa.source.domain.favorite.entity.QFavorite.*;
 import static com.linkmoa.source.domain.site.entity.QSite.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
@@ -25,7 +24,7 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public List<DirectoryDetailResponse> findDirectoryDetails(Long directoryId, Set<Long> favoriteDirectoryIds) {
+	public List<DirectoryDetailResponse> findDirectoryDetails(Long directoryId, List<Long> favoriteDirectoryIds) {
 
 		return jpaQueryFactory
 			.selectFrom(directory)
@@ -121,7 +120,7 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
 	}
 
 	@Override
-	public List<DirectoryDetailResponse> findFavoriteDirectories(Set<Long> favoriteDirectoryIds) {
+	public List<DirectoryDetailResponse> findFavoriteDirectories(List<Long> favoriteDirectoryIds) {
 		return jpaQueryFactory
 			.selectDistinct(
 				Projections.constructor(
