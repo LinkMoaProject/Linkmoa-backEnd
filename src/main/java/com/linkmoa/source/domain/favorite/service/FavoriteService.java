@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
+import com.linkmoa.source.domain.directory.dto.response.DirectorySimpleResponse;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.favorite.constant.ItemType;
 import com.linkmoa.source.domain.favorite.dto.request.FavoriteUpdateRequest;
@@ -20,7 +20,7 @@ import com.linkmoa.source.domain.favorite.error.FavoriteErrorCode;
 import com.linkmoa.source.domain.favorite.exception.FavoriteException;
 import com.linkmoa.source.domain.favorite.repository.FavoriteRepository;
 import com.linkmoa.source.domain.member.entity.Member;
-import com.linkmoa.source.domain.site.dto.response.SiteDetailResponse;
+import com.linkmoa.source.domain.site.dto.response.SiteSimpleResponse;
 import com.linkmoa.source.domain.site.repository.SiteRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -118,14 +118,14 @@ public class FavoriteService {
 		List<Long> favoriteDirectoryIds = findFavoriteDirectoryIds(favorites);
 		List<Long> favoriteSiteIds = findFavoriteSiteIds(favorites);
 
-		List<DirectoryDetailResponse> directoryDetailResponses = directoryRepository.findFavoriteDirectories(
+		List<DirectorySimpleResponse> directoryDetailResponses = directoryRepository.findFavoriteDirectories(
 			favoriteDirectoryIds);
-		List<SiteDetailResponse> sitesDetails = siteRepository.findFavoriteSites(favoriteSiteIds);
+		List<SiteSimpleResponse> sitesDetails = siteRepository.findFavoriteSites(favoriteSiteIds);
 
 		FavoriteDetailResponse favoriteDetailResponse = FavoriteDetailResponse.builder()
 			.email(principalDetails.getEmail())
-			.directoryDetailResponses(directoryDetailResponses)
-			.siteDetailResponses(sitesDetails)
+			.directorySimpleResponses(directoryDetailResponses)
+			.siteSimpleResponses(sitesDetails)
 			.build();
 
 		return ApiFavoriteResponseSpec.<FavoriteDetailResponse>builder()
