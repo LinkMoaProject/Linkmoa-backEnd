@@ -1,4 +1,4 @@
-package com.linkmoa.source.domain.page.controller.impl;
+package com.linkmoa.source.domain.page.controller;
 
 import java.util.List;
 

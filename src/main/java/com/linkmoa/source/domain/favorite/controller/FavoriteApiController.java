@@ -1,4 +1,4 @@
-package com.linkmoa.source.domain.favorite.controller.impl;
+package com.linkmoa.source.domain.favorite.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
