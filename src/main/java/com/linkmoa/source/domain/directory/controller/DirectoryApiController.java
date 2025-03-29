@@ -41,9 +41,9 @@ public class DirectoryApiController {
 	public ResponseEntity<ApiResponseSpec<Long>> createDirectory(
 		@RequestBody @Validated DirectoryCreateRequest directoryCreateRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<Long> createDirectoryResponse = directoryService.createDirectory(
+		ApiResponseSpec<Long> response = directoryService.createDirectory(
 			directoryCreateRequest, principalDetails);
-		return ResponseEntity.ok().body(createDirectoryResponse);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@PutMapping
@@ -52,9 +52,9 @@ public class DirectoryApiController {
 		@RequestBody DirectoryUpdateRequest directoryUpdateRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails
 	) {
-		ApiResponseSpec<Long> updateDirectoryResponse = directoryService.updateDirectory(
+		ApiResponseSpec<Long> response = directoryService.updateDirectory(
 			directoryUpdateRequest, principalDetails);
-		return ResponseEntity.ok().body(updateDirectoryResponse);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@DeleteMapping()
@@ -63,9 +63,9 @@ public class DirectoryApiController {
 		@RequestBody @Validated DirectoryIdRequest directoryIdRequestDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails
 	) {
-		ApiResponseSpec<Long> deleteDirectoryResponse = directoryService.deleteDirectory(directoryIdRequestDto,
+		ApiResponseSpec<Long> response = directoryService.deleteDirectory(directoryIdRequestDto,
 			principalDetails);
-		return ResponseEntity.ok().body(deleteDirectoryResponse);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@PutMapping("/move")
@@ -74,10 +74,10 @@ public class DirectoryApiController {
 		@RequestBody @Validated DirectoryChangeParentRequest directoryChangeParentRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails
 	) {
-		ApiResponseSpec<Long> moveDirectoryResponse = directoryService.changeParentDirectory(
+		ApiResponseSpec<Long> response = directoryService.changeParentDirectory(
 			directoryChangeParentRequest,
 			principalDetails);
-		return ResponseEntity.ok().body(moveDirectoryResponse);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@GetMapping("/details")
@@ -85,9 +85,9 @@ public class DirectoryApiController {
 	public ResponseEntity<ApiResponseSpec<DirectoryResponse>> getDirectory(
 		@RequestBody @Validated DirectoryIdRequest directoryIdRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<DirectoryResponse> directoryResponse = directoryService.findDirectoryDetails(
+		ApiResponseSpec<DirectoryResponse> response = directoryService.findDirectoryDetails(
 			directoryIdRequest, principalDetails);
-		return ResponseEntity.ok().body(directoryResponse);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@PostMapping("/paste")
@@ -95,10 +95,10 @@ public class DirectoryApiController {
 	public ResponseEntity<ApiResponseSpec<DirectoryPasteResponse>> pasteDirectory(
 		@RequestBody @Validated DirectoryPasteRequest directoryPasteRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<DirectoryPasteResponse> directoryPasteResponse = directoryService.pasteDirectory(
+		ApiResponseSpec<DirectoryPasteResponse> response = directoryService.pasteDirectory(
 			directoryPasteRequest, principalDetails);
 
-		return ResponseEntity.ok().body(directoryPasteResponse);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@PutMapping("/drag-and-drop")
@@ -106,10 +106,10 @@ public class DirectoryApiController {
 	public ResponseEntity<ApiResponseSpec<DirectoryDragAndDropResponse>> dragAndDropDirectoryOrSite(
 		@RequestBody @Validated DirectoryDragAndDropRequest directoryDragAndDropRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<DirectoryDragAndDropResponse> directoryDragAndDropResponseApiDirectoryResponse =
+		ApiResponseSpec<DirectoryDragAndDropResponse> response =
 			directoryService.dragAndDropDirectoryOrSite(directoryDragAndDropRequest, principalDetails);
 
-		return ResponseEntity.ok().body(directoryDragAndDropResponseApiDirectoryResponse);
+		return ResponseEntity.ok().body(response);
 	}
 
 }

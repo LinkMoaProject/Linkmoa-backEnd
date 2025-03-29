@@ -54,10 +54,10 @@ public class DispatchApiController {
 		@RequestBody @Validated DispatchProcessingRequest dispatchProcessingRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-		ApiResponseSpec<DispatchDetailResponse> directoryTransmissionResponse = directoryTransmissionRequestProcessor.processRequest(
+		ApiResponseSpec<DispatchDetailResponse> response = directoryTransmissionRequestProcessor.processRequest(
 			dispatchProcessingRequest, principalDetails);
 
-		return ResponseEntity.ok().body(directoryTransmissionResponse);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@PostMapping("/share-page-invitations")
@@ -65,11 +65,11 @@ public class DispatchApiController {
 	public ResponseEntity<ApiResponseSpec<SharePageInvitationResponse>> inviteSharePage(
 		@RequestBody @Validated SharePageInvitationRequestCreate pageInvitationRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<SharePageInvitationResponse> pageInviteRequestResponse =
+		ApiResponseSpec<SharePageInvitationResponse> response =
 			dispatchRequestService.mapToPageInviteRequestResponse(
 				dispatchRequestService.createSharePageInviteRequest(pageInvitationRequest, principalDetails));
 
-		return ResponseEntity.ok().body(pageInviteRequestResponse);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@PatchMapping("/share-page-invitations/status")
@@ -78,10 +78,10 @@ public class DispatchApiController {
 		@RequestBody @Validated DispatchProcessingRequest dispatchProcessingRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-		ApiResponseSpec<DispatchDetailResponse> sharePageInvitationResponse = sharePageInvitationRequestProcessor.processRequest(
+		ApiResponseSpec<DispatchDetailResponse> response = sharePageInvitationRequestProcessor.processRequest(
 			dispatchProcessingRequest, principalDetails);
 
-		return ResponseEntity.ok().body(sharePageInvitationResponse);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@GetMapping("/notifications")
@@ -89,10 +89,10 @@ public class DispatchApiController {
 	public ResponseEntity<ApiResponseSpec<NotificationsDetailsResponse>> getAllNotification(
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-		ApiResponseSpec<NotificationsDetailsResponse> allNotificationsForReceiver =
+		ApiResponseSpec<NotificationsDetailsResponse> response =
 			dispatchRequestService.findAllNotificationsForReceiver(principalDetails.getEmail());
 
-		return ResponseEntity.ok().body(allNotificationsForReceiver);
+		return ResponseEntity.ok().body(response);
 	}
 
 }

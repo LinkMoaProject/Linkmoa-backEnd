@@ -32,10 +32,10 @@ public class FavoriteApiController {
 		@RequestBody @Validated FavoriteUpdateRequest favoriteUpdateRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-		ApiResponseSpec<FavoriteResponse> favoriteCreateResponse = favoriteService.updateFavorite(
+		ApiResponseSpec<FavoriteResponse> response = favoriteService.updateFavorite(
 			favoriteUpdateRequest, principalDetails);
 
-		return ResponseEntity.ok().body(favoriteCreateResponse);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@GetMapping
@@ -43,10 +43,10 @@ public class FavoriteApiController {
 	public ResponseEntity<ApiResponseSpec<FavoriteDetailResponse>> getFavorite(
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-		ApiResponseSpec<FavoriteDetailResponse> favoriteDetails = favoriteService.findFavoriteDetails(
+		ApiResponseSpec<FavoriteDetailResponse> response = favoriteService.findFavoriteDetails(
 			principalDetails);
 
-		return ResponseEntity.ok().body(favoriteDetails);
+		return ResponseEntity.ok().body(response);
 	}
 
 }

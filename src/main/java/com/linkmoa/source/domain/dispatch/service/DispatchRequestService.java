@@ -58,15 +58,15 @@ public class DispatchRequestService {
 	@ValidationApplied
 	@NotificationApplied
 	public DirectoryTransmissionRequest createDirectoryTransmissionRequest(
-		DirectoryTransmissionRequestCreate directoryTransmissionSendRequest,
+		DirectoryTransmissionRequestCreate request,
 		PrincipalDetails principalDetails) {
 
-		if (!memberService.isMemberExist(directoryTransmissionSendRequest.receiverEmail())) {
+		if (!memberService.isMemberExist(request.receiverEmail())) {
 			throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL);
 		}
 
 		DirectoryTransmissionRequest existingRequest = directoryTransmissionRequestRepository
-			.findByDirectoryIdAndRequestStatus(directoryTransmissionSendRequest.directoryId(), RequestStatus.WAITING)
+			.findByDirectoryIdAndRequestStatus(request.directoryId(), RequestStatus.WAITING)
 			.orElse(null);
 
 		if (existingRequest != null) {
@@ -74,19 +74,19 @@ public class DispatchRequestService {
 		}
 
 		DirectoryTransmissionRequest acceptedRequest = directoryTransmissionRequestRepository
-			.findByDirectoryIdAndRequestStatus(directoryTransmissionSendRequest.directoryId(), RequestStatus.ACCEPTED)
+			.findByDirectoryIdAndRequestStatus(request.directoryId(), RequestStatus.ACCEPTED)
 			.orElse(null);
 
 		if (acceptedRequest != null) {
 			throw new DispatchException(DispatchErrorCode.TRANSMIT_DIRECTORY_REQUEST_ACCEPTED_EXIST);
 		}
 
-		Directory directory = directoryRepository.findById(directoryTransmissionSendRequest.directoryId())
+		Directory directory = directoryRepository.findById(request.directoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
 		DirectoryTransmissionRequest directoryTransmissionRequest = DirectoryTransmissionRequest.builder()
 			.sender(principalDetails.getMember())
-			.receiver(memberService.findMemberByEmail(directoryTransmissionSendRequest.receiverEmail()))
+			.receiver(memberService.findMemberByEmail(request.receiverEmail()))
 			.directory(directory)
 			.build();
 
@@ -94,12 +94,12 @@ public class DispatchRequestService {
 	}
 
 	public ApiResponseSpec<DirectoryTransmissionResponse> mapToDirectorySendResponse(
-		DirectoryTransmissionRequest directoryTransmissionRequest) {
+		DirectoryTransmissionRequest request) {
 		DirectoryTransmissionResponse directoryTransmissionResponse = DirectoryTransmissionResponse.builder()
-			.directoryName(directoryTransmissionRequest.getDirectory().getDirectoryName())
-			.receiverEmail(directoryTransmissionRequest.getReceiver().getEmail())
-			.senderEmail(directoryTransmissionRequest.getSender().getEmail())
-			.directoryTransmissionId(directoryTransmissionRequest.getRequestId())
+			.directoryName(request.getDirectory().getDirectoryName())
+			.receiverEmail(request.getReceiver().getEmail())
+			.senderEmail(request.getSender().getEmail())
+			.directoryTransmissionId(request.getRequestId())
 			.build();
 
 		return ApiResponseSpec.success(
@@ -113,13 +113,13 @@ public class DispatchRequestService {
 	@ValidationApplied
 	@NotificationApplied
 	public SharePageInvitationRequest createSharePageInviteRequest(
-		SharePageInvitationRequestCreate sharePageInvitationRequestCreate, PrincipalDetails principalDetails) {
+		SharePageInvitationRequestCreate request, PrincipalDetails principalDetails) {
 
-		if (!memberService.isMemberExist(sharePageInvitationRequestCreate.receiverEmail())) {
+		if (!memberService.isMemberExist(request.receiverEmail())) {
 			throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL); // 유저가 없으면 예외 발생
 		}
 
-		Page page = pageRepository.findById(sharePageInvitationRequestCreate.baseRequest().pageId())
+		Page page = pageRepository.findById(request.baseRequest().pageId())
 			.orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
 
 		if (page.getPageType() == PageType.PERSONAL) {
@@ -144,22 +144,22 @@ public class DispatchRequestService {
 
 		SharePageInvitationRequest sharePageInvitationRequest = SharePageInvitationRequest.builder()
 			.sender(principalDetails.getMember())
-			.receiver(memberService.findMemberByEmail(sharePageInvitationRequestCreate.receiverEmail()))
+			.receiver(memberService.findMemberByEmail(request.receiverEmail()))
 			.page(page)
-			.permissionType(sharePageInvitationRequestCreate.permissionType())
+			.permissionType(request.permissionType())
 			.build();
 
 		return sharePageInvitationRequestRepository.save(sharePageInvitationRequest);
 	}
 
 	public ApiResponseSpec<SharePageInvitationResponse> mapToPageInviteRequestResponse(
-		com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest sharePageInvitationRequest) {
+		SharePageInvitationRequest request) {
 
 		SharePageInvitationResponse sharePageInvitationResponse = SharePageInvitationResponse.builder()
-			.pageTitle(sharePageInvitationRequest.getPage().getPageTitle())
-			.receiverEmail(sharePageInvitationRequest.getReceiver().getEmail())
-			.senderEmail(sharePageInvitationRequest.getSender().getEmail())
-			.pageInvitationRequestId(sharePageInvitationRequest.getId())
+			.pageTitle(request.getPage().getPageTitle())
+			.receiverEmail(request.getReceiver().getEmail())
+			.senderEmail(request.getSender().getEmail())
+			.pageInvitationRequestId(request.getId())
 			.build();
 
 		return ApiResponseSpec.success(

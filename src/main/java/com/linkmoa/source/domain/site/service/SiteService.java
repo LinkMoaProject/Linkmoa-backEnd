@@ -31,17 +31,17 @@ public class SiteService {
 	private final DirectoryRepository directoryRepository;
 
 	@ValidationApplied
-	public ApiResponseSpec<Long> createSite(SiteCreateRequestDto siteCreateRequestDto,
+	public ApiResponseSpec<Long> createSite(SiteCreateRequestDto request,
 		PrincipalDetails principalDetails) {
 
-		Directory directory = directoryRepository.findById(siteCreateRequestDto.directoryId())
+		Directory directory = directoryRepository.findById(request.directoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
 		Integer nextOrderIndex = directory.getNextOrderIndex();
 
 		Site newSite = Site.builder()
-			.siteName(siteCreateRequestDto.siteName())
-			.siteUrl(siteCreateRequestDto.siteUrl())
+			.siteName(request.siteName())
+			.siteUrl(request.siteUrl())
 			.directory(directory)
 			.orderIndex(nextOrderIndex)
 			.build();
@@ -56,13 +56,13 @@ public class SiteService {
 	}
 
 	@ValidationApplied
-	public ApiResponseSpec<Long> updateSite(SiteUpdateRequestDto siteUpdateRequestDto,
+	public ApiResponseSpec<Long> updateSite(SiteUpdateRequestDto request,
 		PrincipalDetails principalDetails) {
 
-		Site updateSite = siteRepository.findById(siteUpdateRequestDto.siteId())
+		Site updateSite = siteRepository.findById(request.siteId())
 			.orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
 
-		updateSite.updateSiteNameAndUrl(siteUpdateRequestDto.siteName(), siteUpdateRequestDto.siteUrl());
+		updateSite.updateSiteNameAndUrl(request.siteName(), request.siteUrl());
 
 		return ApiResponseSpec.success(
 			HttpStatus.OK,
@@ -73,10 +73,10 @@ public class SiteService {
 	}
 
 	@ValidationApplied
-	public ApiResponseSpec<Long> deleteSite(SiteDeleteRequestDto siteDeleteRequestDto,
+	public ApiResponseSpec<Long> deleteSite(SiteDeleteRequestDto request,
 		PrincipalDetails principalDetails) {
 
-		Site deleteSite = siteRepository.findById(siteDeleteRequestDto.siteId())
+		Site deleteSite = siteRepository.findById(request.siteId())
 			.orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
 
 		Directory parentDirectory = deleteSite.getDirectory();
@@ -93,12 +93,12 @@ public class SiteService {
 	}
 
 	@ValidationApplied
-	public ApiResponseSpec<Long> moveSite(SiteMoveRequestDto siteMoveRequestDto, PrincipalDetails principalDetails) {
+	public ApiResponseSpec<Long> moveSite(SiteMoveRequestDto request, PrincipalDetails principalDetails) {
 
-		Site moveSite = siteRepository.findById(siteMoveRequestDto.siteId())
+		Site moveSite = siteRepository.findById(request.siteId())
 			.orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
 
-		Directory targetDirectory = directoryRepository.findById(siteMoveRequestDto.targetDirectoryId())
+		Directory targetDirectory = directoryRepository.findById(request.targetDirectoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
 		directoryRepository.decrementDirectoryAndSiteOrderIndexes(moveSite.getDirectory(), moveSite.getOrderIndex());

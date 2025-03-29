@@ -34,19 +34,19 @@ public class FavoriteService {
 	private final SiteRepository siteRepository;
 
 	@Transactional
-	public ApiResponseSpec<FavoriteResponse> updateFavorite(FavoriteUpdateRequest favoriteUpdateRequest,
+	public ApiResponseSpec<FavoriteResponse> updateFavorite(FavoriteUpdateRequest request,
 		PrincipalDetails principalDetails) {
-		Favorite favorite = favoriteRepository.findByItemIdAndItemType(favoriteUpdateRequest.itemId(),
-			favoriteUpdateRequest.itemType());
+		Favorite favorite = favoriteRepository.findByItemIdAndItemType(request.itemId(),
+			request.itemType());
 
 		if (favorite == null) {
-			return createFavorite(favoriteUpdateRequest, principalDetails);
+			return createFavorite(request, principalDetails);
 		} else {
 			return deleteFavorite(favorite);
 		}
 	}
 
-	private ApiResponseSpec<FavoriteResponse> createFavorite(FavoriteUpdateRequest favoriteUpdateRequest,
+	private ApiResponseSpec<FavoriteResponse> createFavorite(FavoriteUpdateRequest request,
 		PrincipalDetails principalDetails) {
 
 		try {
@@ -56,8 +56,8 @@ public class FavoriteService {
 
 			Favorite newFavorite = Favorite.builder()
 				.member(member)
-				.itemId(favoriteUpdateRequest.itemId())
-				.itemType(favoriteUpdateRequest.itemType())
+				.itemId(request.itemId())
+				.itemType(request.itemType())
 				.orderIndex(1)
 				.build();
 
@@ -66,16 +66,16 @@ public class FavoriteService {
 			throw new FavoriteException(FavoriteErrorCode.FAVORITE_DELETE_FAILED);
 		}
 		FavoriteResponse favoriteResponse = FavoriteResponse.builder()
-			.itemType(favoriteUpdateRequest.itemType())
-			.itemId(favoriteUpdateRequest.itemId())
+			.itemType(request.itemType())
+			.itemId(request.itemId())
 			.build();
 
 		return ApiResponseSpec.success(
 			HttpStatus.OK,
 			"아이템 ( 디렉토리 , 사이트)를 즐겨 찾기에 등록했습니다.",
 			FavoriteResponse.builder()
-				.itemType(favoriteUpdateRequest.itemType())
-				.itemId(favoriteUpdateRequest.itemId())
+				.itemType(request.itemType())
+				.itemId(request.itemId())
 				.build()
 		);
 

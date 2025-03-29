@@ -48,19 +48,19 @@ public class DirectoryService {
 
 	@Transactional
 	@ValidationApplied
-	public ApiResponseSpec<Long> createDirectory(DirectoryCreateRequest requestDto,
+	public ApiResponseSpec<Long> createDirectory(DirectoryCreateRequest request,
 		PrincipalDetails principalDetails) {
 
-		Directory parentDirectory = requestDto.parentDirectoryId() == null
+		Directory parentDirectory = request.parentDirectoryId() == null
 			? null
-			: directoryRepository.findById(requestDto.parentDirectoryId())
+			: directoryRepository.findById(request.parentDirectoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
 		Integer nextOrderIndex = parentDirectory.getNextOrderIndex();
 
 		Directory newDirectory = Directory.builder()
-			.directoryName(requestDto.directoryName())
-			.directoryDescription(requestDto.directoryDescription())
+			.directoryName(request.directoryName())
+			.directoryDescription(request.directoryDescription())
 			.orderIndex(nextOrderIndex)
 			.build();
 
@@ -80,14 +80,14 @@ public class DirectoryService {
 
 	@Transactional
 	@ValidationApplied
-	public ApiResponseSpec<Long> updateDirectory(DirectoryUpdateRequest requestDto,
+	public ApiResponseSpec<Long> updateDirectory(DirectoryUpdateRequest request,
 		PrincipalDetails principalDetails) {
 
-		Directory updateDirectory = directoryRepository.findById(requestDto.directoryId())
+		Directory updateDirectory = directoryRepository.findById(request.directoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-		updateDirectory.updateDirectoryNameAndDescription(requestDto.directoryName(),
-			requestDto.directoryDescription());
+		updateDirectory.updateDirectoryNameAndDescription(request.directoryName(),
+			request.directoryDescription());
 
 		return ApiResponseSpec.success(
 			HttpStatus.OK,
@@ -98,10 +98,10 @@ public class DirectoryService {
 
 	@Transactional
 	@ValidationApplied
-	public ApiResponseSpec<Long> deleteDirectory(DirectoryIdRequest requestDto,
+	public ApiResponseSpec<Long> deleteDirectory(DirectoryIdRequest request,
 		PrincipalDetails principalDetails) {
 
-		Directory deleteDirectory = directoryRepository.findById(requestDto.directoryId())
+		Directory deleteDirectory = directoryRepository.findById(request.directoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
 		Long directoryId = deleteDirectory.getId();
@@ -120,13 +120,13 @@ public class DirectoryService {
 
 	@Transactional
 	@ValidationApplied
-	public ApiResponseSpec<Long> changeParentDirectory(DirectoryChangeParentRequest requestDto,
+	public ApiResponseSpec<Long> changeParentDirectory(DirectoryChangeParentRequest request,
 		PrincipalDetails principalDetails) {
 
-		Directory movingDirectory = directoryRepository.findById(requestDto.movingDirectoryId())
+		Directory movingDirectory = directoryRepository.findById(request.movingDirectoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-		Directory newParentDirectory = directoryRepository.findById(requestDto.newParentDirectoryId())
+		Directory newParentDirectory = directoryRepository.findById(request.newParentDirectoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
 		directoryRepository.decrementDirectoryAndSiteOrderIndexes(
@@ -147,36 +147,36 @@ public class DirectoryService {
 	@Transactional
 	@ValidationApplied
 	public ApiResponseSpec<DirectoryDragAndDropResponse> dragAndDropDirectoryOrSite(
-		DirectoryDragAndDropRequest directoryDragAndDropRequest,
+		DirectoryDragAndDropRequest request,
 		PrincipalDetails principalDetails) {
 
 		Integer currentItemOrderIndex;
 
-		Directory parentDirectory = directoryRepository.findById(directoryDragAndDropRequest.parentDirectoryId())
+		Directory parentDirectory = directoryRepository.findById(request.parentDirectoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
 		currentItemOrderIndex = getOrderIndex(
-			directoryDragAndDropRequest.targetId(),
-			directoryDragAndDropRequest.itemType()
+			request.targetId(),
+			request.itemType()
 		);
 
-		boolean isIncrement = currentItemOrderIndex > directoryDragAndDropRequest.targetOrderIndex();
-		int startIndex = Math.min(currentItemOrderIndex, directoryDragAndDropRequest.targetOrderIndex());
-		int endIndex = Math.max(currentItemOrderIndex, directoryDragAndDropRequest.targetOrderIndex());
+		boolean isIncrement = currentItemOrderIndex > request.targetOrderIndex();
+		int startIndex = Math.min(currentItemOrderIndex, request.targetOrderIndex());
+		int endIndex = Math.max(currentItemOrderIndex, request.targetOrderIndex());
 
 		directoryRepository.updateDirectoryAndSiteOrderIndexesInRange(parentDirectory, startIndex, endIndex,
 			isIncrement);
 
 		setOrderIndex(
-			directoryDragAndDropRequest.targetId(),
-			directoryDragAndDropRequest.itemType(),
-			directoryDragAndDropRequest.targetOrderIndex()
+			request.targetId(),
+			request.itemType(),
+			request.targetOrderIndex()
 		);
 
 		DirectoryDragAndDropResponse response = DirectoryDragAndDropResponse.builder()
-			.targetId(directoryDragAndDropRequest.targetId())
-			.itemType(String.valueOf(directoryDragAndDropRequest.itemType()))
-			.targetOrderIndex(directoryDragAndDropRequest.targetOrderIndex())
+			.targetId(request.targetId())
+			.itemType(String.valueOf(request.itemType()))
+			.targetOrderIndex(request.targetOrderIndex())
 			.build();
 
 		return ApiResponseSpec.success(
@@ -221,10 +221,10 @@ public class DirectoryService {
 
 	@ValidationApplied
 	public ApiResponseSpec<DirectoryResponse> findDirectoryDetails(
-		DirectoryIdRequest directoryIdRequest,
+		DirectoryIdRequest request,
 		PrincipalDetails principalDetails) {
 
-		Directory targetDirectory = directoryRepository.findById(directoryIdRequest.directoryId())
+		Directory targetDirectory = directoryRepository.findById(request.directoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
 		List<Favorite> favorites = favoriteRepository.findByMember(principalDetails.getMember());

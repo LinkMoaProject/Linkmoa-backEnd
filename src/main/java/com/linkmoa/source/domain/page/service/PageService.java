@@ -117,18 +117,18 @@ public class PageService {
 		);
 	}
 
-	private static void validatePageTypeIsNotPersonal(PageCreateRequest requestDto) {
-		PageType pageType = requestDto.pageType();
+	private static void validatePageTypeIsNotPersonal(PageCreateRequest request) {
+		PageType pageType = request.pageType();
 		if (pageType.equals(PageType.PERSONAL)) {
 			throw new PageException(PageErrorCode.PERSONAL_PAGE_ALREADY_EXISTS);
 		}
 	}
 
-	private Page createNewPage(PageCreateRequest requestDto, Directory rootDirectory) {
+	private Page createNewPage(PageCreateRequest request, Directory rootDirectory) {
 		return Page.builder()
-			.pageType(requestDto.pageType())
-			.pageTitle(requestDto.pageTitle())
-			.pageDescription(requestDto.pageDescription())
+			.pageType(request.pageType())
+			.pageTitle(request.pageTitle())
+			.pageDescription(request.pageDescription())
 			.rootDirectory(rootDirectory)
 			.build();
 	}
@@ -157,13 +157,13 @@ public class PageService {
 
 	@Transactional
 	@ValidationApplied
-	public ApiResponseSpec<Long> deletePage(PageDeleteRequest pageDeleteRequest,
+	public ApiResponseSpec<Long> deletePage(PageDeleteRequest request,
 		PrincipalDetails principalDetails) {
-		pageRepository.deleteById(pageDeleteRequest.baseRequest().pageId());
+		pageRepository.deleteById(request.baseRequest().pageId());
 		return ApiResponseSpec.success(
 			HttpStatus.OK,
 			"페이지 삭제에 성공했습니다.",
-			pageDeleteRequest.baseRequest().pageId()
+			request.baseRequest().pageId()
 		);
 	}
 

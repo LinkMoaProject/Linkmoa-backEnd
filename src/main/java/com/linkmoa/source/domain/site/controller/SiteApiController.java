@@ -33,8 +33,8 @@ public class SiteApiController {
 	public ResponseEntity<ApiResponseSpec<Long>> saveSite(
 		@RequestBody @Validated SiteCreateRequestDto siteCreateRequestDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<Long> siteCreateResponse = siteService.createSite(siteCreateRequestDto, principalDetails);
-		return ResponseEntity.ok().body(siteCreateResponse);
+		ApiResponseSpec<Long> response = siteService.createSite(siteCreateRequestDto, principalDetails);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@PutMapping
@@ -42,8 +42,8 @@ public class SiteApiController {
 	public ResponseEntity<ApiResponseSpec<Long>> updateSite(
 		@RequestBody @Validated SiteUpdateRequestDto siteCreateRequestDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<Long> siteUpdateResponse = siteService.updateSite(siteCreateRequestDto, principalDetails);
-		return ResponseEntity.ok().body(siteUpdateResponse);
+		ApiResponseSpec<Long> response = siteService.updateSite(siteCreateRequestDto, principalDetails);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@DeleteMapping()
@@ -51,8 +51,8 @@ public class SiteApiController {
 	public ResponseEntity<ApiResponseSpec<Long>> deleteSite(
 		@RequestBody @Validated SiteDeleteRequestDto siteDeleteRequestDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<Long> siteDeleteResponse = siteService.deleteSite(siteDeleteRequestDto, principalDetails);
-		return ResponseEntity.ok().body(siteDeleteResponse);
+		ApiResponseSpec<Long> response = siteService.deleteSite(siteDeleteRequestDto, principalDetails);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@PutMapping("/move")
@@ -60,7 +60,7 @@ public class SiteApiController {
 	public ResponseEntity<ApiResponseSpec<Long>> moveSite(
 		@RequestBody @Validated SiteMoveRequestDto siteMoveRequestDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<Long> siteMoveResponse = siteService.moveSite(siteMoveRequestDto, principalDetails);
-		return ResponseEntity.ok().body(siteMoveResponse);
+		ApiResponseSpec<Long> response = siteService.moveSite(siteMoveRequestDto, principalDetails);
+		return ResponseEntity.ok().body(response);
 	}
 }

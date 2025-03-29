@@ -36,11 +36,11 @@ public class SharePageInvitationRequestProcessor implements DispatchProcessor {
 	@Override
 	@Transactional
 	public ApiResponseSpec<DispatchDetailResponse> processRequest(
-		DispatchProcessingRequest dispatchProcessingRequest, PrincipalDetails principalDetails) {
+		DispatchProcessingRequest request, PrincipalDetails principalDetails) {
 
-		Long requestId = dispatchProcessingRequest.requestId();
-		RequestStatus requestStatus = dispatchProcessingRequest.requestStatus();
-		NotificationType notificationType = dispatchProcessingRequest.notificationType();
+		Long requestId = request.requestId();
+		RequestStatus requestStatus = request.requestStatus();
+		NotificationType notificationType = request.notificationType();
 
 		// 요청 타입 검증
 		validateNotificationType(NotificationType.INVITE_PAGE, notificationType);
