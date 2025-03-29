@@ -10,7 +10,7 @@ import com.linkmoa.source.domain.member.exception.MemberException;
 import com.linkmoa.source.domain.page.exception.PageException;
 import com.linkmoa.source.domain.site.exception.SiteException;
 import com.linkmoa.source.global.exception.ValidationException;
-import com.linkmoa.source.global.spec.ApiResponseErrorSpec;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,18 +20,18 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(MemberException.class)
 	public ResponseEntity<?> handleMemberException(MemberException e) {
-		ApiResponseErrorSpec memberExceptionResponse = ApiResponseErrorSpec.builder()
-			.httpStatusCode(e.getMemberErrorCode().getHttpStatus())
-			.errorMessage(e.getMemberErrorCode().getErrorMessage())
+		ApiResponseSpec memberExceptionResponse = ApiResponseSpec.builder()
+			.status(e.getMemberErrorCode().getHttpStatus())
+			.message(e.getMemberErrorCode().getErrorMessage())
 			.build();
 		return ResponseEntity.status(e.getMemberErrorCode().getHttpStatus()).body(memberExceptionResponse);
 	}
 
 	@ExceptionHandler(SiteException.class)
 	public ResponseEntity<?> handleSiteException(SiteException e) {
-		ApiResponseErrorSpec siteExceptionResponse = ApiResponseErrorSpec.builder()
-			.httpStatusCode(e.getSiteErrorCode().getHttpStatus())
-			.errorMessage(e.getSiteErrorCode().getErrorMessage())
+		ApiResponseSpec siteExceptionResponse = ApiResponseSpec.builder()
+			.status(e.getSiteErrorCode().getHttpStatus())
+			.message(e.getSiteErrorCode().getErrorMessage())
 			.build();
 
 		return ResponseEntity.status(e.getSiteErrorCode().getHttpStatus()).body(siteExceptionResponse);
@@ -39,27 +39,27 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(ValidationException.class)
 	public ResponseEntity<?> handleValidationException(ValidationException e) {
-		ApiResponseErrorSpec validationExceptionResponse = ApiResponseErrorSpec.builder()
-			.httpStatusCode(e.getValidationErrorCode().getHttpStatus())
-			.errorMessage(e.getValidationErrorCode().getErrorMessage())
+		ApiResponseSpec validationExceptionResponse = ApiResponseSpec.builder()
+			.status(e.getValidationErrorCode().getHttpStatus())
+			.message(e.getValidationErrorCode().getErrorMessage())
 			.build();
 		return ResponseEntity.status(e.getValidationErrorCode().getHttpStatus()).body(validationExceptionResponse);
 	}
 
 	@ExceptionHandler(PageException.class)
 	public ResponseEntity<?> handleValidationException(PageException e) {
-		ApiResponseErrorSpec pageExceptionResponse = ApiResponseErrorSpec.builder()
-			.httpStatusCode(e.getPageErrorCode().getHttpStatus())
-			.errorMessage(e.getPageErrorCode().getErrorMessage())
+		ApiResponseSpec pageExceptionResponse = ApiResponseSpec.builder()
+			.status(e.getPageErrorCode().getHttpStatus())
+			.message(e.getPageErrorCode().getErrorMessage())
 			.build();
 		return ResponseEntity.status(e.getPageErrorCode().getHttpStatus()).body(pageExceptionResponse);
 	}
 
 	@ExceptionHandler(DispatchException.class)
 	public ResponseEntity<?> handleDispatchException(DispatchException e) {
-		ApiResponseErrorSpec dispatchExceptionResponse = ApiResponseErrorSpec.builder()
-			.httpStatusCode(e.getErrorCode().getHttpStatus())
-			.errorMessage(e.getErrorCode().getErrorMessage())
+		ApiResponseSpec dispatchExceptionResponse = ApiResponseSpec.builder()
+			.status(e.getErrorCode().getHttpStatus())
+			.message(e.getErrorCode().getErrorMessage())
 			.build();
 		return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(dispatchExceptionResponse);
 	}
@@ -68,11 +68,11 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handleAllExceptions(Exception e) {
 		log.error("예기치 못한 오류가 발생했습니다", e);
 
-		ApiResponseErrorSpec apiResponseErrorSpec = ApiResponseErrorSpec.builder()
-			.httpStatusCode(HttpStatus.INTERNAL_SERVER_ERROR)
-			.errorMessage("서버에서 예상치 못한 오류가 발생했습니다.")
+		ApiResponseSpec apiResponseSpec = ApiResponseSpec.builder()
+			.status(HttpStatus.INTERNAL_SERVER_ERROR)
+			.message("서버에서 예상치 못한 오류가 발생했습니다.")
 			.build();
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseErrorSpec);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseSpec);
 	}
 
 }

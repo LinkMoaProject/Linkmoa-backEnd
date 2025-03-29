@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.favorite.dto.request.FavoriteUpdateRequest;
-import com.linkmoa.source.domain.favorite.dto.response.ApiFavoriteResponseSpec;
 import com.linkmoa.source.domain.favorite.dto.response.FavoriteDetailResponse;
 import com.linkmoa.source.domain.favorite.dto.response.FavoriteResponse;
 import com.linkmoa.source.domain.favorite.service.FavoriteService;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,11 +28,11 @@ public class FavoriteApiController {
 
 	@PostMapping
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiFavoriteResponseSpec<FavoriteResponse>> updateFavorite(
+	public ResponseEntity<ApiResponseSpec<FavoriteResponse>> updateFavorite(
 		@RequestBody @Validated FavoriteUpdateRequest favoriteUpdateRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-		ApiFavoriteResponseSpec<FavoriteResponse> favoriteCreateResponse = favoriteService.updateFavorite(
+		ApiResponseSpec<FavoriteResponse> favoriteCreateResponse = favoriteService.updateFavorite(
 			favoriteUpdateRequest, principalDetails);
 
 		return ResponseEntity.ok().body(favoriteCreateResponse);
@@ -40,10 +40,10 @@ public class FavoriteApiController {
 
 	@GetMapping
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiFavoriteResponseSpec<FavoriteDetailResponse>> getFavorite(
+	public ResponseEntity<ApiResponseSpec<FavoriteDetailResponse>> getFavorite(
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-		ApiFavoriteResponseSpec<FavoriteDetailResponse> favoriteDetails = favoriteService.findFavoriteDetails(
+		ApiResponseSpec<FavoriteDetailResponse> favoriteDetails = favoriteService.findFavoriteDetails(
 			principalDetails);
 
 		return ResponseEntity.ok().body(favoriteDetails);

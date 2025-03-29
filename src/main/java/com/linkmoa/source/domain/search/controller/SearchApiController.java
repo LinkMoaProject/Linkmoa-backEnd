@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.search.dto.request.SearchRequest;
-import com.linkmoa.source.domain.search.dto.response.ApiSearchResponseSpec;
 import com.linkmoa.source.domain.search.dto.response.SearchPageResponse;
 import com.linkmoa.source.domain.search.service.SearchService;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class SearchApiController {
 
 	@PostMapping
 	@PreAuthorize("isAuthenticated()")
-	ResponseEntity<ApiSearchResponseSpec<SearchPageResponse>> getDirectoryAndSiteByKeyword(
+	ResponseEntity<ApiResponseSpec<SearchPageResponse>> getDirectoryAndSiteByKeyword(
 		@RequestBody SearchRequest searchRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails
 	) {
@@ -36,7 +36,7 @@ public class SearchApiController {
 			searchRequest.keyword(),
 			searchRequest.searchType());
 
-		ApiSearchResponseSpec<SearchPageResponse> apiSearchResponse = searchService.searchDirectoriesAndSitesByTitleInPage(
+		ApiResponseSpec<SearchPageResponse> apiSearchResponse = searchService.searchDirectoriesAndSitesByTitleInPage(
 			searchRequest, principalDetails);
 
 		return ResponseEntity.ok().body(apiSearchResponse);

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.member.dto.request.MemberSignUpRequest;
 import com.linkmoa.source.domain.member.service.MemberService;
-import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.dto.response.PageResponse;
 import com.linkmoa.source.domain.page.service.PageService;
 import com.linkmoa.source.global.spec.ApiResponseSpec;
@@ -41,9 +40,8 @@ public class MemberApiController {
 		memberService.memberSignUp(memberSignUpRequest, principalDetails);
 		pageService.createPersonalPage(principalDetails);
 
-		ApiResponseSpec apiResponseSpec = new ApiResponseSpec(HttpStatus.OK, "회원가입 성공");
 		return ResponseEntity.ok()
-			.body(apiResponseSpec);
+			.body(ApiResponseSpec.success(HttpStatus.OK, "회원 가입 성공 "));
 	}
 
 	@PostMapping("/log-out")
@@ -52,17 +50,16 @@ public class MemberApiController {
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
 		memberService.memberLogout(principalDetails);
-		ApiResponseSpec apiResponseSpec = new ApiResponseSpec(HttpStatus.OK, "로그아웃 성공");
 		return ResponseEntity.ok()
-			.body(apiResponseSpec);
+			.body(ApiResponseSpec.success(HttpStatus.OK, "로그아웃 성공 "));
 	}
 
 	@GetMapping("/deletion-process")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiPageResponseSpec<List<PageResponse>>> memberDeletionProcess(
+	public ResponseEntity<ApiResponseSpec<List<PageResponse>>> memberDeletionProcess(
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-		ApiPageResponseSpec<List<PageResponse>> pagesWithUniqueHost = memberService.processMemberDeletion(
+		ApiResponseSpec<List<PageResponse>> pagesWithUniqueHost = memberService.processMemberDeletion(
 			principalDetails);
 		return ResponseEntity.ok()
 			.body(pagesWithUniqueHost);
@@ -73,8 +70,7 @@ public class MemberApiController {
 	public ResponseEntity<ApiResponseSpec> memberDeletion(
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 		memberService.memberDelete(principalDetails);
-		ApiResponseSpec apiResponseSpec = new ApiResponseSpec(HttpStatus.OK, "회원 탈퇴 성공");
 		return ResponseEntity.ok()
-			.body(apiResponseSpec);
+			.body(ApiResponseSpec.success(HttpStatus.OK, "회원 탈퇴 성공 "));
 	}
 }

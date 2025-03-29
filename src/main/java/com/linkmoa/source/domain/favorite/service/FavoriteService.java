@@ -12,7 +12,6 @@ import com.linkmoa.source.domain.directory.dto.response.DirectorySimpleResponse;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.favorite.constant.ItemType;
 import com.linkmoa.source.domain.favorite.dto.request.FavoriteUpdateRequest;
-import com.linkmoa.source.domain.favorite.dto.response.ApiFavoriteResponseSpec;
 import com.linkmoa.source.domain.favorite.dto.response.FavoriteDetailResponse;
 import com.linkmoa.source.domain.favorite.dto.response.FavoriteResponse;
 import com.linkmoa.source.domain.favorite.entity.Favorite;
@@ -22,6 +21,7 @@ import com.linkmoa.source.domain.favorite.repository.FavoriteRepository;
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.site.dto.response.SiteSimpleResponse;
 import com.linkmoa.source.domain.site.repository.SiteRepository;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +34,7 @@ public class FavoriteService {
 	private final SiteRepository siteRepository;
 
 	@Transactional
-	public ApiFavoriteResponseSpec<FavoriteResponse> updateFavorite(FavoriteUpdateRequest favoriteUpdateRequest,
+	public ApiResponseSpec<FavoriteResponse> updateFavorite(FavoriteUpdateRequest favoriteUpdateRequest,
 		PrincipalDetails principalDetails) {
 		Favorite favorite = favoriteRepository.findByItemIdAndItemType(favoriteUpdateRequest.itemId(),
 			favoriteUpdateRequest.itemType());
@@ -46,7 +46,7 @@ public class FavoriteService {
 		}
 	}
 
-	private ApiFavoriteResponseSpec<FavoriteResponse> createFavorite(FavoriteUpdateRequest favoriteUpdateRequest,
+	private ApiResponseSpec<FavoriteResponse> createFavorite(FavoriteUpdateRequest favoriteUpdateRequest,
 		PrincipalDetails principalDetails) {
 
 		try {
@@ -70,15 +70,18 @@ public class FavoriteService {
 			.itemId(favoriteUpdateRequest.itemId())
 			.build();
 
-		return ApiFavoriteResponseSpec.<FavoriteResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("아이템 ( 디렉토리 , 사이트)를 즐겨 찾기에 등록했습니다.")
-			.data(favoriteResponse)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"아이템 ( 디렉토리 , 사이트)를 즐겨 찾기에 등록했습니다.",
+			FavoriteResponse.builder()
+				.itemType(favoriteUpdateRequest.itemType())
+				.itemId(favoriteUpdateRequest.itemId())
+				.build()
+		);
 
 	}
 
-	private ApiFavoriteResponseSpec<FavoriteResponse> deleteFavorite(Favorite favorite) {
+	private ApiResponseSpec<FavoriteResponse> deleteFavorite(Favorite favorite) {
 
 		try {
 			favoriteRepository.decrementFavoriteOrderIndexes(favorite.getOrderIndex());
@@ -91,11 +94,14 @@ public class FavoriteService {
 			.itemType(favorite.getItemType())
 			.build();
 
-		return ApiFavoriteResponseSpec.<FavoriteResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("아이템( 디렉토리, 사이트)를 즐겨 찾기에서 삭제했습니다.")
-			.data(favoriteResponse)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"아이템( 디렉토리, 사이트)를 즐겨 찾기에서 삭제했습니다.",
+			FavoriteResponse.builder()
+				.itemId(favorite.getItemId())
+				.itemType(favorite.getItemType())
+				.build()
+		);
 	}
 
 	public List<Long> findFavoriteDirectoryIds(List<Favorite> favorites) {
@@ -112,7 +118,7 @@ public class FavoriteService {
 			.collect(Collectors.toList());
 	}
 
-	public ApiFavoriteResponseSpec<FavoriteDetailResponse> findFavoriteDetails(PrincipalDetails principalDetails) {
+	public ApiResponseSpec<FavoriteDetailResponse> findFavoriteDetails(PrincipalDetails principalDetails) {
 		List<Favorite> favorites = favoriteRepository.findByMember(principalDetails.getMember());
 
 		List<Long> favoriteDirectoryIds = findFavoriteDirectoryIds(favorites);
@@ -128,11 +134,15 @@ public class FavoriteService {
 			.siteSimpleResponses(sitesDetails)
 			.build();
 
-		return ApiFavoriteResponseSpec.<FavoriteDetailResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("즐겨찾기를 조회했습니다.")
-			.data(favoriteDetailResponse)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"즐겨찾기를 조회했습니다.",
+			FavoriteDetailResponse.builder()
+				.email(principalDetails.getEmail())
+				.directorySimpleResponses(directoryRepository.findFavoriteDirectories(favoriteDirectoryIds))
+				.siteSimpleResponses(siteRepository.findFavoriteSites(favoriteSiteIds))
+				.build()
+		);
 	}
 
 }

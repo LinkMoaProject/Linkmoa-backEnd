@@ -9,7 +9,6 @@ import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.service.DirectoryService;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
-import com.linkmoa.source.domain.dispatch.dto.response.ApiDispatchResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
 import com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest;
 import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
@@ -20,6 +19,7 @@ import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.notification.constant.NotificationType;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.page.service.PageService;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +34,7 @@ public class DirectoryTransmissionRequestProcessor implements DispatchProcessor 
 
 	@Override
 	@Transactional
-	public ApiDispatchResponseSpec<DispatchDetailResponse> processRequest(
+	public ApiResponseSpec<DispatchDetailResponse> processRequest(
 		DispatchProcessingRequest dispatchProcessingRequest, PrincipalDetails principalDetails) {
 		Long requestId = dispatchProcessingRequest.requestId();
 		RequestStatus requestStatus = dispatchProcessingRequest.requestStatus();
@@ -71,11 +71,11 @@ public class DirectoryTransmissionRequestProcessor implements DispatchProcessor 
 			.notificationType(NotificationType.TRANSMIT_DIRECTORY)
 			.build();
 
-		return ApiDispatchResponseSpec.<DispatchDetailResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage(successMessage)
-			.data(response)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			successMessage,
+			response
+		);
 
 	}
 

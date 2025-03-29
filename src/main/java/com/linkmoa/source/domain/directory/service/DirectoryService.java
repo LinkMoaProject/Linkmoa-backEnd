@@ -13,7 +13,6 @@ import com.linkmoa.source.domain.directory.dto.request.DirectoryDragAndDropReque
 import com.linkmoa.source.domain.directory.dto.request.DirectoryIdRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryPasteRequest;
 import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequest;
-import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryDragAndDropResponse;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryPasteResponse;
@@ -32,6 +31,7 @@ import com.linkmoa.source.domain.site.error.SiteErrorCode;
 import com.linkmoa.source.domain.site.exception.SiteException;
 import com.linkmoa.source.domain.site.repository.SiteRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ public class DirectoryService {
 
 	@Transactional
 	@ValidationApplied
-	public ApiDirectoryResponseSpec<Long> createDirectory(DirectoryCreateRequest requestDto,
+	public ApiResponseSpec<Long> createDirectory(DirectoryCreateRequest requestDto,
 		PrincipalDetails principalDetails) {
 
 		Directory parentDirectory = requestDto.parentDirectoryId() == null
@@ -71,16 +71,16 @@ public class DirectoryService {
 
 		directoryRepository.save(newDirectory);
 
-		return ApiDirectoryResponseSpec.<Long>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("Directory 생성에 성공했습니다.")
-			.data(newDirectory.getId())
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"디렉토리 생성에 성공했습니다.",
+			newDirectory.getId()
+		);
 	}
 
 	@Transactional
 	@ValidationApplied
-	public ApiDirectoryResponseSpec<Long> updateDirectory(DirectoryUpdateRequest requestDto,
+	public ApiResponseSpec<Long> updateDirectory(DirectoryUpdateRequest requestDto,
 		PrincipalDetails principalDetails) {
 
 		Directory updateDirectory = directoryRepository.findById(requestDto.directoryId())
@@ -89,17 +89,16 @@ public class DirectoryService {
 		updateDirectory.updateDirectoryNameAndDescription(requestDto.directoryName(),
 			requestDto.directoryDescription());
 
-		return ApiDirectoryResponseSpec.<Long>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("Directory 수정(이름,설명)에 성공했습니다.")
-			.data(updateDirectory.getId())
-			.build();
-
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"Directory 수정(이름,설명)에 성공했습니다.",
+			updateDirectory.getId()
+		);
 	}
 
 	@Transactional
 	@ValidationApplied
-	public ApiDirectoryResponseSpec<Long> deleteDirectory(DirectoryIdRequest requestDto,
+	public ApiResponseSpec<Long> deleteDirectory(DirectoryIdRequest requestDto,
 		PrincipalDetails principalDetails) {
 
 		Directory deleteDirectory = directoryRepository.findById(requestDto.directoryId())
@@ -112,16 +111,16 @@ public class DirectoryService {
 		directoryRepository.decrementDirectoryAndSiteOrderIndexes(parentDirectory, orderIndex);
 		directoryRepository.delete(deleteDirectory);
 
-		return ApiDirectoryResponseSpec.<Long>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("Directory 삭제에 성공했습니다.")
-			.data(directoryId)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"Directory 삭제에 성공했습니다.",
+			directoryId
+		);
 	}
 
 	@Transactional
 	@ValidationApplied
-	public ApiDirectoryResponseSpec<Long> changeParentDirectory(DirectoryChangeParentRequest requestDto,
+	public ApiResponseSpec<Long> changeParentDirectory(DirectoryChangeParentRequest requestDto,
 		PrincipalDetails principalDetails) {
 
 		Directory movingDirectory = directoryRepository.findById(requestDto.movingDirectoryId())
@@ -130,25 +129,24 @@ public class DirectoryService {
 		Directory newParentDirectory = directoryRepository.findById(requestDto.newParentDirectoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-		directoryRepository.decrementDirectoryAndSiteOrderIndexes(movingDirectory.getParentDirectory(),
-			movingDirectory.getOrderIndex());
+		directoryRepository.decrementDirectoryAndSiteOrderIndexes(
+			movingDirectory.getParentDirectory(),
+			movingDirectory.getOrderIndex()
+		);
 
 		movingDirectory.setParentDirectory(newParentDirectory);
+		movingDirectory.setOrderIndex(newParentDirectory.getNextOrderIndex());
 
-		Integer newOrderIndex = newParentDirectory.getNextOrderIndex();
-
-		movingDirectory.setOrderIndex(newOrderIndex);
-
-		return ApiDirectoryResponseSpec.<Long>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("Directory를 다른 Directory로 이동시켰습니다.")
-			.data(movingDirectory.getId())
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"디렉토리를 다른 디렉토리로 이동시켰습니다.",
+			movingDirectory.getId()
+		);
 	}
 
 	@Transactional
 	@ValidationApplied
-	public ApiDirectoryResponseSpec<DirectoryDragAndDropResponse> dragAndDropDirectoryOrSite(
+	public ApiResponseSpec<DirectoryDragAndDropResponse> dragAndDropDirectoryOrSite(
 		DirectoryDragAndDropRequest directoryDragAndDropRequest,
 		PrincipalDetails principalDetails) {
 
@@ -175,17 +173,17 @@ public class DirectoryService {
 			directoryDragAndDropRequest.targetOrderIndex()
 		);
 
-		DirectoryDragAndDropResponse directoryDragAndDropResponse = DirectoryDragAndDropResponse.builder()
+		DirectoryDragAndDropResponse response = DirectoryDragAndDropResponse.builder()
 			.targetId(directoryDragAndDropRequest.targetId())
 			.itemType(String.valueOf(directoryDragAndDropRequest.itemType()))
 			.targetOrderIndex(directoryDragAndDropRequest.targetOrderIndex())
 			.build();
 
-		return ApiDirectoryResponseSpec.<DirectoryDragAndDropResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("Drag and Drop를 수행했습니다.")
-			.data(directoryDragAndDropResponse)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"Drag and Drop를 수행했습니다.",
+			response
+		);
 	}
 
 	private Integer getOrderIndex(Long targetId, ItemType itemType) {
@@ -222,8 +220,9 @@ public class DirectoryService {
 	}
 
 	@ValidationApplied
-	public ApiDirectoryResponseSpec<DirectoryResponse> findDirectoryDetails(DirectoryIdRequest directoryIdRequest
-		, PrincipalDetails principalDetails) {
+	public ApiResponseSpec<DirectoryResponse> findDirectoryDetails(
+		DirectoryIdRequest directoryIdRequest,
+		PrincipalDetails principalDetails) {
 
 		Directory targetDirectory = directoryRepository.findById(directoryIdRequest.directoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
@@ -233,35 +232,36 @@ public class DirectoryService {
 		List<Long> favoriteDirectoryIds = favoriteService.findFavoriteDirectoryIds(favorites);
 		List<Long> favoriteSiteIds = favoriteService.findFavoriteSiteIds(favorites);
 
-		List<DirectoryDetailResponse> directoryDetailResponses = directoryRepository.findDirectoryDetails(
-			targetDirectory.getId(), favoriteDirectoryIds);
+		List<DirectoryDetailResponse> directoryDetailResponses =
+			directoryRepository.findDirectoryDetails(targetDirectory.getId(), favoriteDirectoryIds);
 
-		List<SiteDetailResponse> sitesDetails = siteRepository.findSitesDetails(targetDirectory.getId(),
-			favoriteSiteIds);
+		List<SiteDetailResponse> siteDetailResponses =
+			siteRepository.findSitesDetails(targetDirectory.getId(), favoriteSiteIds);
 
 		DirectoryResponse directoryResponse = DirectoryResponse.builder()
 			.targetDirectoryDescription(targetDirectory.getDirectoryDescription())
 			.targetDirectoryName(targetDirectory.getDirectoryName())
 			.directoryDetailResponses(directoryDetailResponses)
-			.siteDetailResponses(sitesDetails)
+			.siteDetailResponses(siteDetailResponses)
 			.build();
 
-		return ApiDirectoryResponseSpec.<DirectoryResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("Directory 클릭 시, 해당 디렉토리 내에 사이트 및 디렉토리를 조회했습니다.")
-			.data(directoryResponse)
-			.build();
-
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"Directory 클릭 시, 해당 디렉토리 내에 사이트 및 디렉토리를 조회했습니다.",
+			directoryResponse
+		);
 	}
 
-	@ValidationApplied
 	@Transactional
-	public ApiDirectoryResponseSpec<DirectoryPasteResponse> pasteDirectory(DirectoryPasteRequest directoryPasteRequest,
+	@ValidationApplied
+	public ApiResponseSpec<DirectoryPasteResponse> pasteDirectory(
+		DirectoryPasteRequest request,
 		PrincipalDetails principalDetails) {
-		Directory originalDirectory = directoryRepository.findById(directoryPasteRequest.originalDirectoryId())
+
+		Directory originalDirectory = directoryRepository.findById(request.originalDirectoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-		Directory destinationDirectory = directoryRepository.findById(directoryPasteRequest.destinationDirectoryId())
+		Directory destinationDirectory = directoryRepository.findById(request.destinationDirectoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
 		directoryRepository.incrementDirectoryAndSiteOrderIndexes(destinationDirectory, 0);
@@ -270,17 +270,17 @@ public class DirectoryService {
 		pastedDirectory.setOrderIndex(1);
 		directoryRepository.save(pastedDirectory);
 
-		DirectoryPasteResponse directoryPasteResponse = DirectoryPasteResponse.builder()
+		DirectoryPasteResponse response = DirectoryPasteResponse.builder()
 			.pastedirectoryId(pastedDirectory.getId())
 			.destinationDirectoryId(destinationDirectory.getId())
 			.clonedDirectoryName(pastedDirectory.getDirectoryName())
 			.build();
 
-		return ApiDirectoryResponseSpec.<DirectoryPasteResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("Directory 붙여넣기에 성공했습니다.")
-			.data(directoryPasteResponse)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"Directory 붙여넣기에 성공했습니다.",
+			response
+		);
 	}
 
 	public Directory cloneDirectory(Long newRootDirectoryId, Long originalDirectoryId) {

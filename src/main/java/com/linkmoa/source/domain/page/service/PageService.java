@@ -23,7 +23,6 @@ import com.linkmoa.source.domain.memberPageLink.repository.MemberPageLinkReposit
 import com.linkmoa.source.domain.page.contant.PageType;
 import com.linkmoa.source.domain.page.dto.request.PageCreateRequest;
 import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
-import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.dto.response.PageDetailsResponse;
 import com.linkmoa.source.domain.page.dto.response.PageResponse;
 import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
@@ -33,6 +32,7 @@ import com.linkmoa.source.domain.page.exception.PageException;
 import com.linkmoa.source.domain.page.repository.PageRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
 import com.linkmoa.source.global.dto.request.BaseRequest;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +57,7 @@ public class PageService {
 	 * @return
 	 */
 	@Transactional
-	public ApiPageResponseSpec<Long> createPersonalPage(PrincipalDetails principalDetails) {
+	public ApiResponseSpec<Long> createPersonalPage(PrincipalDetails principalDetails) {
 
 		Member hostMember = memberService.findMemberByEmail(principalDetails.getEmail());
 
@@ -74,11 +74,11 @@ public class PageService {
 		MemberPageLink memberPageLink = createMemberPageLink(hostMember, newPage);
 		saveEntities(newPage, memberPageLink, rootDirectory);
 
-		return ApiPageResponseSpec.<Long>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage(newPage.getPageType().toString() + "페이지 생성에 성공했습니다.")
-			.data(newPage.getId())
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			newPage.getPageType().toString() + "페이지 생성에 성공했습니다.",
+			newPage.getId()
+		);
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class PageService {
 	 * @return
 	 */
 	@Transactional
-	public ApiPageResponseSpec<Long> createSharedPage(PageCreateRequest requestDto, PrincipalDetails principalDetails) {
+	public ApiResponseSpec<Long> createSharedPage(PageCreateRequest requestDto, PrincipalDetails principalDetails) {
 
 		validatePageTypeIsNotPersonal(requestDto);
 		Member hostMember = memberService.findMemberByEmail(principalDetails.getEmail());
@@ -110,11 +110,11 @@ public class PageService {
 		MemberPageLink memberPageLink = createMemberPageLink(hostMember, newPage);
 		saveEntities(newPage, memberPageLink, rootDirectory);
 
-		return ApiPageResponseSpec.<Long>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage(newPage.getPageType().toString() + "페이지 생성에 성공했습니다.")
-			.data(newPage.getId())
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			newPage.getPageType().toString() + "페이지 생성에 성공했습니다.",
+			newPage.getId()
+		);
 	}
 
 	private static void validatePageTypeIsNotPersonal(PageCreateRequest requestDto) {
@@ -157,29 +157,29 @@ public class PageService {
 
 	@Transactional
 	@ValidationApplied
-	public ApiPageResponseSpec<Long> deletePage(PageDeleteRequest pageDeleteRequest,
+	public ApiResponseSpec<Long> deletePage(PageDeleteRequest pageDeleteRequest,
 		PrincipalDetails principalDetails) {
 		pageRepository.deleteById(pageDeleteRequest.baseRequest().pageId());
-		return ApiPageResponseSpec.<Long>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("페이지 삭제에 성공했습니다.")
-			.data(pageDeleteRequest.baseRequest().pageId())
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"페이지 삭제에 성공했습니다.",
+			pageDeleteRequest.baseRequest().pageId()
+		);
 	}
 
-	public ApiPageResponseSpec<List<PageResponse>> findAllPages(PrincipalDetails principalDetails) {
+	public ApiResponseSpec<List<PageResponse>> findAllPages(PrincipalDetails principalDetails) {
 		List<PageResponse> allPagesByMemberId = pageRepository.findAllPagesByMemberId(principalDetails.getId());
 
-		return ApiPageResponseSpec.<List<PageResponse>>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("현재 회원이 참여 중인 모든 페이지를 조회했습니다.")
-			.data(allPagesByMemberId)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"현재 회원이 참여 중인 모든 페이지를 조회했습니다.",
+			allPagesByMemberId
+		);
 
 	}
 
 	@Transactional
-	public ApiPageResponseSpec<SharePageLeaveResponse> leaveSharePage(BaseRequest baseRequest,
+	public ApiResponseSpec<SharePageLeaveResponse> leaveSharePage(BaseRequest baseRequest,
 		PrincipalDetails principalDetails) {
 
 		Page page = pageRepository.findById(baseRequest.pageId()).
@@ -195,12 +195,11 @@ public class PageService {
 			.pageId(page.getId())
 			.pageTitle(page.getPageTitle())
 			.build();
-
-		return ApiPageResponseSpec.<SharePageLeaveResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("공유 페이지 탈퇴에 성공했습니다.")
-			.data(sharePageLeaveResponse)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"공유 페이지 탈퇴에 성공했습니다.",
+			sharePageLeaveResponse
+		);
 	}
 
 	private void validateCanLeaveSharePage(Page page, Member member) {
@@ -225,18 +224,18 @@ public class PageService {
 	 * @param principalDetails
 	 * @return
 	 */
-	public ApiPageResponseSpec<PageDetailsResponse> getPageMain(BaseRequest baseRequest,
+	public ApiResponseSpec<PageDetailsResponse> getPageMain(BaseRequest baseRequest,
 		PrincipalDetails principalDetails) {
 		Page page = pageRepository.findById(baseRequest.pageId())
 			.orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
 
 		PageDetailsResponse pageDetailsResponse = getPageDetailsResponse(page, principalDetails);
 
-		return ApiPageResponseSpec.<PageDetailsResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("페이지 접속 시, 해당 페이지 메인화면을 조회합니다")
-			.data(pageDetailsResponse)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"페이지 접속 시, 해당 페이지 메인화면을 조회합니다",
+			pageDetailsResponse
+		);
 	}
 
 	private PageDetailsResponse getPageDetailsResponse(Page page, PrincipalDetails principalDetails) {
@@ -258,7 +257,7 @@ public class PageService {
 		return pageDetailsResponse;
 	}
 
-	public ApiPageResponseSpec<PageDetailsResponse> loadPersonalPageMain(PrincipalDetails principalDetails) {
+	public ApiResponseSpec<PageDetailsResponse> loadPersonalPageMain(PrincipalDetails principalDetails) {
 		Member member = memberService.findMemberByEmail(principalDetails.getEmail());
 
 		Page personalPage = memberPageLinkRepository.findPersonalPageByMemberId(member.getId())
@@ -266,11 +265,11 @@ public class PageService {
 
 		PageDetailsResponse pageDetailsResponse = getPageDetailsResponse(personalPage, principalDetails);
 
-		return ApiPageResponseSpec.<PageDetailsResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("로그인 성공 시, 유저의 개인 페이지 메인 화면 데이터를 조회합니다.")
-			.data(pageDetailsResponse)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"로그인 성공 시, 유저의 개인 페이지 메인 화면 데이터를 조회합니다.",
+			pageDetailsResponse
+		);
 	}
 
 	public Page getPersonalPage(Long memberId) {

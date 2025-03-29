@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
@@ -15,7 +14,6 @@ import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequestCreate;
 import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
-import com.linkmoa.source.domain.dispatch.dto.response.ApiDispatchResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.response.DirectoryTransmissionResponse;
 import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
 import com.linkmoa.source.domain.dispatch.dto.response.NotificationsDetailsResponse;
@@ -33,12 +31,12 @@ import com.linkmoa.source.domain.notification.aop.annotation.NotificationApplied
 import com.linkmoa.source.domain.notification.repository.NotificationRepository;
 import com.linkmoa.source.domain.notification.service.NotificationService;
 import com.linkmoa.source.domain.page.contant.PageType;
-import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.page.error.PageErrorCode;
 import com.linkmoa.source.domain.page.exception.PageException;
 import com.linkmoa.source.domain.page.repository.PageRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -95,7 +93,7 @@ public class DispatchRequestService {
 		return directoryTransmissionRequestRepository.save(directoryTransmissionRequest);
 	}
 
-	public ApiDirectoryResponseSpec<DirectoryTransmissionResponse> mapToDirectorySendResponse(
+	public ApiResponseSpec<DirectoryTransmissionResponse> mapToDirectorySendResponse(
 		DirectoryTransmissionRequest directoryTransmissionRequest) {
 		DirectoryTransmissionResponse directoryTransmissionResponse = DirectoryTransmissionResponse.builder()
 			.directoryName(directoryTransmissionRequest.getDirectory().getDirectoryName())
@@ -104,11 +102,11 @@ public class DispatchRequestService {
 			.directoryTransmissionId(directoryTransmissionRequest.getRequestId())
 			.build();
 
-		return ApiDirectoryResponseSpec.<DirectoryTransmissionResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("디렉토리 전송 요청을 보냈습니다.")
-			.data(directoryTransmissionResponse)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"디렉토리 전송 요청을 보냈습니다.",
+			directoryTransmissionResponse
+		);
 	}
 
 	@Transactional
@@ -154,7 +152,7 @@ public class DispatchRequestService {
 		return sharePageInvitationRequestRepository.save(sharePageInvitationRequest);
 	}
 
-	public ApiPageResponseSpec<SharePageInvitationResponse> mapToPageInviteRequestResponse(
+	public ApiResponseSpec<SharePageInvitationResponse> mapToPageInviteRequestResponse(
 		com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest sharePageInvitationRequest) {
 
 		SharePageInvitationResponse sharePageInvitationResponse = SharePageInvitationResponse.builder()
@@ -164,11 +162,11 @@ public class DispatchRequestService {
 			.pageInvitationRequestId(sharePageInvitationRequest.getId())
 			.build();
 
-		return ApiPageResponseSpec.<SharePageInvitationResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("공유 페이지 초대를 보냈습니다.")
-			.data(sharePageInvitationResponse)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"공유 페이지 초대를 보냈습니다.",
+			sharePageInvitationResponse
+		);
 	}
 
 	public List<DispatchDetailResponse> findSharePageInvitationsForReceiver(String receiverEmail) {
@@ -186,7 +184,7 @@ public class DispatchRequestService {
 	}
 
 	@Transactional
-	public ApiDispatchResponseSpec<NotificationsDetailsResponse> findAllNotificationsForReceiver(String receiverEmail) {
+	public ApiResponseSpec<NotificationsDetailsResponse> findAllNotificationsForReceiver(String receiverEmail) {
 		NotificationsDetailsResponse notificationDetails = NotificationsDetailsResponse.builder()
 			.DirectoryTransmissionRequests(findDirectoryDirectoryTransmissionsForReceiver(receiverEmail))
 			.SharePageInvitationRequests(findSharePageInvitationsForReceiver(receiverEmail))
@@ -196,11 +194,11 @@ public class DispatchRequestService {
 
 		notificationService.sendUnreadNotificationCount(receiverEmail);
 
-		return ApiDispatchResponseSpec.<NotificationsDetailsResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("알람 목록을 조회했습니다.")
-			.data(notificationDetails)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"알람 목록을 조회했습니다.",
+			notificationDetails
+		);
 
 	}
 

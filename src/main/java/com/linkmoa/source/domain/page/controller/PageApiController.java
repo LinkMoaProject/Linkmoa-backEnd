@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.page.dto.request.PageCreateRequest;
 import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
-import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.dto.response.PageDetailsResponse;
 import com.linkmoa.source.domain.page.dto.response.PageResponse;
 import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
 import com.linkmoa.source.domain.page.service.PageService;
 import com.linkmoa.source.global.dto.request.BaseRequest;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,10 +34,10 @@ public class PageApiController {
 
 	@PostMapping
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiPageResponseSpec<Long>> createPage(
+	public ResponseEntity<ApiResponseSpec<Long>> createPage(
 		@RequestBody @Validated PageCreateRequest pageCreateRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiPageResponseSpec<Long> createPageResponse = pageService.createSharedPage(pageCreateRequest,
+		ApiResponseSpec<Long> createPageResponse = pageService.createSharedPage(pageCreateRequest,
 			principalDetails);
 
 		return ResponseEntity.ok().body(createPageResponse);
@@ -45,20 +45,20 @@ public class PageApiController {
 
 	@DeleteMapping
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiPageResponseSpec<Long>> deletePage(
+	public ResponseEntity<ApiResponseSpec<Long>> deletePage(
 		@RequestBody @Validated PageDeleteRequest pageDeleteRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiPageResponseSpec<Long> deletePageResponse = pageService.deletePage(pageDeleteRequest, principalDetails);
+		ApiResponseSpec<Long> deletePageResponse = pageService.deletePage(pageDeleteRequest, principalDetails);
 
 		return ResponseEntity.ok().body(deletePageResponse);
 	}
 
 	@GetMapping()
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiPageResponseSpec<List<PageResponse>>> getAllPages(
+	public ResponseEntity<ApiResponseSpec<List<PageResponse>>> getAllPages(
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-		ApiPageResponseSpec<List<PageResponse>> allPages = pageService.findAllPages(principalDetails);
+		ApiResponseSpec<List<PageResponse>> allPages = pageService.findAllPages(principalDetails);
 
 		return ResponseEntity.ok().body(allPages);
 
@@ -66,10 +66,10 @@ public class PageApiController {
 
 	@DeleteMapping("/leave")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiPageResponseSpec<SharePageLeaveResponse>> leaveSharePage(
+	public ResponseEntity<ApiResponseSpec<SharePageLeaveResponse>> leaveSharePage(
 		@RequestBody @Validated BaseRequest baseRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiPageResponseSpec<SharePageLeaveResponse> sharePageLeaveResponse = pageService.leaveSharePage(baseRequest,
+		ApiResponseSpec<SharePageLeaveResponse> sharePageLeaveResponse = pageService.leaveSharePage(baseRequest,
 			principalDetails);
 
 		return ResponseEntity.ok().body(sharePageLeaveResponse);
@@ -77,19 +77,19 @@ public class PageApiController {
 
 	@GetMapping("/details")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiPageResponseSpec<PageDetailsResponse>> getPageDetails(
+	public ResponseEntity<ApiResponseSpec<PageDetailsResponse>> getPageDetails(
 		@RequestBody @Validated BaseRequest baseRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiPageResponseSpec<PageDetailsResponse> pageDetailsResponse = pageService.getPageMain(baseRequest,
+		ApiResponseSpec<PageDetailsResponse> pageDetailsResponse = pageService.getPageMain(baseRequest,
 			principalDetails);
 		return ResponseEntity.ok().body(pageDetailsResponse);
 	}
 
 	@GetMapping("/login")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiPageResponseSpec<PageDetailsResponse>> loadPersonalPageMain(
+	public ResponseEntity<ApiResponseSpec<PageDetailsResponse>> loadPersonalPageMain(
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiPageResponseSpec<PageDetailsResponse> pageDetailsResponse = pageService.loadPersonalPageMain(
+		ApiResponseSpec<PageDetailsResponse> pageDetailsResponse = pageService.loadPersonalPageMain(
 			principalDetails);
 		return ResponseEntity.ok().body(pageDetailsResponse);
 	}

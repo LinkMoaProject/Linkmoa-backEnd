@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
-import com.linkmoa.source.domain.dispatch.dto.response.ApiDispatchResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
 import com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest;
 import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
@@ -21,6 +20,7 @@ import com.linkmoa.source.domain.memberPageLink.repository.MemberPageLinkReposit
 import com.linkmoa.source.domain.notification.constant.NotificationType;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.page.repository.PageRepository;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +35,7 @@ public class SharePageInvitationRequestProcessor implements DispatchProcessor {
 
 	@Override
 	@Transactional
-	public ApiDispatchResponseSpec<DispatchDetailResponse> processRequest(
+	public ApiResponseSpec<DispatchDetailResponse> processRequest(
 		DispatchProcessingRequest dispatchProcessingRequest, PrincipalDetails principalDetails) {
 
 		Long requestId = dispatchProcessingRequest.requestId();
@@ -75,11 +75,11 @@ public class SharePageInvitationRequestProcessor implements DispatchProcessor {
 			.notificationType(NotificationType.INVITE_PAGE)
 			.build();
 
-		return ApiDispatchResponseSpec.<DispatchDetailResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage(successMessage)
-			.data(response)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			successMessage,
+			response
+		);
 
 	}
 

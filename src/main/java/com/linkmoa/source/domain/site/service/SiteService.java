@@ -13,12 +13,12 @@ import com.linkmoa.source.domain.site.dto.request.SiteCreateRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteDeleteRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteMoveRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteUpdateRequestDto;
-import com.linkmoa.source.domain.site.dto.response.ApiSiteResponse;
 import com.linkmoa.source.domain.site.entity.Site;
 import com.linkmoa.source.domain.site.error.SiteErrorCode;
 import com.linkmoa.source.domain.site.exception.SiteException;
 import com.linkmoa.source.domain.site.repository.SiteRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.AllArgsConstructor;
 
@@ -31,7 +31,7 @@ public class SiteService {
 	private final DirectoryRepository directoryRepository;
 
 	@ValidationApplied
-	public ApiSiteResponse<Long> createSite(SiteCreateRequestDto siteCreateRequestDto,
+	public ApiResponseSpec<Long> createSite(SiteCreateRequestDto siteCreateRequestDto,
 		PrincipalDetails principalDetails) {
 
 		Directory directory = directoryRepository.findById(siteCreateRequestDto.directoryId())
@@ -47,16 +47,16 @@ public class SiteService {
 			.build();
 
 		siteRepository.save(newSite);
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"site 생성에 성공했습니다.",
+			newSite.getId()
+		);
 
-		return ApiSiteResponse.<Long>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("site 생성에 성공했습니다.")
-			.data(newSite.getId())
-			.build();
 	}
 
 	@ValidationApplied
-	public ApiSiteResponse<Long> updateSite(SiteUpdateRequestDto siteUpdateRequestDto,
+	public ApiResponseSpec<Long> updateSite(SiteUpdateRequestDto siteUpdateRequestDto,
 		PrincipalDetails principalDetails) {
 
 		Site updateSite = siteRepository.findById(siteUpdateRequestDto.siteId())
@@ -64,16 +64,16 @@ public class SiteService {
 
 		updateSite.updateSiteNameAndUrl(siteUpdateRequestDto.siteName(), siteUpdateRequestDto.siteUrl());
 
-		return ApiSiteResponse.<Long>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("site 수정(이름,url)에 성공했습니다.")
-			.data(updateSite.getId())
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"site 수정(이름,url)에 성공했습니다.",
+			updateSite.getId()
+		);
 
 	}
 
 	@ValidationApplied
-	public ApiSiteResponse<Long> deleteSite(SiteDeleteRequestDto siteDeleteRequestDto,
+	public ApiResponseSpec<Long> deleteSite(SiteDeleteRequestDto siteDeleteRequestDto,
 		PrincipalDetails principalDetails) {
 
 		Site deleteSite = siteRepository.findById(siteDeleteRequestDto.siteId())
@@ -85,15 +85,15 @@ public class SiteService {
 		directoryRepository.decrementDirectoryAndSiteOrderIndexes(parentDirectory, orderIndex);
 		siteRepository.delete(deleteSite);
 
-		return ApiSiteResponse.<Long>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("site 삭제에 성공했습니다.")
-			.data(deleteSite.getId())
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"site 삭제에 성공했습니다.",
+			deleteSite.getId()
+		);
 	}
 
 	@ValidationApplied
-	public ApiSiteResponse<Long> moveSite(SiteMoveRequestDto siteMoveRequestDto, PrincipalDetails principalDetails) {
+	public ApiResponseSpec<Long> moveSite(SiteMoveRequestDto siteMoveRequestDto, PrincipalDetails principalDetails) {
 
 		Site moveSite = siteRepository.findById(siteMoveRequestDto.siteId())
 			.orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
@@ -109,11 +109,11 @@ public class SiteService {
 
 		moveSite.setOrderIndex(newOrderIndex);
 
-		return ApiSiteResponse.<Long>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("site의 위치를 다른 directory로 위치 이동에 성공했습니다.")
-			.data(moveSite.getId())
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"site의 위치를 다른 directory로 위치 이동에 성공했습니다.",
+			moveSite.getId()
+		);
 
 	}
 

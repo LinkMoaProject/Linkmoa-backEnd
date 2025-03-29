@@ -1,7 +1,14 @@
 package com.linkmoa.source.auth.jwt.controller.impl;
 
-import com.linkmoa.source.auth.jwt.service.JwtService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.linkmoa.source.auth.jwt.refresh.service.RefreshTokenService;
+import com.linkmoa.source.auth.jwt.service.JwtService;
 import com.linkmoa.source.domain.member.entity.Member;
 import com.linkmoa.source.domain.member.error.MemberErrorCode;
 import com.linkmoa.source.domain.member.exception.MemberException;
@@ -11,13 +18,6 @@ import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,18 +52,15 @@ public class JwtApiController {
 			String redirectUrl = memberService.getRedirectUrlForMember(email);
 			log.info("Redirect URL: {}", redirectUrl);
 
-			// 응답 생성
-			ApiResponseSpec apiResponseSpec = new ApiResponseSpec(HttpStatus.OK, "Access Token 발급 성공");
 			return ResponseEntity.ok()
 				.header("Authorization", "Bearer " + accessToken)
 				.header("Redirect-Url", redirectUrl) // 리다이렉트 URL 헤더 추가
-				.body(apiResponseSpec);
+				.body(ApiResponseSpec.success(HttpStatus.OK, "Access Token 발급 성공", accessToken));
 
 		} catch (Exception e) {
 			log.error("Error processing access token request", e);
-			ApiResponseSpec errorResponse = new ApiResponseSpec(HttpStatus.INTERNAL_SERVER_ERROR, "토큰 처리 중 오류 발생");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-				.body(errorResponse);
+				.body(ApiResponseSpec.fail(HttpStatus.INTERNAL_SERVER_ERROR, "토큰 처리 중 오류 발생"));
 		}
 	}
 

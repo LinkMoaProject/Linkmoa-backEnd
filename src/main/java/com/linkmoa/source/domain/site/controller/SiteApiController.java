@@ -16,8 +16,8 @@ import com.linkmoa.source.domain.site.dto.request.SiteCreateRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteDeleteRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteMoveRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteUpdateRequestDto;
-import com.linkmoa.source.domain.site.dto.response.ApiSiteResponse;
 import com.linkmoa.source.domain.site.service.SiteService;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,37 +30,37 @@ public class SiteApiController {
 
 	@PostMapping
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiSiteResponse<Long>> saveSite(
+	public ResponseEntity<ApiResponseSpec<Long>> saveSite(
 		@RequestBody @Validated SiteCreateRequestDto siteCreateRequestDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiSiteResponse<Long> siteCreateResponse = siteService.createSite(siteCreateRequestDto, principalDetails);
+		ApiResponseSpec<Long> siteCreateResponse = siteService.createSite(siteCreateRequestDto, principalDetails);
 		return ResponseEntity.ok().body(siteCreateResponse);
 	}
 
 	@PutMapping
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiSiteResponse<Long>> updateSite(
+	public ResponseEntity<ApiResponseSpec<Long>> updateSite(
 		@RequestBody @Validated SiteUpdateRequestDto siteCreateRequestDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiSiteResponse<Long> siteUpdateResponse = siteService.updateSite(siteCreateRequestDto, principalDetails);
+		ApiResponseSpec<Long> siteUpdateResponse = siteService.updateSite(siteCreateRequestDto, principalDetails);
 		return ResponseEntity.ok().body(siteUpdateResponse);
 	}
 
 	@DeleteMapping()
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiSiteResponse<Long>> deleteSite(
+	public ResponseEntity<ApiResponseSpec<Long>> deleteSite(
 		@RequestBody @Validated SiteDeleteRequestDto siteDeleteRequestDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiSiteResponse<Long> siteDeleteResponse = siteService.deleteSite(siteDeleteRequestDto, principalDetails);
+		ApiResponseSpec<Long> siteDeleteResponse = siteService.deleteSite(siteDeleteRequestDto, principalDetails);
 		return ResponseEntity.ok().body(siteDeleteResponse);
 	}
 
 	@PutMapping("/move")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiSiteResponse<Long>> moveSite(
+	public ResponseEntity<ApiResponseSpec<Long>> moveSite(
 		@RequestBody @Validated SiteMoveRequestDto siteMoveRequestDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiSiteResponse<Long> siteMoveResponse = siteService.moveSite(siteMoveRequestDto, principalDetails);
+		ApiResponseSpec<Long> siteMoveResponse = siteService.moveSite(siteMoveRequestDto, principalDetails);
 		return ResponseEntity.ok().body(siteMoveResponse);
 	}
 }

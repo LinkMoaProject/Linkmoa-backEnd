@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 
 import com.linkmoa.source.global.error.code.spec.ErrorCode;
-import com.linkmoa.source.global.spec.ApiResponseErrorSpec;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 import com.linkmoa.source.global.swagger.ApiErrorCodeExamples;
 import com.linkmoa.source.global.swagger.ExampleHolder;
 
@@ -99,9 +99,9 @@ public class SwaggerConfig {
 		ErrorCode errorCode = (ErrorCode)errorCodeEnum;
 
 		// ResponseError 객체 생성
-		ApiResponseErrorSpec apiResponseErrorSpec = ApiResponseErrorSpec.builder()
-			.httpStatusCode(errorCode.getHttpStatus())
-			.errorMessage(errorCode.getErrorMessage())
+		ApiResponseSpec apiResponseErrorSpec = ApiResponseSpec.builder()
+			.status(errorCode.getHttpStatus())
+			.message(errorCode.getErrorMessage())
 			.build();
 
 		Example example = new Example();

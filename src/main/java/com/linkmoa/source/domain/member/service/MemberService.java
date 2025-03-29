@@ -19,9 +19,9 @@ import com.linkmoa.source.domain.member.exception.MemberException;
 import com.linkmoa.source.domain.member.repository.MemberRepository;
 import com.linkmoa.source.domain.memberPageLink.service.MemberPageLinkService;
 import com.linkmoa.source.domain.notification.service.NotificationService;
-import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.dto.response.PageResponse;
 import com.linkmoa.source.domain.page.entity.Page;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -90,7 +90,7 @@ public class MemberService {
 		refreshTokenService.deleteRefreshToken(member.getEmail());
 	}
 
-	public ApiPageResponseSpec<List<PageResponse>> processMemberDeletion(PrincipalDetails principalDetails) {
+	public ApiResponseSpec<List<PageResponse>> processMemberDeletion(PrincipalDetails principalDetails) {
 		log.info("memberDelete - email : {}", principalDetails.getEmail());
 		Member member = memberRepository.findByEmail(principalDetails.getEmail())
 			.orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
@@ -107,11 +107,11 @@ public class MemberService {
 				.build());
 
 		}
-		return ApiPageResponseSpec.<List<PageResponse>>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("해당 회원이 유일한 호스트인 페이지 반환 완료!")
-			.data(pageResponses)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"해당 회원이 유일한 호스트인 페이지 반환 완료!",
+			pageResponses
+		);
 	}
 
 	@Transactional

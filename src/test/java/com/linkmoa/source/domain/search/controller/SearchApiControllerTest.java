@@ -21,9 +21,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linkmoa.source.domain.member.entity.WithMockPrincipalDetails;
 import com.linkmoa.source.domain.search.constant.SearchType;
 import com.linkmoa.source.domain.search.dto.request.SearchRequest;
-import com.linkmoa.source.domain.search.dto.response.ApiSearchResponseSpec;
 import com.linkmoa.source.domain.search.dto.response.SearchPageResponse;
 import com.linkmoa.source.domain.search.service.SearchService;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 @ExtendWith(MockitoExtension.class)
 class SearchApiControllerTest {
@@ -51,9 +51,9 @@ class SearchApiControllerTest {
 		String requestBody = objectMapper.writeValueAsString(searchRequest);
 
 		// ✅ 응답 mock
-		ApiSearchResponseSpec<SearchPageResponse> mockResponse = ApiSearchResponseSpec.<SearchPageResponse>builder()
-			.httpStatusCode(org.springframework.http.HttpStatus.OK)
-			.successMessage("사이트 내에 있는 모든 디렉토리와 사이트를 제목으로 검색합니다.")
+		ApiResponseSpec<SearchPageResponse> mockResponse = ApiResponseSpec.<SearchPageResponse>builder()
+			.status(org.springframework.http.HttpStatus.OK)
+			.message("사이트 내에 있는 모든 디렉토리와 사이트를 제목으로 검색합니다.")
 			.data(SearchPageResponse.builder()
 				.directorySimpleResponses(List.of()) // 빈 리스트 또는 mock 데이터
 				.siteSimpleResponses(List.of())

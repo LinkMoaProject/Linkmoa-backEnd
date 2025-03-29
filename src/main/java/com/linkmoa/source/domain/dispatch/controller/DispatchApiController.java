@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.directory.dto.response.ApiDirectoryResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequestCreate;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
 import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
-import com.linkmoa.source.domain.dispatch.dto.response.ApiDispatchResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.response.DirectoryTransmissionResponse;
 import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
 import com.linkmoa.source.domain.dispatch.dto.response.NotificationsDetailsResponse;
@@ -24,7 +22,7 @@ import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationRespon
 import com.linkmoa.source.domain.dispatch.service.DispatchRequestService;
 import com.linkmoa.source.domain.dispatch.service.processor.DirectoryTransmissionRequestProcessor;
 import com.linkmoa.source.domain.dispatch.service.processor.SharePageInvitationRequestProcessor;
-import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,10 +37,10 @@ public class DispatchApiController {
 
 	@PostMapping("/directory-transmissions")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiDirectoryResponseSpec<DirectoryTransmissionResponse>> transmitDirectory(
+	public ResponseEntity<ApiResponseSpec<DirectoryTransmissionResponse>> transmitDirectory(
 		@RequestBody @Validated DirectoryTransmissionRequestCreate directoryTransmissionRequestCreate,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiDirectoryResponseSpec<DirectoryTransmissionResponse> directoryTransmissionResponse = dispatchRequestService.mapToDirectorySendResponse(
+		ApiResponseSpec<DirectoryTransmissionResponse> directoryTransmissionResponse = dispatchRequestService.mapToDirectorySendResponse(
 			dispatchRequestService.createDirectoryTransmissionRequest(
 				directoryTransmissionRequestCreate,
 				principalDetails)
@@ -52,11 +50,11 @@ public class DispatchApiController {
 
 	@PatchMapping("/directory-transmissions/status")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiDispatchResponseSpec<DispatchDetailResponse>> processDirectoryTransmission(
+	public ResponseEntity<ApiResponseSpec<DispatchDetailResponse>> processDirectoryTransmission(
 		@RequestBody @Validated DispatchProcessingRequest dispatchProcessingRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-		ApiDispatchResponseSpec<DispatchDetailResponse> directoryTransmissionResponse = directoryTransmissionRequestProcessor.processRequest(
+		ApiResponseSpec<DispatchDetailResponse> directoryTransmissionResponse = directoryTransmissionRequestProcessor.processRequest(
 			dispatchProcessingRequest, principalDetails);
 
 		return ResponseEntity.ok().body(directoryTransmissionResponse);
@@ -64,10 +62,10 @@ public class DispatchApiController {
 
 	@PostMapping("/share-page-invitations")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiPageResponseSpec<SharePageInvitationResponse>> inviteSharePage(
+	public ResponseEntity<ApiResponseSpec<SharePageInvitationResponse>> inviteSharePage(
 		@RequestBody @Validated SharePageInvitationRequestCreate pageInvitationRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiPageResponseSpec<SharePageInvitationResponse> pageInviteRequestResponse =
+		ApiResponseSpec<SharePageInvitationResponse> pageInviteRequestResponse =
 			dispatchRequestService.mapToPageInviteRequestResponse(
 				dispatchRequestService.createSharePageInviteRequest(pageInvitationRequest, principalDetails));
 
@@ -76,11 +74,11 @@ public class DispatchApiController {
 
 	@PatchMapping("/share-page-invitations/status")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiDispatchResponseSpec<DispatchDetailResponse>> processSharePageInvitation(
+	public ResponseEntity<ApiResponseSpec<DispatchDetailResponse>> processSharePageInvitation(
 		@RequestBody @Validated DispatchProcessingRequest dispatchProcessingRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-		ApiDispatchResponseSpec<DispatchDetailResponse> sharePageInvitationResponse = sharePageInvitationRequestProcessor.processRequest(
+		ApiResponseSpec<DispatchDetailResponse> sharePageInvitationResponse = sharePageInvitationRequestProcessor.processRequest(
 			dispatchProcessingRequest, principalDetails);
 
 		return ResponseEntity.ok().body(sharePageInvitationResponse);
@@ -88,10 +86,10 @@ public class DispatchApiController {
 
 	@GetMapping("/notifications")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiDispatchResponseSpec<NotificationsDetailsResponse>> getAllNotification(
+	public ResponseEntity<ApiResponseSpec<NotificationsDetailsResponse>> getAllNotification(
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-		ApiDispatchResponseSpec<NotificationsDetailsResponse> allNotificationsForReceiver =
+		ApiResponseSpec<NotificationsDetailsResponse> allNotificationsForReceiver =
 			dispatchRequestService.findAllNotificationsForReceiver(principalDetails.getEmail());
 
 		return ResponseEntity.ok().body(allNotificationsForReceiver);
