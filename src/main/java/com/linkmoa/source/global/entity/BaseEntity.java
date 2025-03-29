@@ -10,12 +10,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import lombok.Getter;
 
 /**
  * 각 도메인 별 baseEntity 사용 부분 수정 필요
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+@Getter
 public class BaseEntity {
 
 	@CreatedDate
