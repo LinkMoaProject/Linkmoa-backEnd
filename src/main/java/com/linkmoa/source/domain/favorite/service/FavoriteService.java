@@ -63,7 +63,7 @@ public class FavoriteService {
 
 			favoriteRepository.save(newFavorite);
 		} catch (Exception e) {
-			throw new FavoriteException(FavoriteErrorCode.FAVORITE_DELETE_FAILED);
+			throw new FavoriteException(FavoriteErrorCode.FAVORITE_CREATE_FAILED);
 		}
 		FavoriteResponse favoriteResponse = FavoriteResponse.builder()
 			.itemType(request.itemType())
