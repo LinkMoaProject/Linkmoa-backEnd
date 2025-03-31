@@ -1,4 +1,4 @@
-package com.linkmoa.source.auth.jwt.controller.impl;
+package com.linkmoa.source.auth.jwt.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

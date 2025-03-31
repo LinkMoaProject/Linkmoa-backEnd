@@ -1,15 +1,14 @@
 package com.linkmoa.source.auth.jwt.refresh.service;
 
+import java.time.LocalDateTime;
+
+import org.springframework.stereotype.Service;
+
 import com.linkmoa.source.auth.jwt.refresh.entity.RefreshToken;
 import com.linkmoa.source.auth.jwt.refresh.repository.RefreshTokenRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
-
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -17,45 +16,29 @@ import java.util.concurrent.TimeUnit;
 public class RefreshTokenService {
 
 	private final RefreshTokenRepository refreshTokenRepository;
-	private final RedisTemplate<String, Object> redisTemplate;
 
-	public void saveRefreshToken(String refreshToken, String email) {
+	public void saveRefreshToken(String token, String email) {
+
+		if (refreshTokenRepository.existsByEmail(email)) {
+			deleteRefreshToken(email);  // 존재할 때만 삭제
+		}
 		refreshTokenRepository.save(RefreshToken.builder()
-			.refreshToken(refreshToken)
-			.memberEmail(email)
+			.token(token)
+			.email(email)
+			.expiresAt(LocalDateTime.now().plusHours(24))
 			.build()
 		);
-
-		String oldToken = (String)redisTemplate.opsForValue().get(email);
-		if (oldToken != null) {
-			// 기존 토큰 키 삭제
-			redisTemplate.delete(email);
-			redisTemplate.delete("RefreshToken:" + oldToken);
-			redisTemplate.delete("RefreshToken:" + oldToken + ":phantom");
-		}
-
-		// memberEmail을 key로, refreshToken 을 value 저장
-		redisTemplate.opsForValue().set(email, refreshToken, 86400, TimeUnit.SECONDS);
 	}
 
-	public String getRefreshTokenByEmail(String email) {
-		return (String)redisTemplate.opsForValue().get(email);
-	}
-
-	public String getEmailByRefreshToken(String refreshToken) {
-		return refreshTokenRepository.findByRefreshToken(refreshToken)
-			.map(RefreshToken::getMemberEmail)
+	public String getEmailByRefreshToken(String token) {
+		return refreshTokenRepository.findRefreshTokenByToken(token)
+			.map(RefreshToken::getEmail)
 			.orElse(null);
+
 	}
 
 	public void deleteRefreshToken(String email) {
-
-		String oldToken = (String)redisTemplate.opsForValue().get(email);
-		if (oldToken != null) {
-			redisTemplate.delete(email);
-			redisTemplate.delete("RefreshToken:" + oldToken);
-			redisTemplate.delete("RefreshToken:" + oldToken + ":phantom");
-		}
-		refreshTokenRepository.deleteById(email);
+		refreshTokenRepository.deleteByEmail(email);
 	}
+
 }
