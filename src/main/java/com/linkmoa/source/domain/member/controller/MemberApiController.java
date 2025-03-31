@@ -41,7 +41,7 @@ public class MemberApiController {
 		pageService.createPersonalPage(principalDetails);
 
 		return ResponseEntity.ok()
-			.body(ApiResponseSpec.success(HttpStatus.OK, "회원 가입 성공 "));
+			.body(ApiResponseSpec.success(HttpStatus.OK, "회원 가입에 성공했습니다."));
 	}
 
 	@PostMapping("/log-out")
@@ -51,7 +51,7 @@ public class MemberApiController {
 
 		memberService.memberLogout(principalDetails);
 		return ResponseEntity.ok()
-			.body(ApiResponseSpec.success(HttpStatus.OK, "로그아웃 성공 "));
+			.body(ApiResponseSpec.success(HttpStatus.OK, "로그아웃에 성공했습니다."));
 	}
 
 	@GetMapping("/deletion-process")
@@ -71,6 +71,6 @@ public class MemberApiController {
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 		memberService.memberDelete(principalDetails);
 		return ResponseEntity.ok()
-			.body(ApiResponseSpec.success(HttpStatus.OK, "회원 탈퇴 성공 "));
+			.body(ApiResponseSpec.success(HttpStatus.OK, "회원 탈퇴에 성공했습니다."));
 	}
 }

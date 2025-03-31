@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,16 +83,14 @@ public class MemberService {
 	}
 
 	public void memberLogout(PrincipalDetails principalDetails) {
-		log.info("memberLogout - email : {}", principalDetails.getEmail());
 		Member member = memberRepository.findByEmail(principalDetails.getEmail())
-			.orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
+			.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL));
 		refreshTokenService.deleteRefreshToken(member.getEmail());
 	}
 
 	public ApiResponseSpec<List<PageResponse>> processMemberDeletion(PrincipalDetails principalDetails) {
-		log.info("memberDelete - email : {}", principalDetails.getEmail());
 		Member member = memberRepository.findByEmail(principalDetails.getEmail())
-			.orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
+			.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL));
 
 		List<Page> pagesWithUniqueHost = memberPageLinkService.PagesWithUniqueHostByMember(member.getId());
 
@@ -116,9 +113,8 @@ public class MemberService {
 
 	@Transactional
 	public void memberDelete(PrincipalDetails principalDetails) {
-		log.info("memberDelete - email : {}", principalDetails.getEmail());
 		Member member = memberRepository.findByEmail(principalDetails.getEmail())
-			.orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
+			.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL));
 
 		String memberEmail = member.getEmail();
 
