@@ -2,6 +2,7 @@ package com.linkmoa.source.auth.jwt.refresh.service;
 
 import java.time.LocalDateTime;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.linkmoa.source.auth.jwt.refresh.entity.RefreshToken;
@@ -39,6 +40,12 @@ public class RefreshTokenService {
 
 	public void deleteRefreshToken(String email) {
 		refreshTokenRepository.deleteByEmail(email);
+	}
+
+	// TODO : 리프레시 토큰 삭제 스케줄러 추후 수정 필요
+	@Scheduled(fixedRate = 1800000, initialDelay = 120000)
+	public void deleteExpiredRefreshTokens() {
+		refreshTokenRepository.deleteByExpiresAtBefore(LocalDateTime.now());
 	}
 
 }
