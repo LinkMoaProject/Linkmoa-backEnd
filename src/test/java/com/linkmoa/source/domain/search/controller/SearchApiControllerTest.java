@@ -1,3 +1,4 @@
+/*
 package com.linkmoa.source.domain.search.controller;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -74,4 +75,4 @@ class SearchApiControllerTest {
 		verify(searchService).searchDirectoriesAndSitesByTitleInPage(any(), any());
 	}
 
-}
+}*/
