@@ -1,3 +1,4 @@
+/*
 package com.linkmoa.source.global.config;
 
 import java.util.Arrays;
@@ -41,17 +42,19 @@ public class SwaggerConfig {
 
 	}
 
-	/**
-	 * public enum SiteErrorCode implements ErrorCode {
-	 *     SITE_NOT_FOUND(HttpStatus.NOT_FOUND, "SITE_001", "Site를 찾을 수 없습니다.");
-	 * }
-	 * 이 Enum을 사용하여 generateErrorCodeResponseExample 메서드를 호출하면, 다음과 같은 과정이 진행됩니다:
-	 *
-	 * errorCodes 배열에는 SITE_NOT_FOUND가 포함됩니다.
-	 * ExampleHolder 객체를 생성하여 SITE_NOT_FOUND의 상태 코드(404), 에러 코드(SITE_001), 그리고 예시 응답(getSwaggerExample(SITE_NOT_FOUND))을 설정합니다.
-	 * 상태 코드(404)를 키로 하고, ExampleHolder 객체를 값으로 가지는 맵을 생성합니다.
-	 * 이 맵을 ApiResponses 객체에 추가하여 API 문서에 응답 예시를 포함시킵니다.
-	 */
+	*/
+/**
+ * public enum SiteErrorCode implements ErrorCode {
+ *     SITE_NOT_FOUND(HttpStatus.NOT_FOUND, "SITE_001", "Site를 찾을 수 없습니다.");
+ * }
+ * 이 Enum을 사용하여 generateErrorCodeResponseExample 메서드를 호출하면, 다음과 같은 과정이 진행됩니다:
+ *
+ * errorCodes 배열에는 SITE_NOT_FOUND가 포함됩니다.
+ * ExampleHolder 객체를 생성하여 SITE_NOT_FOUND의 상태 코드(404), 에러 코드(SITE_001), 그리고 예시 응답(getSwaggerExample(SITE_NOT_FOUND))을 설정합니다.
+ * 상태 코드(404)를 키로 하고, ExampleHolder 객체를 값으로 가지는 맵을 생성합니다.
+ * 이 맵을 ApiResponses 객체에 추가하여 API 문서에 응답 예시를 포함시킵니다.
+ *//*
+
 
 	private void generateErrorCodeResponseExample(Operation operation, Class<? extends ErrorCode> value) {
 		ApiResponses responses = operation.getResponses();
@@ -112,3 +115,4 @@ public class SwaggerConfig {
 	}
 
 }
+*/
