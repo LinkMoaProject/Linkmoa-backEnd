@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "share_page_Invitation_request")
+@Table(name = "share_page_invitation_request")
 public class SharePageInvitationRequest extends BaseEntity implements NotificationInfo {
 
 	@Id
