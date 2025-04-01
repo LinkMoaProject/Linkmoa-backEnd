@@ -6,11 +6,28 @@ import com.linkmoa.source.global.dto.request.BaseRequest;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-@Builder
-public record SharePageInvitationRequestCreate(
-	BaseRequest baseRequest,
-	@NotNull String receiverEmail,
-	PermissionType permissionType
+public class SharePageInvitationRequestCreate {
+	@Builder
+	public record Request(
+		BaseRequest baseRequest,
+		@NotNull String receiverEmail,
+		PermissionType permissionType
 
-) {
+	) {
+
+	}
+
+	@Builder
+	public record Response(
+		String receiverEmail,
+		String senderEmail,
+		String pageTitle,
+		Long pageInvitationRequestId
+	) {
+
+	}
 }
+
+
+
+

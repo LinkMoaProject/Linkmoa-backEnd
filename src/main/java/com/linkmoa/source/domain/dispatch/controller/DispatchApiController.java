@@ -15,10 +15,8 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequestCreate;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
 import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
-import com.linkmoa.source.domain.dispatch.dto.response.DirectoryTransmissionResponse;
 import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
 import com.linkmoa.source.domain.dispatch.dto.response.NotificationsDetailsResponse;
-import com.linkmoa.source.domain.dispatch.dto.response.SharePageInvitationResponse;
 import com.linkmoa.source.domain.dispatch.service.DispatchRequestService;
 import com.linkmoa.source.domain.dispatch.service.processor.DirectoryTransmissionRequestProcessor;
 import com.linkmoa.source.domain.dispatch.service.processor.SharePageInvitationRequestProcessor;
@@ -37,10 +35,10 @@ public class DispatchApiController {
 
 	@PostMapping("/directory-transmissions")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiResponseSpec<DirectoryTransmissionResponse>> transmitDirectory(
-		@RequestBody @Validated DirectoryTransmissionRequestCreate directoryTransmissionRequestCreate,
+	public ResponseEntity<ApiResponseSpec<DirectoryTransmissionRequestCreate.Response>> transmitDirectory(
+		@RequestBody @Validated DirectoryTransmissionRequestCreate.Requeest directoryTransmissionRequestCreate,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<DirectoryTransmissionResponse> directoryTransmissionResponse = dispatchRequestService.mapToDirectorySendResponse(
+		ApiResponseSpec<DirectoryTransmissionRequestCreate.Response> directoryTransmissionResponse = dispatchRequestService.mapToDirectorySendResponse(
 			dispatchRequestService.createDirectoryTransmissionRequest(
 				directoryTransmissionRequestCreate,
 				principalDetails)
@@ -62,10 +60,10 @@ public class DispatchApiController {
 
 	@PostMapping("/share-page-invitations")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiResponseSpec<SharePageInvitationResponse>> inviteSharePage(
-		@RequestBody @Validated SharePageInvitationRequestCreate pageInvitationRequest,
+	public ResponseEntity<ApiResponseSpec<SharePageInvitationRequestCreate.Response>> inviteSharePage(
+		@RequestBody @Validated SharePageInvitationRequestCreate.Request pageInvitationRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<SharePageInvitationResponse> response =
+		ApiResponseSpec<SharePageInvitationRequestCreate.Response> response =
 			dispatchRequestService.mapToPageInviteRequestResponse(
 				dispatchRequestService.createSharePageInviteRequest(pageInvitationRequest, principalDetails));
 
