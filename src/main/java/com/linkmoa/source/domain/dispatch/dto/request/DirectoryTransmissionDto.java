@@ -5,7 +5,7 @@ import com.linkmoa.source.global.dto.request.BaseRequest;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-public class DirectoryTransmissionRequestCreate {
+public class DirectoryTransmissionDto {
 
 	public record Requeest(
 		BaseRequest baseRequest,

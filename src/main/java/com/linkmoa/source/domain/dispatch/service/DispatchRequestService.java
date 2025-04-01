@@ -12,11 +12,10 @@ import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
-import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequestCreate;
-import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
+import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionDto;
+import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestDto;
 import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
 import com.linkmoa.source.domain.dispatch.dto.response.NotificationsDetailsResponse;
-import com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest;
 import com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest;
 import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
 import com.linkmoa.source.domain.dispatch.exception.DispatchException;
@@ -55,15 +54,15 @@ public class DispatchRequestService {
 	@Transactional
 	@ValidationApplied
 	@NotificationApplied
-	public DirectoryTransmissionRequest createDirectoryTransmissionRequest(
-		DirectoryTransmissionRequestCreate.Requeest request,
+	public com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest createDirectoryTransmissionRequest(
+		DirectoryTransmissionDto.Requeest request,
 		PrincipalDetails principalDetails) {
 
 		if (!memberService.isMemberExist(request.receiverEmail())) {
 			throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL);
 		}
 
-		DirectoryTransmissionRequest existingRequest = directoryTransmissionRequestRepository
+		com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest existingRequest = directoryTransmissionRequestRepository
 			.findByDirectoryIdAndRequestStatus(request.directoryId(), RequestStatus.WAITING)
 			.orElse(null);
 
@@ -71,7 +70,7 @@ public class DispatchRequestService {
 			throw new DispatchException(DispatchErrorCode.TRANSMIT_DIRECTORY_REQUEST_ALREADY_EXIST);
 		}
 
-		DirectoryTransmissionRequest acceptedRequest = directoryTransmissionRequestRepository
+		com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest acceptedRequest = directoryTransmissionRequestRepository
 			.findByDirectoryIdAndRequestStatus(request.directoryId(), RequestStatus.ACCEPTED)
 			.orElse(null);
 
@@ -82,7 +81,7 @@ public class DispatchRequestService {
 		Directory directory = directoryRepository.findById(request.directoryId())
 			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
 
-		DirectoryTransmissionRequest directoryTransmissionRequest = DirectoryTransmissionRequest.builder()
+		com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest directoryTransmissionRequest = com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest.builder()
 			.sender(principalDetails.getMember())
 			.receiver(memberService.findMemberByEmail(request.receiverEmail()))
 			.directory(directory)
@@ -91,9 +90,9 @@ public class DispatchRequestService {
 		return directoryTransmissionRequestRepository.save(directoryTransmissionRequest);
 	}
 
-	public ApiResponseSpec<DirectoryTransmissionRequestCreate.Response> mapToDirectorySendResponse(
-		DirectoryTransmissionRequest request) {
-		DirectoryTransmissionRequestCreate.Response directoryTransmissionResponse = DirectoryTransmissionRequestCreate.Response.builder()
+	public ApiResponseSpec<DirectoryTransmissionDto.Response> mapToDirectorySendResponse(
+		com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest request) {
+		DirectoryTransmissionDto.Response directoryTransmissionResponse = DirectoryTransmissionDto.Response.builder()
 			.directoryName(request.getDirectory().getDirectoryName())
 			.receiverEmail(request.getReceiver().getEmail())
 			.senderEmail(request.getSender().getEmail())
@@ -111,7 +110,7 @@ public class DispatchRequestService {
 	@ValidationApplied
 	@NotificationApplied
 	public SharePageInvitationRequest createSharePageInviteRequest(
-		SharePageInvitationRequestCreate.Request request, PrincipalDetails principalDetails) {
+		SharePageInvitationRequestDto.Request request, PrincipalDetails principalDetails) {
 
 		if (!memberService.isMemberExist(request.receiverEmail())) {
 			throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL); // 유저가 없으면 예외 발생
@@ -150,10 +149,10 @@ public class DispatchRequestService {
 		return sharePageInvitationRequestRepository.save(sharePageInvitationRequest);
 	}
 
-	public ApiResponseSpec<SharePageInvitationRequestCreate.Response> mapToPageInviteRequestResponse(
+	public ApiResponseSpec<SharePageInvitationRequestDto.Response> mapToPageInviteRequestResponse(
 		SharePageInvitationRequest request) {
 
-		SharePageInvitationRequestCreate.Response sharePageInvitationResponse = SharePageInvitationRequestCreate.Response.builder()
+		SharePageInvitationRequestDto.Response sharePageInvitationResponse = SharePageInvitationRequestDto.Response.builder()
 			.pageTitle(request.getPage().getPageTitle())
 			.receiverEmail(request.getReceiver().getEmail())
 			.senderEmail(request.getSender().getEmail())

@@ -6,7 +6,7 @@ import com.linkmoa.source.global.dto.request.BaseRequest;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-public class SharePageInvitationRequestCreate {
+public class SharePageInvitationRequestDto {
 	@Builder
 	public record Request(
 		BaseRequest baseRequest,

@@ -11,9 +11,7 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.response.DirectorySimpleResponse;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
 import com.linkmoa.source.domain.favorite.constant.ItemType;
-import com.linkmoa.source.domain.favorite.dto.request.FavoriteUpdateRequest;
-import com.linkmoa.source.domain.favorite.dto.response.FavoriteDetailResponse;
-import com.linkmoa.source.domain.favorite.dto.response.FavoriteResponse;
+import com.linkmoa.source.domain.favorite.dto.request.FavoriteUpdateDto;
 import com.linkmoa.source.domain.favorite.entity.Favorite;
 import com.linkmoa.source.domain.favorite.error.FavoriteErrorCode;
 import com.linkmoa.source.domain.favorite.exception.FavoriteException;
@@ -34,7 +32,7 @@ public class FavoriteService {
 	private final SiteRepository siteRepository;
 
 	@Transactional
-	public ApiResponseSpec<FavoriteResponse> updateFavorite(FavoriteUpdateRequest request,
+	public ApiResponseSpec<FavoriteUpdateDto.SimpleResponse> updateFavorite(FavoriteUpdateDto.Request request,
 		PrincipalDetails principalDetails) {
 		Favorite favorite = favoriteRepository.findByItemIdAndItemType(request.itemId(),
 			request.itemType());
@@ -46,7 +44,7 @@ public class FavoriteService {
 		}
 	}
 
-	private ApiResponseSpec<FavoriteResponse> createFavorite(FavoriteUpdateRequest request,
+	private ApiResponseSpec<FavoriteUpdateDto.SimpleResponse> createFavorite(FavoriteUpdateDto.Request request,
 		PrincipalDetails principalDetails) {
 
 		try {
@@ -65,7 +63,7 @@ public class FavoriteService {
 		} catch (Exception e) {
 			throw new FavoriteException(FavoriteErrorCode.FAVORITE_CREATE_FAILED);
 		}
-		FavoriteResponse favoriteResponse = FavoriteResponse.builder()
+		FavoriteUpdateDto.SimpleResponse response = FavoriteUpdateDto.SimpleResponse.builder()
 			.itemType(request.itemType())
 			.itemId(request.itemId())
 			.build();
@@ -73,15 +71,12 @@ public class FavoriteService {
 		return ApiResponseSpec.success(
 			HttpStatus.OK,
 			"아이템 ( 디렉토리 , 사이트)를 즐겨 찾기에 등록했습니다.",
-			FavoriteResponse.builder()
-				.itemType(request.itemType())
-				.itemId(request.itemId())
-				.build()
+			response
 		);
 
 	}
 
-	private ApiResponseSpec<FavoriteResponse> deleteFavorite(Favorite favorite) {
+	private ApiResponseSpec<FavoriteUpdateDto.SimpleResponse> deleteFavorite(Favorite favorite) {
 
 		try {
 			favoriteRepository.decrementFavoriteOrderIndexes(favorite.getOrderIndex());
@@ -89,7 +84,7 @@ public class FavoriteService {
 		} catch (Exception e) {
 			throw new FavoriteException(FavoriteErrorCode.FAVORITE_DELETE_FAILED);
 		}
-		FavoriteResponse favoriteResponse = FavoriteResponse.builder()
+		FavoriteUpdateDto.SimpleResponse response = FavoriteUpdateDto.SimpleResponse.builder()
 			.itemId(favorite.getItemId())
 			.itemType(favorite.getItemType())
 			.build();
@@ -97,10 +92,7 @@ public class FavoriteService {
 		return ApiResponseSpec.success(
 			HttpStatus.OK,
 			"아이템( 디렉토리, 사이트)를 즐겨 찾기에서 삭제했습니다.",
-			FavoriteResponse.builder()
-				.itemId(favorite.getItemId())
-				.itemType(favorite.getItemType())
-				.build()
+			response
 		);
 	}
 
@@ -118,7 +110,7 @@ public class FavoriteService {
 			.collect(Collectors.toList());
 	}
 
-	public ApiResponseSpec<FavoriteDetailResponse> findFavoriteDetails(PrincipalDetails principalDetails) {
+	public ApiResponseSpec<FavoriteUpdateDto.DetailResponse> findFavoriteDetails(PrincipalDetails principalDetails) {
 		List<Favorite> favorites = favoriteRepository.findByMember(principalDetails.getMember());
 
 		List<Long> favoriteDirectoryIds = findFavoriteDirectoryIds(favorites);
@@ -128,7 +120,7 @@ public class FavoriteService {
 			favoriteDirectoryIds);
 		List<SiteSimpleResponse> sitesDetails = siteRepository.findFavoriteSites(favoriteSiteIds);
 
-		FavoriteDetailResponse favoriteDetailResponse = FavoriteDetailResponse.builder()
+		FavoriteUpdateDto.DetailResponse response = FavoriteUpdateDto.DetailResponse.builder()
 			.email(principalDetails.getEmail())
 			.directorySimpleResponses(directoryDetailResponses)
 			.siteSimpleResponses(sitesDetails)
@@ -137,11 +129,7 @@ public class FavoriteService {
 		return ApiResponseSpec.success(
 			HttpStatus.OK,
 			"즐겨찾기를 조회했습니다.",
-			FavoriteDetailResponse.builder()
-				.email(principalDetails.getEmail())
-				.directorySimpleResponses(directoryRepository.findFavoriteDirectories(favoriteDirectoryIds))
-				.siteSimpleResponses(siteRepository.findFavoriteSites(favoriteSiteIds))
-				.build()
+			response
 		);
 	}
 

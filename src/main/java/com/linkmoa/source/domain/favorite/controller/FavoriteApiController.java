@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.favorite.dto.request.FavoriteUpdateRequest;
-import com.linkmoa.source.domain.favorite.dto.response.FavoriteDetailResponse;
-import com.linkmoa.source.domain.favorite.dto.response.FavoriteResponse;
+import com.linkmoa.source.domain.favorite.dto.request.FavoriteUpdateDto;
 import com.linkmoa.source.domain.favorite.service.FavoriteService;
 import com.linkmoa.source.global.spec.ApiResponseSpec;
 
@@ -28,11 +26,11 @@ public class FavoriteApiController {
 
 	@PostMapping
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiResponseSpec<FavoriteResponse>> updateFavorite(
-		@RequestBody @Validated FavoriteUpdateRequest favoriteUpdateRequest,
+	public ResponseEntity<ApiResponseSpec<FavoriteUpdateDto.SimpleResponse>> updateFavorite(
+		@RequestBody @Validated FavoriteUpdateDto.Request favoriteUpdateRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-		ApiResponseSpec<FavoriteResponse> response = favoriteService.updateFavorite(
+		ApiResponseSpec<FavoriteUpdateDto.SimpleResponse> response = favoriteService.updateFavorite(
 			favoriteUpdateRequest, principalDetails);
 
 		return ResponseEntity.ok().body(response);
@@ -40,10 +38,10 @@ public class FavoriteApiController {
 
 	@GetMapping
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiResponseSpec<FavoriteDetailResponse>> getFavorite(
+	public ResponseEntity<ApiResponseSpec<FavoriteUpdateDto.DetailResponse>> getFavorite(
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-		ApiResponseSpec<FavoriteDetailResponse> response = favoriteService.findFavoriteDetails(
+		ApiResponseSpec<FavoriteUpdateDto.DetailResponse> response = favoriteService.findFavoriteDetails(
 			principalDetails);
 
 		return ResponseEntity.ok().body(response);

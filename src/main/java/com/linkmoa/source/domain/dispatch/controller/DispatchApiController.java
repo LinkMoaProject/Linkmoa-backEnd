@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionRequestCreate;
+import com.linkmoa.source.domain.dispatch.dto.request.DirectoryTransmissionDto;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
-import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestCreate;
+import com.linkmoa.source.domain.dispatch.dto.request.SharePageInvitationRequestDto;
 import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
 import com.linkmoa.source.domain.dispatch.dto.response.NotificationsDetailsResponse;
 import com.linkmoa.source.domain.dispatch.service.DispatchRequestService;
@@ -35,10 +35,10 @@ public class DispatchApiController {
 
 	@PostMapping("/directory-transmissions")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiResponseSpec<DirectoryTransmissionRequestCreate.Response>> transmitDirectory(
-		@RequestBody @Validated DirectoryTransmissionRequestCreate.Requeest directoryTransmissionRequestCreate,
+	public ResponseEntity<ApiResponseSpec<DirectoryTransmissionDto.Response>> transmitDirectory(
+		@RequestBody @Validated DirectoryTransmissionDto.Requeest directoryTransmissionRequestCreate,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<DirectoryTransmissionRequestCreate.Response> directoryTransmissionResponse = dispatchRequestService.mapToDirectorySendResponse(
+		ApiResponseSpec<DirectoryTransmissionDto.Response> directoryTransmissionResponse = dispatchRequestService.mapToDirectorySendResponse(
 			dispatchRequestService.createDirectoryTransmissionRequest(
 				directoryTransmissionRequestCreate,
 				principalDetails)
@@ -60,10 +60,10 @@ public class DispatchApiController {
 
 	@PostMapping("/share-page-invitations")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<ApiResponseSpec<SharePageInvitationRequestCreate.Response>> inviteSharePage(
-		@RequestBody @Validated SharePageInvitationRequestCreate.Request pageInvitationRequest,
+	public ResponseEntity<ApiResponseSpec<SharePageInvitationRequestDto.Response>> inviteSharePage(
+		@RequestBody @Validated SharePageInvitationRequestDto.Request pageInvitationRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<SharePageInvitationRequestCreate.Response> response =
+		ApiResponseSpec<SharePageInvitationRequestDto.Response> response =
 			dispatchRequestService.mapToPageInviteRequestResponse(
 				dispatchRequestService.createSharePageInviteRequest(pageInvitationRequest, principalDetails));
 
