@@ -27,6 +27,7 @@ public class ApiResponseSpec<T> {
 		return new ApiResponseSpec<>(status, message, null);
 	}
 
+	//TODO : RFC 규격에 따른 , ProblemDetails을 사용함
 	public static <T> ApiResponseSpec<T> fail(HttpStatus status, String message, T data) {
 		return new ApiResponseSpec<>(status, message, data);
 	}
