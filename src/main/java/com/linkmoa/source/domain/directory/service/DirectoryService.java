@@ -7,16 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.directory.dto.request.DirectoryChangeParentRequest;
-import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateRequest;
-import com.linkmoa.source.domain.directory.dto.request.DirectoryDragAndDropRequest;
-import com.linkmoa.source.domain.directory.dto.request.DirectoryIdRequest;
-import com.linkmoa.source.domain.directory.dto.request.DirectoryPasteRequest;
-import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateRequest;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryChangeParentDto;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryCreateDto;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryDragAndDropDto;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryIdDto;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryPasteDto;
+import com.linkmoa.source.domain.directory.dto.request.DirectoryUpdateDto;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryDragAndDropResponse;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryPasteResponse;
-import com.linkmoa.source.domain.directory.dto.response.DirectoryResponse;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
@@ -48,7 +45,7 @@ public class DirectoryService {
 
 	@Transactional
 	@ValidationApplied
-	public ApiResponseSpec<Long> createDirectory(DirectoryCreateRequest request,
+	public ApiResponseSpec<Long> createDirectory(DirectoryCreateDto.Request request,
 		PrincipalDetails principalDetails) {
 
 		Directory parentDirectory = request.parentDirectoryId() == null
@@ -80,7 +77,7 @@ public class DirectoryService {
 
 	@Transactional
 	@ValidationApplied
-	public ApiResponseSpec<Long> updateDirectory(DirectoryUpdateRequest request,
+	public ApiResponseSpec<Long> updateDirectory(DirectoryUpdateDto.Request request,
 		PrincipalDetails principalDetails) {
 
 		Directory updateDirectory = directoryRepository.findById(request.directoryId())
@@ -98,7 +95,7 @@ public class DirectoryService {
 
 	@Transactional
 	@ValidationApplied
-	public ApiResponseSpec<Long> deleteDirectory(DirectoryIdRequest request,
+	public ApiResponseSpec<Long> deleteDirectory(DirectoryIdDto.Request request,
 		PrincipalDetails principalDetails) {
 
 		Directory deleteDirectory = directoryRepository.findById(request.directoryId())
@@ -120,7 +117,7 @@ public class DirectoryService {
 
 	@Transactional
 	@ValidationApplied
-	public ApiResponseSpec<Long> changeParentDirectory(DirectoryChangeParentRequest request,
+	public ApiResponseSpec<Long> changeParentDirectory(DirectoryChangeParentDto.Request request,
 		PrincipalDetails principalDetails) {
 
 		Directory movingDirectory = directoryRepository.findById(request.movingDirectoryId())
@@ -146,8 +143,8 @@ public class DirectoryService {
 
 	@Transactional
 	@ValidationApplied
-	public ApiResponseSpec<DirectoryDragAndDropResponse> dragAndDropDirectoryOrSite(
-		DirectoryDragAndDropRequest request,
+	public ApiResponseSpec<DirectoryDragAndDropDto.Response> dragAndDropDirectoryOrSite(
+		DirectoryDragAndDropDto.Request request,
 		PrincipalDetails principalDetails) {
 
 		Integer currentItemOrderIndex;
@@ -173,7 +170,7 @@ public class DirectoryService {
 			request.targetOrderIndex()
 		);
 
-		DirectoryDragAndDropResponse response = DirectoryDragAndDropResponse.builder()
+		DirectoryDragAndDropDto.Response response = DirectoryDragAndDropDto.Response.builder()
 			.targetId(request.targetId())
 			.itemType(String.valueOf(request.itemType()))
 			.targetOrderIndex(request.targetOrderIndex())
@@ -220,8 +217,8 @@ public class DirectoryService {
 	}
 
 	@ValidationApplied
-	public ApiResponseSpec<DirectoryResponse> findDirectoryDetails(
-		DirectoryIdRequest request,
+	public ApiResponseSpec<DirectoryIdDto.Response> findDirectoryDetails(
+		DirectoryIdDto.Request request,
 		PrincipalDetails principalDetails) {
 
 		Directory targetDirectory = directoryRepository.findById(request.directoryId())
@@ -238,7 +235,7 @@ public class DirectoryService {
 		List<SiteDetailResponse> siteDetailResponses =
 			siteRepository.findSitesDetails(targetDirectory.getId(), favoriteSiteIds);
 
-		DirectoryResponse directoryResponse = DirectoryResponse.builder()
+		DirectoryIdDto.Response directoryResponse = DirectoryIdDto.Response.builder()
 			.targetDirectoryDescription(targetDirectory.getDirectoryDescription())
 			.targetDirectoryName(targetDirectory.getDirectoryName())
 			.directoryDetailResponses(directoryDetailResponses)
@@ -254,8 +251,8 @@ public class DirectoryService {
 
 	@Transactional
 	@ValidationApplied
-	public ApiResponseSpec<DirectoryPasteResponse> pasteDirectory(
-		DirectoryPasteRequest request,
+	public ApiResponseSpec<DirectoryPasteDto.Response> pasteDirectory(
+		DirectoryPasteDto.Request request,
 		PrincipalDetails principalDetails) {
 
 		Directory originalDirectory = directoryRepository.findById(request.originalDirectoryId())
@@ -270,7 +267,7 @@ public class DirectoryService {
 		pastedDirectory.setOrderIndex(1);
 		directoryRepository.save(pastedDirectory);
 
-		DirectoryPasteResponse response = DirectoryPasteResponse.builder()
+		DirectoryPasteDto.Response response = DirectoryPasteDto.Response.builder()
 			.pastedirectoryId(pastedDirectory.getId())
 			.destinationDirectoryId(destinationDirectory.getId())
 			.clonedDirectoryName(pastedDirectory.getDirectoryName())
