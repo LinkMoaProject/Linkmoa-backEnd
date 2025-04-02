@@ -4,8 +4,11 @@ import com.linkmoa.source.global.dto.request.BaseRequest;
 
 import jakarta.validation.constraints.NotNull;
 
-public record SiteDeleteRequestDto(
-	BaseRequest baseRequest,
-	@NotNull Long siteId
-) {
+public class SiteDeleteDto {
+	public record Request(
+		BaseRequest baseRequest,
+		@NotNull Long siteId
+	) {
+
+	}
 }

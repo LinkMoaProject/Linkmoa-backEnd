@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.site.dto.request.SiteCreateRequestDto;
-import com.linkmoa.source.domain.site.dto.request.SiteDeleteRequestDto;
+import com.linkmoa.source.domain.site.dto.request.SiteCreateDto;
+import com.linkmoa.source.domain.site.dto.request.SiteDeleteDto;
 import com.linkmoa.source.domain.site.dto.request.SiteMoveRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteUpdateRequestDto;
 import com.linkmoa.source.domain.site.service.SiteService;
@@ -31,9 +31,9 @@ public class SiteApiController {
 	@PostMapping
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<ApiResponseSpec<Long>> saveSite(
-		@RequestBody @Validated SiteCreateRequestDto siteCreateRequestDto,
+		@RequestBody @Validated SiteCreateDto.Request siteCreateDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<Long> response = siteService.createSite(siteCreateRequestDto, principalDetails);
+		ApiResponseSpec<Long> response = siteService.createSite(siteCreateDto, principalDetails);
 		return ResponseEntity.ok().body(response);
 	}
 
@@ -49,9 +49,9 @@ public class SiteApiController {
 	@DeleteMapping()
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<ApiResponseSpec<Long>> deleteSite(
-		@RequestBody @Validated SiteDeleteRequestDto siteDeleteRequestDto,
+		@RequestBody @Validated SiteDeleteDto.Request siteDeleteDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<Long> response = siteService.deleteSite(siteDeleteRequestDto, principalDetails);
+		ApiResponseSpec<Long> response = siteService.deleteSite(siteDeleteDto, principalDetails);
 		return ResponseEntity.ok().body(response);
 	}
 

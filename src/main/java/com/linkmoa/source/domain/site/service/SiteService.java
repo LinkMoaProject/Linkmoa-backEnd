@@ -9,8 +9,8 @@ import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.error.DirectoryErrorCode;
 import com.linkmoa.source.domain.directory.exception.DirectoryException;
 import com.linkmoa.source.domain.directory.repository.DirectoryRepository;
-import com.linkmoa.source.domain.site.dto.request.SiteCreateRequestDto;
-import com.linkmoa.source.domain.site.dto.request.SiteDeleteRequestDto;
+import com.linkmoa.source.domain.site.dto.request.SiteCreateDto;
+import com.linkmoa.source.domain.site.dto.request.SiteDeleteDto;
 import com.linkmoa.source.domain.site.dto.request.SiteMoveRequestDto;
 import com.linkmoa.source.domain.site.dto.request.SiteUpdateRequestDto;
 import com.linkmoa.source.domain.site.entity.Site;
@@ -31,7 +31,7 @@ public class SiteService {
 	private final DirectoryRepository directoryRepository;
 
 	@ValidationApplied
-	public ApiResponseSpec<Long> createSite(SiteCreateRequestDto request,
+	public ApiResponseSpec<Long> createSite(SiteCreateDto.Request request,
 		PrincipalDetails principalDetails) {
 
 		Directory directory = directoryRepository.findById(request.directoryId())
@@ -73,7 +73,7 @@ public class SiteService {
 	}
 
 	@ValidationApplied
-	public ApiResponseSpec<Long> deleteSite(SiteDeleteRequestDto request,
+	public ApiResponseSpec<Long> deleteSite(SiteDeleteDto.Request request,
 		PrincipalDetails principalDetails) {
 
 		Site deleteSite = siteRepository.findById(request.siteId())
