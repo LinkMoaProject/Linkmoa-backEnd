@@ -8,5 +8,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class SiteException extends RuntimeException {
-	private final SiteErrorCode siteErrorCode;
+	private final SiteErrorCode errorCode;
 }

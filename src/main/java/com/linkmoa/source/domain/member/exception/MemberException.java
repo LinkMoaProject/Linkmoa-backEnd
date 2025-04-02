@@ -8,15 +8,15 @@ import lombok.Getter;
 
 @Getter
 public class MemberException extends RuntimeException {
-	private final MemberErrorCode memberErrorCode;
+	private final MemberErrorCode errorCode;
 
-	public MemberException(MemberErrorCode memberErrorCode) {
-		super(memberErrorCode.getErrorMessage());
-		this.memberErrorCode = memberErrorCode;
+	public MemberException(MemberErrorCode errorCode) {
+		super(errorCode.getErrorMessage());
+		this.errorCode = errorCode;
 	}
 
 	public HttpStatus getHttpStatus() {
-		return memberErrorCode.getHttpStatus();
+		return errorCode.getHttpStatus();
 	}
 
 }

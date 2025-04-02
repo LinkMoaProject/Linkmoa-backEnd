@@ -8,5 +8,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class ValidationException extends RuntimeException {
-	private final ValidationErrorCode validationErrorCode;
+	private final ValidationErrorCode errorCode;
 }
