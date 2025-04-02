@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
-import com.linkmoa.source.domain.page.dto.request.PageCreateRequest;
-import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
+import com.linkmoa.source.domain.page.dto.request.PageCreateDto;
+import com.linkmoa.source.domain.page.dto.request.PageDeleteDto;
 import com.linkmoa.source.domain.page.dto.response.PageDetailsResponse;
 import com.linkmoa.source.domain.page.dto.response.PageResponse;
 import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
@@ -35,9 +35,9 @@ public class PageApiController {
 	@PostMapping
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<ApiResponseSpec<Long>> createPage(
-		@RequestBody @Validated PageCreateRequest pageCreateRequest,
+		@RequestBody @Validated PageCreateDto.Request pageCreateDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<Long> createPageResponse = pageService.createSharedPage(pageCreateRequest,
+		ApiResponseSpec<Long> createPageResponse = pageService.createSharedPage(pageCreateDto,
 			principalDetails);
 
 		return ResponseEntity.ok().body(createPageResponse);
@@ -46,9 +46,9 @@ public class PageApiController {
 	@DeleteMapping
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<ApiResponseSpec<Long>> deletePage(
-		@RequestBody @Validated PageDeleteRequest pageDeleteRequest,
+		@RequestBody @Validated PageDeleteDto.Request pageDeleteDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<Long> response = pageService.deletePage(pageDeleteRequest, principalDetails);
+		ApiResponseSpec<Long> response = pageService.deletePage(pageDeleteDto, principalDetails);
 
 		return ResponseEntity.ok().body(response);
 	}

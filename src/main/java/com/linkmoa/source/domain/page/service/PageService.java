@@ -21,8 +21,8 @@ import com.linkmoa.source.domain.memberPageLink.constant.PermissionType;
 import com.linkmoa.source.domain.memberPageLink.entity.MemberPageLink;
 import com.linkmoa.source.domain.memberPageLink.repository.MemberPageLinkRepository;
 import com.linkmoa.source.domain.page.contant.PageType;
-import com.linkmoa.source.domain.page.dto.request.PageCreateRequest;
-import com.linkmoa.source.domain.page.dto.request.PageDeleteRequest;
+import com.linkmoa.source.domain.page.dto.request.PageCreateDto;
+import com.linkmoa.source.domain.page.dto.request.PageDeleteDto;
 import com.linkmoa.source.domain.page.dto.response.PageDetailsResponse;
 import com.linkmoa.source.domain.page.dto.response.PageResponse;
 import com.linkmoa.source.domain.page.dto.response.SharePageLeaveResponse;
@@ -63,7 +63,7 @@ public class PageService {
 
 		validatePersonalPageNotExists(hostMember);
 
-		PageCreateRequest requestDto = PageCreateRequest.builder()
+		PageCreateDto.Request requestDto = PageCreateDto.Request.builder()
 			.pageTitle(hostMember.getEmail() + " 개인")
 			.pageDescription(hostMember.getEmail() + " 의 개인 페이지 입니다.")
 			.pageType(PageType.PERSONAL)
@@ -100,7 +100,7 @@ public class PageService {
 	 * @return
 	 */
 	@Transactional
-	public ApiResponseSpec<Long> createSharedPage(PageCreateRequest requestDto, PrincipalDetails principalDetails) {
+	public ApiResponseSpec<Long> createSharedPage(PageCreateDto.Request requestDto, PrincipalDetails principalDetails) {
 
 		validatePageTypeIsNotPersonal(requestDto);
 		Member hostMember = memberService.findMemberByEmail(principalDetails.getEmail());
@@ -117,14 +117,14 @@ public class PageService {
 		);
 	}
 
-	private static void validatePageTypeIsNotPersonal(PageCreateRequest request) {
+	private static void validatePageTypeIsNotPersonal(PageCreateDto.Request request) {
 		PageType pageType = request.pageType();
 		if (pageType.equals(PageType.PERSONAL)) {
 			throw new PageException(PageErrorCode.PERSONAL_PAGE_ALREADY_EXISTS);
 		}
 	}
 
-	private Page createNewPage(PageCreateRequest request, Directory rootDirectory) {
+	private Page createNewPage(PageCreateDto.Request request, Directory rootDirectory) {
 		return Page.builder()
 			.pageType(request.pageType())
 			.pageTitle(request.pageTitle())
@@ -157,7 +157,7 @@ public class PageService {
 
 	@Transactional
 	@ValidationApplied
-	public ApiResponseSpec<Long> deletePage(PageDeleteRequest request,
+	public ApiResponseSpec<Long> deletePage(PageDeleteDto.Request request,
 		PrincipalDetails principalDetails) {
 		pageRepository.deleteById(request.baseRequest().pageId());
 		return ApiResponseSpec.success(
