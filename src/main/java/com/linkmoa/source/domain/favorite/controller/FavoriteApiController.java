@@ -1,5 +1,6 @@
 package com.linkmoa.source.domain.favorite.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,11 +30,14 @@ public class FavoriteApiController {
 	public ResponseEntity<ApiResponseSpec<FavoriteUpdateDto.SimpleResponse>> updateFavorite(
 		@RequestBody @Validated FavoriteUpdateDto.Request favoriteUpdateRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-
-		ApiResponseSpec<FavoriteUpdateDto.SimpleResponse> response = favoriteService.updateFavorite(
+		FavoriteUpdateDto.SimpleResponse response = favoriteService.updateFavorite(
 			favoriteUpdateRequest, principalDetails);
 
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().body(ApiResponseSpec.success(
+			HttpStatus.OK,
+			response.action().getMessage(),
+			response
+		));
 	}
 
 	@GetMapping
@@ -41,10 +45,12 @@ public class FavoriteApiController {
 	public ResponseEntity<ApiResponseSpec<FavoriteUpdateDto.DetailResponse>> getFavorite(
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-		ApiResponseSpec<FavoriteUpdateDto.DetailResponse> response = favoriteService.findFavoriteDetails(
-			principalDetails);
-
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().body(ApiResponseSpec.success(
+			HttpStatus.OK,
+			"즐겨찾기를 조회했습니다.",
+			favoriteService.findFavoriteDetails(
+				principalDetails)
+		));
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.linkmoa.source.domain.directory.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,9 +39,12 @@ public class DirectoryApiController {
 	public ResponseEntity<ApiResponseSpec<Long>> createDirectory(
 		@RequestBody @Validated DirectoryCreateDto.Request directoryCreateRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<Long> response = directoryService.createDirectory(
-			directoryCreateRequest, principalDetails);
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().body(ApiResponseSpec.success(
+			HttpStatus.OK,
+			"디렉토리 생성에 성공했습니다.",
+			directoryService.createDirectory(
+				directoryCreateRequest, principalDetails)
+		));
 	}
 
 	@PutMapping
@@ -49,9 +53,12 @@ public class DirectoryApiController {
 		@RequestBody DirectoryUpdateDto.Request directoryUpdateRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails
 	) {
-		ApiResponseSpec<Long> response = directoryService.updateDirectory(
-			directoryUpdateRequest, principalDetails);
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().body(ApiResponseSpec.success(
+			HttpStatus.OK,
+			"Directory 수정(이름,설명)에 성공했습니다.",
+			directoryService.updateDirectory(
+				directoryUpdateRequest, principalDetails)
+		));
 	}
 
 	@DeleteMapping()
@@ -60,9 +67,12 @@ public class DirectoryApiController {
 		@RequestBody @Validated DirectoryIdDto.Request directoryIdRequestDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails
 	) {
-		ApiResponseSpec<Long> response = directoryService.deleteDirectory(directoryIdRequestDto,
-			principalDetails);
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().body(ApiResponseSpec.success(
+			HttpStatus.OK,
+			"Directory 삭제에 성공했습니다.",
+			directoryService.deleteDirectory(directoryIdRequestDto,
+				principalDetails)
+		));
 	}
 
 	@PutMapping("/move")
@@ -71,10 +81,13 @@ public class DirectoryApiController {
 		@RequestBody @Validated DirectoryChangeParentDto.Request directoryChangeParentRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails
 	) {
-		ApiResponseSpec<Long> response = directoryService.changeParentDirectory(
-			directoryChangeParentRequest,
-			principalDetails);
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().body(ApiResponseSpec.success(
+			HttpStatus.OK,
+			"디렉토리를 다른 디렉토리로 이동시켰습니다.",
+			directoryService.changeParentDirectory(
+				directoryChangeParentRequest,
+				principalDetails)
+		));
 	}
 
 	@GetMapping("/details")
@@ -82,9 +95,12 @@ public class DirectoryApiController {
 	public ResponseEntity<ApiResponseSpec<DirectoryIdDto.Response>> getDirectory(
 		@RequestBody @Validated DirectoryIdDto.Request directoryIdRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<DirectoryIdDto.Response> response = directoryService.findDirectoryDetails(
-			directoryIdRequest, principalDetails);
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().body(ApiResponseSpec.success(
+			HttpStatus.OK,
+			"Directory 클릭 시, 해당 디렉토리 내에 사이트 및 디렉토리를 조회했습니다.",
+			directoryService.findDirectoryDetails(
+				directoryIdRequest, principalDetails)
+		));
 	}
 
 	@PostMapping("/paste")
@@ -92,10 +108,13 @@ public class DirectoryApiController {
 	public ResponseEntity<ApiResponseSpec<DirectoryPasteDto.Response>> pasteDirectory(
 		@RequestBody @Validated DirectoryPasteDto.Request directoryPasteRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<DirectoryPasteDto.Response> response = directoryService.pasteDirectory(
-			directoryPasteRequest, principalDetails);
 
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().body(ApiResponseSpec.success(
+			HttpStatus.OK,
+			"Directory 붙여넣기에 성공했습니다.",
+			directoryService.pasteDirectory(
+				directoryPasteRequest, principalDetails)
+		));
 	}
 
 	@PutMapping("/drag-and-drop")
@@ -103,10 +122,12 @@ public class DirectoryApiController {
 	public ResponseEntity<ApiResponseSpec<DirectoryDragAndDropDto.Response>> dragAndDropDirectoryOrSite(
 		@RequestBody @Validated DirectoryDragAndDropDto.Request directoryDragAndDropRequest,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<DirectoryDragAndDropDto.Response> response =
-			directoryService.dragAndDropDirectoryOrSite(directoryDragAndDropRequest, principalDetails);
 
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().body(ApiResponseSpec.success(
+			HttpStatus.OK,
+			"Drag and Drop를 수행했습니다.",
+			directoryService.dragAndDropDirectoryOrSite(directoryDragAndDropRequest, principalDetails)
+		));
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.linkmoa.source.domain.site.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,8 +34,11 @@ public class SiteApiController {
 	public ResponseEntity<ApiResponseSpec<Long>> saveSite(
 		@RequestBody @Validated SiteCreateDto.Request siteCreateDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<Long> response = siteService.createSite(siteCreateDto, principalDetails);
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().body(ApiResponseSpec.success(
+			HttpStatus.OK,
+			"site 생성에 성공했습니다.",
+			siteService.createSite(siteCreateDto, principalDetails)
+		));
 	}
 
 	@PutMapping
@@ -42,8 +46,11 @@ public class SiteApiController {
 	public ResponseEntity<ApiResponseSpec<Long>> updateSite(
 		@RequestBody @Validated SiteUpdateRequestDto siteCreateRequestDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<Long> response = siteService.updateSite(siteCreateRequestDto, principalDetails);
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().body(ApiResponseSpec.success(
+			HttpStatus.OK,
+			"site 수정(이름,url)에 성공했습니다.",
+			siteService.updateSite(siteCreateRequestDto, principalDetails)
+		));
 	}
 
 	@DeleteMapping()
@@ -51,8 +58,11 @@ public class SiteApiController {
 	public ResponseEntity<ApiResponseSpec<Long>> deleteSite(
 		@RequestBody @Validated SiteDeleteDto.Request siteDeleteDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<Long> response = siteService.deleteSite(siteDeleteDto, principalDetails);
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().body(ApiResponseSpec.success(
+			HttpStatus.OK,
+			"site 삭제에 성공했습니다.",
+			siteService.deleteSite(siteDeleteDto, principalDetails)
+		));
 	}
 
 	@PutMapping("/move")
@@ -60,7 +70,10 @@ public class SiteApiController {
 	public ResponseEntity<ApiResponseSpec<Long>> moveSite(
 		@RequestBody @Validated SiteMoveRequestDto siteMoveRequestDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		ApiResponseSpec<Long> response = siteService.moveSite(siteMoveRequestDto, principalDetails);
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().body(ApiResponseSpec.success(
+			HttpStatus.OK,
+			"site의 위치를 다른 directory로 위치 이동에 성공했습니다.",
+			siteService.moveSite(siteMoveRequestDto, principalDetails)
+		));
 	}
 }

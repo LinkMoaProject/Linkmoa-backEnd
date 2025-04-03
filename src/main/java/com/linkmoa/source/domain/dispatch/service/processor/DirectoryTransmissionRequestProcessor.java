@@ -1,6 +1,5 @@
 package com.linkmoa.source.domain.dispatch.service.processor;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +18,6 @@ import com.linkmoa.source.domain.member.service.MemberService;
 import com.linkmoa.source.domain.notification.constant.NotificationType;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.page.service.PageService;
-import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +32,7 @@ public class DirectoryTransmissionRequestProcessor implements DispatchProcessor 
 
 	@Override
 	@Transactional
-	public ApiResponseSpec<DispatchDetailResponse> processRequest(
+	public DispatchDetailResponse processRequest(
 		DispatchProcessingRequest dispatchProcessingRequest, PrincipalDetails principalDetails) {
 		Long requestId = dispatchProcessingRequest.requestId();
 		RequestStatus requestStatus = dispatchProcessingRequest.requestStatus();
@@ -57,25 +55,12 @@ public class DirectoryTransmissionRequestProcessor implements DispatchProcessor 
 
 		String successMessage;
 
-		if (requestStatus == RequestStatus.ACCEPTED) {
-			DirectoryTransmissionProcess(directoryTransmissionRequest);
-			successMessage = "디렉토리 전송 요청을 수락하고 디렉토리를 이동했습니다.";
-		} else {
-			successMessage = "디렉토리 전송 요청을 거절했습니다.";
-		}
-
-		DispatchDetailResponse response = DispatchDetailResponse.builder()
+		return DispatchDetailResponse.builder()
 			.id(directoryTransmissionRequest.getId())
 			.requestStatus(directoryTransmissionRequest.getRequestStatus())
 			.senderEmail(directoryTransmissionRequest.getSender().getEmail())
 			.notificationType(NotificationType.TRANSMIT_DIRECTORY)
 			.build();
-
-		return ApiResponseSpec.success(
-			HttpStatus.OK,
-			successMessage,
-			response
-		);
 
 	}
 

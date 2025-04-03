@@ -1,6 +1,5 @@
 package com.linkmoa.source.domain.dispatch.service.processor;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +19,6 @@ import com.linkmoa.source.domain.memberPageLink.repository.MemberPageLinkReposit
 import com.linkmoa.source.domain.notification.constant.NotificationType;
 import com.linkmoa.source.domain.page.entity.Page;
 import com.linkmoa.source.domain.page.repository.PageRepository;
-import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +33,7 @@ public class SharePageInvitationRequestProcessor implements DispatchProcessor {
 
 	@Override
 	@Transactional
-	public ApiResponseSpec<DispatchDetailResponse> processRequest(
+	public DispatchDetailResponse processRequest(
 		DispatchProcessingRequest request, PrincipalDetails principalDetails) {
 
 		Long requestId = request.requestId();
@@ -64,22 +62,12 @@ public class SharePageInvitationRequestProcessor implements DispatchProcessor {
 			acceptSharePageInvitation(page, member, permissionType);
 		}
 
-		String successMessage = requestStatus == RequestStatus.ACCEPTED
-			? "공유 페이지 초대를 수락했습니다."
-			: "공유 페이지 초대를 거절했습니다.";
-
-		DispatchDetailResponse response = DispatchDetailResponse.builder()
+		return DispatchDetailResponse.builder()
 			.id(sharePageInvitationRequest.getId())
 			.requestStatus(sharePageInvitationRequest.getRequestStatus())
 			.senderEmail(sharePageInvitationRequest.getSender().getEmail())
 			.notificationType(NotificationType.INVITE_PAGE)
 			.build();
-
-		return ApiResponseSpec.success(
-			HttpStatus.OK,
-			successMessage,
-			response
-		);
 
 	}
 

@@ -3,6 +3,7 @@ package com.linkmoa.source.domain.favorite.dto.request;
 import java.util.List;
 
 import com.linkmoa.source.domain.directory.dto.response.DirectorySimpleResponse;
+import com.linkmoa.source.domain.favorite.constant.FavoriteAction;
 import com.linkmoa.source.domain.favorite.constant.ItemType;
 import com.linkmoa.source.domain.site.dto.response.SiteSimpleResponse;
 
@@ -21,7 +22,8 @@ public class FavoriteUpdateDto {
 	@Builder
 	public record SimpleResponse(
 		Long itemId,
-		ItemType itemType
+		ItemType itemType,
+		FavoriteAction action
 	) {
 	}
 

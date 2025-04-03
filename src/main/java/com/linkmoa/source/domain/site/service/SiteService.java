@@ -1,6 +1,5 @@
 package com.linkmoa.source.domain.site.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +17,6 @@ import com.linkmoa.source.domain.site.error.SiteErrorCode;
 import com.linkmoa.source.domain.site.exception.SiteException;
 import com.linkmoa.source.domain.site.repository.SiteRepository;
 import com.linkmoa.source.global.aop.annotation.ValidationApplied;
-import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.AllArgsConstructor;
 
@@ -31,7 +29,7 @@ public class SiteService {
 	private final DirectoryRepository directoryRepository;
 
 	@ValidationApplied
-	public ApiResponseSpec<Long> createSite(SiteCreateDto.Request request,
+	public Long createSite(SiteCreateDto.Request request,
 		PrincipalDetails principalDetails) {
 
 		Directory directory = directoryRepository.findById(request.directoryId())
@@ -47,16 +45,12 @@ public class SiteService {
 			.build();
 
 		siteRepository.save(newSite);
-		return ApiResponseSpec.success(
-			HttpStatus.OK,
-			"site 생성에 성공했습니다.",
-			newSite.getId()
-		);
+		return newSite.getId();
 
 	}
 
 	@ValidationApplied
-	public ApiResponseSpec<Long> updateSite(SiteUpdateRequestDto request,
+	public Long updateSite(SiteUpdateRequestDto request,
 		PrincipalDetails principalDetails) {
 
 		Site updateSite = siteRepository.findById(request.siteId())
@@ -64,16 +58,12 @@ public class SiteService {
 
 		updateSite.updateSiteNameAndUrl(request.siteName(), request.siteUrl());
 
-		return ApiResponseSpec.success(
-			HttpStatus.OK,
-			"site 수정(이름,url)에 성공했습니다.",
-			updateSite.getId()
-		);
+		return updateSite.getId();
 
 	}
 
 	@ValidationApplied
-	public ApiResponseSpec<Long> deleteSite(SiteDeleteDto.Request request,
+	public Long deleteSite(SiteDeleteDto.Request request,
 		PrincipalDetails principalDetails) {
 
 		Site deleteSite = siteRepository.findById(request.siteId())
@@ -85,15 +75,11 @@ public class SiteService {
 		directoryRepository.decrementDirectoryAndSiteOrderIndexes(parentDirectory, orderIndex);
 		siteRepository.delete(deleteSite);
 
-		return ApiResponseSpec.success(
-			HttpStatus.OK,
-			"site 삭제에 성공했습니다.",
-			deleteSite.getId()
-		);
+		return deleteSite.getId();
 	}
 
 	@ValidationApplied
-	public ApiResponseSpec<Long> moveSite(SiteMoveRequestDto request, PrincipalDetails principalDetails) {
+	public Long moveSite(SiteMoveRequestDto request, PrincipalDetails principalDetails) {
 
 		Site moveSite = siteRepository.findById(request.siteId())
 			.orElseThrow(() -> new SiteException(SiteErrorCode.SITE_NOT_FOUND));
@@ -109,11 +95,7 @@ public class SiteService {
 
 		moveSite.setOrderIndex(newOrderIndex);
 
-		return ApiResponseSpec.success(
-			HttpStatus.OK,
-			"site의 위치를 다른 directory로 위치 이동에 성공했습니다.",
-			moveSite.getId()
-		);
+		return moveSite.getId();
 
 	}
 
