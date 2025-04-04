@@ -1,11 +1,20 @@
 package com.linkmoa.source.auth.jwt.refresh.repository;
 
-import com.linkmoa.source.auth.jwt.refresh.entity.RefreshToken;
-
-import org.springframework.data.repository.CrudRepository;
-
+import java.time.LocalDateTime;
 import java.util.Optional;
 
-public interface RefreshTokenRepository extends CrudRepository<RefreshToken, String> {
-	Optional<RefreshToken> findByRefreshToken(String refreshToken);
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.linkmoa.source.auth.jwt.refresh.entity.RefreshToken;
+
+public interface RefreshTokenRepository extends JpaRepository<RefreshToken, String> {
+	Optional<RefreshToken> findRefreshTokenByToken(String token);
+
+	void deleteByEmail(String email);
+
+	boolean existsByEmail(String email);
+
+	void deleteByExpiresAtBefore(LocalDateTime time);
+
+	Optional<RefreshToken> findRefreshTokenByEmail(String email);
 }

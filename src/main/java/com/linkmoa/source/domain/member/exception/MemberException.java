@@ -1,23 +1,22 @@
 package com.linkmoa.source.domain.member.exception;
 
+import org.springframework.http.HttpStatus;
+
 import com.linkmoa.source.domain.member.error.MemberErrorCode;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-import org.springframework.http.HttpStatus;
 
 @Getter
 public class MemberException extends RuntimeException {
-	private final MemberErrorCode memberErrorCode;
+	private final MemberErrorCode errorCode;
 
-	public MemberException(MemberErrorCode memberErrorCode) {
-		super(memberErrorCode.getErrorMessage());
-		this.memberErrorCode = memberErrorCode;
+	public MemberException(MemberErrorCode errorCode) {
+		super(errorCode.getErrorMessage());
+		this.errorCode = errorCode;
 	}
 
 	public HttpStatus getHttpStatus() {
-		return memberErrorCode.getHttpStatus();
+		return errorCode.getHttpStatus();
 	}
 
 }

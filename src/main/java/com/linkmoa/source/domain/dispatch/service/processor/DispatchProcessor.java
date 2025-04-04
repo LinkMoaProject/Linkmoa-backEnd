@@ -3,13 +3,13 @@ package com.linkmoa.source.domain.dispatch.service.processor;
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
-import com.linkmoa.source.domain.dispatch.dto.response.ApiDispatchResponseSpec;
+import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
 import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
 import com.linkmoa.source.domain.dispatch.exception.DispatchException;
 import com.linkmoa.source.domain.notification.constant.NotificationType;
 
 public interface DispatchProcessor {
-	ApiDispatchResponseSpec<?> processRequest(DispatchProcessingRequest dispatchProcessingRequest,
+	DispatchDetailResponse processRequest(DispatchProcessingRequest dispatchProcessingRequest,
 		PrincipalDetails principalDetails);
 
 	default void validateRequestStatus(RequestStatus status) {

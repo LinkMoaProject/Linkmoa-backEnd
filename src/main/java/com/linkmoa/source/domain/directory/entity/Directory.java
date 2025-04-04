@@ -17,16 +17,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Entity(name = "directory")
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Slf4j
+@Table(name = "directory")
 public class Directory extends BaseEntity {
 
 	@Id
@@ -34,10 +34,10 @@ public class Directory extends BaseEntity {
 	@Column(name = "directory_id")
 	private Long id;
 
-	@Column(name = "name")
+	@Column(name = "name", length = 80)
 	private String directoryName;
 
-	@Column(name = "description")
+	@Column(name = "description", length = 300)
 	private String directoryDescription;
 
 	@ManyToOne(
@@ -124,15 +124,12 @@ public class Directory extends BaseEntity {
 	}
 
 	public Integer getNextOrderIndex() {
-		Integer nextOrderIndex = Stream.concat(
-				this.getChildDirectories().stream().map(d -> d.getOrderIndex()),
-				this.getSites().stream().map(s -> s.getOrderIndex())
+		return Stream.concat(
+				this.getChildDirectories().stream().map(Directory::getOrderIndex),
+				this.getSites().stream().map(Site::getOrderIndex)
 			)
-			.filter(order -> order != null) // null 값을 필터링
-			.max(Integer::compareTo) // 최대 값 계산
-			.orElse(0) + 1; // 값이 없으면 0을 반환하고 1을 더함
-		// nextOrderIndex가 null일 경우 1 반환
-		return (nextOrderIndex == null) ? 1 : nextOrderIndex;
+			.filter(order -> order != null)  // null 제거
+			.max(Integer::compareTo)         // 최대값
+			.orElse(0) + 1;            // 없으면 1부터 시작
 	}
-
 }

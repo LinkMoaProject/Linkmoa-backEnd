@@ -10,9 +10,9 @@ import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.dto.response.DirectorySimpleResponse;
 import com.linkmoa.source.domain.page.repository.PageRepository;
 import com.linkmoa.source.domain.search.dto.request.SearchRequest;
-import com.linkmoa.source.domain.search.dto.response.ApiSearchResponseSpec;
 import com.linkmoa.source.domain.search.dto.response.SearchPageResponse;
 import com.linkmoa.source.domain.site.dto.response.SiteSimpleResponse;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class SearchService {
 
 	private final PageRepository pageRepository;
 
-	public ApiSearchResponseSpec<SearchPageResponse> searchDirectoriesAndSitesByTitleInPage(SearchRequest searchRequest,
+	public ApiResponseSpec<SearchPageResponse> searchDirectoriesAndSitesByTitleInPage(SearchRequest searchRequest,
 		PrincipalDetails principalDetails) {
 		Long rootDirectoryIdByPageId = pageRepository.findRootDirectoryIdByPageId(searchRequest.pageId());
 
@@ -49,11 +49,11 @@ public class SearchService {
 			.siteSimpleResponses(sites)
 			.build();
 
-		return ApiSearchResponseSpec.<SearchPageResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("사이트 내에 있는 모든 디렉토리와 사이트를 제목으로 검색합니다.")
-			.data(searchPageResponse)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"사이트 내에 있는 모든 디렉토리와 사이트를 제목으로 검색합니다.",
+			searchPageResponse
+		);
 	}
 
 	private List<DirectorySimpleResponse> mapToDirectoryResponses(List<Object[]> rawResults) {

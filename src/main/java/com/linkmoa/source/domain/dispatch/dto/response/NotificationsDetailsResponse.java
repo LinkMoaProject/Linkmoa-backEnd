@@ -1,10 +1,8 @@
 package com.linkmoa.source.domain.dispatch.dto.response;
 
-import com.linkmoa.source.global.dto.request.BaseRequest;
+import java.util.List;
 
 import lombok.Builder;
-
-import java.util.List;
 
 @Builder
 public record NotificationsDetailsResponse(

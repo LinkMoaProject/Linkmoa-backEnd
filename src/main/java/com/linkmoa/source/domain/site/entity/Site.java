@@ -11,14 +11,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "site")
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "site")
 public class Site extends BaseEntity {
 
 	@Id
@@ -26,10 +28,10 @@ public class Site extends BaseEntity {
 	@Column(name = "site_id")
 	private Long id;
 
-	@Column(name = "name")
+	@Column(name = "name", length = 45)
 	private String siteName;
 
-	@Column(name = "url")
+	@Column(name = "url", length = 255)
 	private String siteUrl;
 
 	@ManyToOne(

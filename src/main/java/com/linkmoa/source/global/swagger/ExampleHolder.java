@@ -1,3 +1,4 @@
+/*
 package com.linkmoa.source.global.swagger;
 
 import io.swagger.v3.oas.models.examples.Example;
@@ -13,3 +14,4 @@ public class ExampleHolder {
 	private int code; // http 상태코드
 
 }
+*/

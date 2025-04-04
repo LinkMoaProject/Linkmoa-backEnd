@@ -1,10 +1,10 @@
 package com.linkmoa.source.domain.page.error;
 
+import org.springframework.http.HttpStatus;
+
 import com.linkmoa.source.global.error.code.spec.ErrorCode;
 
 import lombok.Getter;
-
-import org.springframework.http.HttpStatus;
 
 @Getter
 public enum PageErrorCode implements ErrorCode {
@@ -16,7 +16,8 @@ public enum PageErrorCode implements ErrorCode {
 	CANNOT_LEAVE_SHARED_PAGE_SINGLE_MEMBER(HttpStatus.BAD_REQUEST,
 		"공유 페이지에 유일한 멤버일 때는, 공유 페이지를 탈퇴할 수 없습니다. 공유 페이지 삭제를 진행해주세요."),
 	CANNOT_LEAVE_SHARED_PAGE_SINGLE_HOST(HttpStatus.BAD_REQUEST,
-		"공유 페이지에 유일한 호스트 멤버일 때는, 공유 페이지를 탈퇴할 수 없습니다. 공유 페이지 삭제를 진행해주세요.");
+		"공유 페이지에 유일한 호스트 멤버일 때는, 공유 페이지를 탈퇴할 수 없습니다. 공유 페이지 삭제를 진행해주세요."),
+	PERSONAL_PAGE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "개인 페이지는 이미 생성되어 있습니다.");
 
 	private HttpStatus httpStatus;
 	private String errorMessage;

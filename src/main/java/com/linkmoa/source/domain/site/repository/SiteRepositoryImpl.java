@@ -1,19 +1,20 @@
 package com.linkmoa.source.domain.site.repository;
 
-import com.linkmoa.source.domain.Favorite.constant.ItemType;
+import static com.linkmoa.source.domain.favorite.entity.QFavorite.*;
+import static com.linkmoa.source.domain.site.entity.QSite.*;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.linkmoa.source.domain.favorite.constant.ItemType;
 import com.linkmoa.source.domain.site.dto.response.SiteDetailResponse;
+import com.linkmoa.source.domain.site.dto.response.SiteSimpleResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
-
-import static com.linkmoa.source.domain.Favorite.entity.QFavorite.favorite;
-import static com.linkmoa.source.domain.site.entity.QSite.site;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class SiteRepositoryImpl implements SiteRepositoryCustom {
@@ -21,7 +22,7 @@ public class SiteRepositoryImpl implements SiteRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public List<SiteDetailResponse> findSitesDetails(Long directoryId, Set<Long> favoriteSiteIds) {
+	public List<SiteDetailResponse> findSitesDetails(Long directoryId, List<Long> favoriteSiteIds) {
 
 		return jpaQueryFactory
 			.selectFrom(site)
@@ -40,16 +41,17 @@ public class SiteRepositoryImpl implements SiteRepositoryCustom {
 	}
 
 	@Override
-	public List<SiteDetailResponse> findFavoriteSites(Set<Long> favoriteSiteIds) {
-
+	public List<SiteSimpleResponse> findFavoriteSites(List<Long> favoriteSiteIds) {
+		if (favoriteSiteIds == null || favoriteSiteIds.isEmpty()) {
+			return Collections.emptyList();
+		}
 		return jpaQueryFactory
-			.selectDistinct(
+			.select(
 				Projections.constructor(
-					SiteDetailResponse.class,
+					SiteSimpleResponse.class,
 					site.id,
 					site.siteName,
 					site.siteUrl,
-					favorite.orderIndex,
 					Expressions.constant(true)
 				)
 			)
@@ -57,7 +59,7 @@ public class SiteRepositoryImpl implements SiteRepositoryCustom {
 			.join(favorite).on(site.id.eq(favorite.itemId)
 				.and(favorite.itemType.eq(ItemType.SITE)))
 			.where(favorite.itemId.in(favoriteSiteIds))
-			.orderBy(favorite.orderIndex.asc())
+			.orderBy(favorite.createdAt.asc())
 			.fetch();
 	}
 

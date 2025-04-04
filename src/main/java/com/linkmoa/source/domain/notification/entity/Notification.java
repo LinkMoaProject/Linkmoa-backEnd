@@ -14,14 +14,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
+@Table(name = "notification")
 public class Notification extends BaseEntity {
 
 	@Id
@@ -32,7 +34,7 @@ public class Notification extends BaseEntity {
 	@Column(name = "is_read", nullable = false)
 	private boolean isRead;
 
-	@Column(name = "content")
+	@Column(name = "content", length = 120)
 	private String content;
 
 	@Enumerated(EnumType.STRING)

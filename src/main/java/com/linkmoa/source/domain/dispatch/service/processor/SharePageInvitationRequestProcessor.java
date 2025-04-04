@@ -1,9 +1,11 @@
 package com.linkmoa.source.domain.dispatch.service.processor;
 
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
-import com.linkmoa.source.domain.dispatch.dto.response.ApiDispatchResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
 import com.linkmoa.source.domain.dispatch.entity.SharePageInvitationRequest;
 import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
@@ -20,10 +22,6 @@ import com.linkmoa.source.domain.page.repository.PageRepository;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 @Component
 @RequiredArgsConstructor
 public class SharePageInvitationRequestProcessor implements DispatchProcessor {
@@ -35,12 +33,12 @@ public class SharePageInvitationRequestProcessor implements DispatchProcessor {
 
 	@Override
 	@Transactional
-	public ApiDispatchResponseSpec<DispatchDetailResponse> processRequest(
-		DispatchProcessingRequest dispatchProcessingRequest, PrincipalDetails principalDetails) {
+	public DispatchDetailResponse processRequest(
+		DispatchProcessingRequest request, PrincipalDetails principalDetails) {
 
-		Long requestId = dispatchProcessingRequest.requestId();
-		RequestStatus requestStatus = dispatchProcessingRequest.requestStatus();
-		NotificationType notificationType = dispatchProcessingRequest.notificationType();
+		Long requestId = request.requestId();
+		RequestStatus requestStatus = request.requestStatus();
+		NotificationType notificationType = request.notificationType();
 
 		// 요청 타입 검증
 		validateNotificationType(NotificationType.INVITE_PAGE, notificationType);
@@ -64,21 +62,11 @@ public class SharePageInvitationRequestProcessor implements DispatchProcessor {
 			acceptSharePageInvitation(page, member, permissionType);
 		}
 
-		String successMessage = requestStatus == RequestStatus.ACCEPTED
-			? "공유 페이지 초대를 수락했습니다."
-			: "공유 페이지 초대를 거절했습니다.";
-
-		DispatchDetailResponse response = DispatchDetailResponse.builder()
+		return DispatchDetailResponse.builder()
 			.id(sharePageInvitationRequest.getId())
 			.requestStatus(sharePageInvitationRequest.getRequestStatus())
 			.senderEmail(sharePageInvitationRequest.getSender().getEmail())
 			.notificationType(NotificationType.INVITE_PAGE)
-			.build();
-
-		return ApiDispatchResponseSpec.<DispatchDetailResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage(successMessage)
-			.data(response)
 			.build();
 
 	}

@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +18,9 @@ import com.linkmoa.source.domain.member.exception.MemberException;
 import com.linkmoa.source.domain.member.repository.MemberRepository;
 import com.linkmoa.source.domain.memberPageLink.service.MemberPageLinkService;
 import com.linkmoa.source.domain.notification.service.NotificationService;
-import com.linkmoa.source.domain.page.dto.response.ApiPageResponseSpec;
 import com.linkmoa.source.domain.page.dto.response.PageResponse;
 import com.linkmoa.source.domain.page.entity.Page;
+import com.linkmoa.source.global.spec.ApiResponseSpec;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -84,16 +83,14 @@ public class MemberService {
 	}
 
 	public void memberLogout(PrincipalDetails principalDetails) {
-		log.info("memberLogout - email : {}", principalDetails.getEmail());
 		Member member = memberRepository.findByEmail(principalDetails.getEmail())
-			.orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
+			.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL));
 		refreshTokenService.deleteRefreshToken(member.getEmail());
 	}
 
-	public ApiPageResponseSpec<List<PageResponse>> processMemberDeletion(PrincipalDetails principalDetails) {
-		log.info("memberDelete - email : {}", principalDetails.getEmail());
+	public ApiResponseSpec<List<PageResponse>> processMemberDeletion(PrincipalDetails principalDetails) {
 		Member member = memberRepository.findByEmail(principalDetails.getEmail())
-			.orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
+			.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL));
 
 		List<Page> pagesWithUniqueHost = memberPageLinkService.PagesWithUniqueHostByMember(member.getId());
 
@@ -107,18 +104,17 @@ public class MemberService {
 				.build());
 
 		}
-		return ApiPageResponseSpec.<List<PageResponse>>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage("해당 회원이 유일한 호스트인 페이지 반환 완료!")
-			.data(pageResponses)
-			.build();
+		return ApiResponseSpec.success(
+			HttpStatus.OK,
+			"해당 회원이 유일한 호스트인 페이지 반환 완료!",
+			pageResponses
+		);
 	}
 
 	@Transactional
 	public void memberDelete(PrincipalDetails principalDetails) {
-		log.info("memberDelete - email : {}", principalDetails.getEmail());
 		Member member = memberRepository.findByEmail(principalDetails.getEmail())
-			.orElseThrow(() -> new UsernameNotFoundException("해당 Email에 해당하는 유저가 없습니다."));
+			.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND_EMAIL));
 
 		String memberEmail = member.getEmail();
 

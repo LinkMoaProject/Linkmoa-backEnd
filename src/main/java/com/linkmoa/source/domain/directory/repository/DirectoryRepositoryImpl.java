@@ -1,16 +1,17 @@
 package com.linkmoa.source.domain.directory.repository;
 
-import static com.linkmoa.source.domain.Favorite.entity.QFavorite.*;
 import static com.linkmoa.source.domain.directory.entity.QDirectory.*;
+import static com.linkmoa.source.domain.favorite.entity.QFavorite.*;
 import static com.linkmoa.source.domain.site.entity.QSite.*;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.linkmoa.source.domain.Favorite.constant.ItemType;
 import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
+import com.linkmoa.source.domain.directory.dto.response.DirectorySimpleResponse;
 import com.linkmoa.source.domain.directory.entity.Directory;
+import com.linkmoa.source.domain.favorite.constant.ItemType;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -25,7 +26,7 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public List<DirectoryDetailResponse> findDirectoryDetails(Long directoryId, Set<Long> favoriteDirectoryIds) {
+	public List<DirectoryDetailResponse> findDirectoryDetails(Long directoryId, List<Long> favoriteDirectoryIds) {
 
 		return jpaQueryFactory
 			.selectFrom(directory)
@@ -121,14 +122,16 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
 	}
 
 	@Override
-	public List<DirectoryDetailResponse> findFavoriteDirectories(Set<Long> favoriteDirectoryIds) {
+	public List<DirectorySimpleResponse> findFavoriteDirectories(List<Long> favoriteDirectoryIds) {
+		if (favoriteDirectoryIds == null || favoriteDirectoryIds.isEmpty()) {
+			return Collections.emptyList();
+		}
 		return jpaQueryFactory
-			.selectDistinct(
+			.select(
 				Projections.constructor(
-					DirectoryDetailResponse.class,
+					DirectorySimpleResponse.class,
 					directory.id,
 					directory.directoryName,
-					favorite.orderIndex,
 					Expressions.constant(true) // isFavorite 값을 항상 true로 설정
 				)
 			)
@@ -136,7 +139,7 @@ public class DirectoryRepositoryImpl implements DirectoryRepositoryCustom {
 			.join(favorite).on(directory.id.eq(favorite.itemId)
 				.and(favorite.itemType.eq(ItemType.DIRECTORY)))
 			.where(favorite.itemId.in(favoriteDirectoryIds))
-			.orderBy(favorite.orderIndex.asc())
+			.orderBy(favorite.createdAt.asc())
 			.fetch();
 	}
 

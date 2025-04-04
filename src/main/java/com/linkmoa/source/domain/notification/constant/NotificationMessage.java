@@ -13,18 +13,6 @@ public enum NotificationMessage {
 		this.message = message;
 	}
 
-	/*    // NotificationType과 메시지를 매핑
-		public static String getMessageByType(NotificationType type) {
-			switch (type) {
-				case SEND_DIRECTORY:
-					return SEND_DIRECTORY_REQUEST.getMessage();
-				case INVITE_PAGE:
-					return INVITE_PAGE_REQUEST.getMessage();
-				default:
-					throw new IllegalArgumentException("Invalid NotificationType: " + type);
-			}
-		}
-		*/
 	public static String getMessageByType(NotificationType notificationType) {
 		switch (notificationType) {
 			case TRANSMIT_DIRECTORY:

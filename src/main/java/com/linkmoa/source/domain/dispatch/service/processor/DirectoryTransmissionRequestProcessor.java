@@ -1,11 +1,13 @@
 package com.linkmoa.source.domain.dispatch.service.processor;
 
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.linkmoa.source.auth.oauth2.principal.PrincipalDetails;
 import com.linkmoa.source.domain.directory.entity.Directory;
 import com.linkmoa.source.domain.directory.service.DirectoryService;
 import com.linkmoa.source.domain.dispatch.constant.RequestStatus;
 import com.linkmoa.source.domain.dispatch.dto.request.DispatchProcessingRequest;
-import com.linkmoa.source.domain.dispatch.dto.response.ApiDispatchResponseSpec;
 import com.linkmoa.source.domain.dispatch.dto.response.DispatchDetailResponse;
 import com.linkmoa.source.domain.dispatch.entity.DirectoryTransmissionRequest;
 import com.linkmoa.source.domain.dispatch.error.DispatchErrorCode;
@@ -19,10 +21,6 @@ import com.linkmoa.source.domain.page.service.PageService;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 @Component
 @RequiredArgsConstructor
 public class DirectoryTransmissionRequestProcessor implements DispatchProcessor {
@@ -34,7 +32,7 @@ public class DirectoryTransmissionRequestProcessor implements DispatchProcessor 
 
 	@Override
 	@Transactional
-	public ApiDispatchResponseSpec<DispatchDetailResponse> processRequest(
+	public DispatchDetailResponse processRequest(
 		DispatchProcessingRequest dispatchProcessingRequest, PrincipalDetails principalDetails) {
 		Long requestId = dispatchProcessingRequest.requestId();
 		RequestStatus requestStatus = dispatchProcessingRequest.requestStatus();
@@ -57,24 +55,11 @@ public class DirectoryTransmissionRequestProcessor implements DispatchProcessor 
 
 		String successMessage;
 
-		if (requestStatus == RequestStatus.ACCEPTED) {
-			DirectoryTransmissionProcess(directoryTransmissionRequest);
-			successMessage = "디렉토리 전송 요청을 수락하고 디렉토리를 이동했습니다.";
-		} else {
-			successMessage = "디렉토리 전송 요청을 거절했습니다.";
-		}
-
-		DispatchDetailResponse response = DispatchDetailResponse.builder()
+		return DispatchDetailResponse.builder()
 			.id(directoryTransmissionRequest.getId())
 			.requestStatus(directoryTransmissionRequest.getRequestStatus())
 			.senderEmail(directoryTransmissionRequest.getSender().getEmail())
 			.notificationType(NotificationType.TRANSMIT_DIRECTORY)
-			.build();
-
-		return ApiDispatchResponseSpec.<DispatchDetailResponse>builder()
-			.httpStatusCode(HttpStatus.OK)
-			.successMessage(successMessage)
-			.data(response)
 			.build();
 
 	}

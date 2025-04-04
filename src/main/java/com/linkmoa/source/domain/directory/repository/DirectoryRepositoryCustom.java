@@ -1,13 +1,13 @@
 package com.linkmoa.source.domain.directory.repository;
 
 import java.util.List;
-import java.util.Set;
 
 import com.linkmoa.source.domain.directory.dto.response.DirectoryDetailResponse;
+import com.linkmoa.source.domain.directory.dto.response.DirectorySimpleResponse;
 import com.linkmoa.source.domain.directory.entity.Directory;
 
 public interface DirectoryRepositoryCustom {
-	List<DirectoryDetailResponse> findDirectoryDetails(Long directoryId, Set<Long> favoriteDirectoryIds);
+	List<DirectoryDetailResponse> findDirectoryDetails(Long directoryId, List<Long> favoriteDirectoryIds);
 
 	void decrementDirectoryOrderIndexes(Directory parentDirectory, Integer orderIndex);
 
@@ -30,6 +30,6 @@ public interface DirectoryRepositoryCustom {
 	void updateDirectoryAndSiteOrderIndexesInRange(Directory parentDirectory, Integer startIndex, Integer endIndex,
 		boolean isIncrement);
 
-	List<DirectoryDetailResponse> findFavoriteDirectories(Set<Long> favoriteDirectoryIds);
+	List<DirectorySimpleResponse> findFavoriteDirectories(List<Long> favoriteDirectoryIds);
 
 }
