@@ -149,7 +149,11 @@ public class PageService {
 	@ValidationApplied
 	public Long deletePage(PageDeleteDto.Request request,
 		PrincipalDetails principalDetails) {
-		pageRepository.deleteById(request.baseRequest().pageId());
+
+		Long pageId = request.baseRequest().pageId();
+		pageRepository.findById(pageId)
+			.orElseThrow(() -> new PageException(PageErrorCode.PAGE_NOT_FOUND));
+		pageRepository.deleteById(pageId);
 		return request.baseRequest().pageId();
 	}
 
