@@ -22,7 +22,7 @@ public class RefreshTokenService {
 	@Transactional
 	public void saveRefreshToken(String token, String email) {
 
-		refreshTokenRepository.findRefreshTokensByEmail(email)
+		refreshTokenRepository.findRefreshTokenByEmail(email)
 			.ifPresent(existingToken -> deleteRefreshToken(email));
 
 		refreshTokenRepository.save(RefreshToken.builder()
