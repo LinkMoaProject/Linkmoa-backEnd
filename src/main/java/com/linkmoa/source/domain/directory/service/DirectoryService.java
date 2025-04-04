@@ -46,12 +46,16 @@ public class DirectoryService {
 	public Long createDirectory(DirectoryCreateDto.Request request,
 		PrincipalDetails principalDetails) {
 
-		Directory parentDirectory = request.parentDirectoryId() == null
-			? null
-			: directoryRepository.findById(request.parentDirectoryId())
-			.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+		Directory parentDirectory = null;
+		Integer nextOrderIndex;
 
-		Integer nextOrderIndex = parentDirectory.getNextOrderIndex();
+		if (request.parentDirectoryId() != null) {
+			parentDirectory = directoryRepository.findById(request.parentDirectoryId())
+				.orElseThrow(() -> new DirectoryException(DirectoryErrorCode.DIRECTORY_NOT_FOUND));
+			nextOrderIndex = parentDirectory.getNextOrderIndex();
+		} else {
+			nextOrderIndex = 1; // 또는 적절한 기본값
+		}
 
 		Directory newDirectory = Directory.builder()
 			.directoryName(request.directoryName())
