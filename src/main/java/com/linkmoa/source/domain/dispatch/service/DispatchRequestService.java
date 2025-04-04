@@ -54,7 +54,7 @@ public class DispatchRequestService {
 	@ValidationApplied
 	@NotificationApplied
 	public DirectoryTransmissionRequest createDirectoryTransmissionRequest(
-		DirectoryTransmissionDto.Requeest request,
+		DirectoryTransmissionDto.Request request,
 		PrincipalDetails principalDetails) {
 
 		if (!memberService.isMemberExist(request.receiverEmail())) {

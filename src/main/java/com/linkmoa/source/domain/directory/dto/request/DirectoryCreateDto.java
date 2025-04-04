@@ -9,7 +9,7 @@ public class DirectoryCreateDto {
 
 	public record Request(
 		BaseRequest baseRequest,
-		@NotBlank @Size(max = 45) String directoryName,
+		@NotBlank @Size(max = 80) String directoryName,
 		Long parentDirectoryId,
 		@Size(max = 300) String directoryDescription
 	) {

@@ -7,7 +7,7 @@ import lombok.Builder;
 
 public class DirectoryTransmissionDto {
 
-	public record Requeest(
+	public record Request(
 		BaseRequest baseRequest,
 		@NotNull String receiverEmail,
 		@NotNull Long directoryId

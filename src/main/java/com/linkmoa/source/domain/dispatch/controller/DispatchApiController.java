@@ -38,7 +38,7 @@ public class DispatchApiController {
 	@PostMapping("/directory-transmissions")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<ApiResponseSpec<DirectoryTransmissionDto.Response>> transmitDirectory(
-		@RequestBody @Validated DirectoryTransmissionDto.Requeest directoryTransmissionRequestCreate,
+		@RequestBody @Validated DirectoryTransmissionDto.Request directoryTransmissionRequestCreate,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
 		return ResponseEntity.ok().body(ApiResponseSpec.success(
 			HttpStatus.OK,
