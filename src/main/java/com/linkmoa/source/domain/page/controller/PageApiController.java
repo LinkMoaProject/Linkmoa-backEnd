@@ -54,7 +54,6 @@ public class PageApiController {
 	public ResponseEntity<ApiResponseSpec<Long>> deletePage(
 		@RequestBody @Validated PageDeleteDto.Request pageDeleteDto,
 		@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		pageService.deletePage(pageDeleteDto, principalDetails);
 
 		return ResponseEntity.ok().body(ApiResponseSpec.success(
 			HttpStatus.OK,
