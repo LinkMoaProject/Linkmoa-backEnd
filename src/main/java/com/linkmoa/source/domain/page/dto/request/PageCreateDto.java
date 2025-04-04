@@ -15,6 +15,4 @@ public class PageCreateDto {
 		@NotNull PageType pageType
 	) {
 	}
-
-	;
 }
